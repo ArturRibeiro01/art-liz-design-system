@@ -1,0 +1,15 @@
+{
+  "name": "@art-liz/storybook",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build:homolog": "storybook build --output-dir ../../storybook-static/homolog",
+    "build:prod": "storybook build --output-dir ../../storybook-static/prod"
+  },
+  "dependencies": {
+    "@art-liz/react": "0.1.0",
+    "@art-liz/tokens": "0.1.0"
+  }
+}

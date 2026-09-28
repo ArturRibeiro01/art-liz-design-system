@@ -1,0 +1,13 @@
+{
+  "name": "@art-liz/tokens",
+  "version": "0.1.0",
+  "description": "Design tokens do Art-Liz Design System.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "publishConfig": { "access": "public" },
+  "scripts": { "build": "tsc -p tsconfig.json" }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@art-liz/react",
+  "version": "0.1.0",
+  "description": "Componentes React do Art-Liz Design System.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": { ".": { "types": "./dist/types/index.d.ts", "import": "./dist/index.js" } },
+  "publishConfig": { "access": "public" },
+  "peerDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": { "@art-liz/tokens": "0.1.0" },
+  "scripts": { "build": "vite build && tsc -p tsconfig.build.json", "test": "vitest run" }
+}
