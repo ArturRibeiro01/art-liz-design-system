@@ -18,7 +18,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
-- **GitFlow planejado:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
+- **GitFlow:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
 
 Essas decisões descrevem a base atual. Novas dependências devem ser adicionadas quando houver uma necessidade concreta de produto ou desenvolvimento.
 
@@ -120,7 +120,7 @@ O contrato do fluxo e os arquivos reutilizáveis estão em `.github/workflows/` 
 
 O workflow `PR branch policy` falha se um PR destinado a `main` vier de outra branch que não `develop`. O script `scripts/setup-gitflow.sh` pode criar `develop`, configurar as proteções e defini-la como branch padrão. Ele executa dry run por padrão e requer `--apply` mais confirmação literal.
 
-Na configuração atual deste repositório, `main` ainda é a branch padrão, não há branch `develop` e a verificação mais recente não encontrou proteções. O script interrompe a aplicação se os workflows não estiverem em `main` e não substitui proteções existentes sem `--replace-protection`. Não aplique regras remotas até que os workflows estejam na branch padrão e os checks tenham sido observados funcionando. O guia em `templates/gitflow/README.md` descreve o bootstrap inicial e a adoção em outros repositórios.
+No estado remoto confirmado em 2026-09-29, `develop` é a branch padrão e `main` continua sendo produção. Ambas exigem PR e os checks `Quality gates` e `Allowed source branch`, bloqueiam bypass administrativo, force-push e exclusão. O PR #11 (`initial_config` -> `develop`) está aberto e com os dois checks aprovados, mas ainda não foi mesclado. Confirme o GitHub antes de assumir que esse estado não mudou. O script `scripts/setup-gitflow.sh` continua sendo um bootstrap para outros repositórios cujo default branch atual seja `main`; ele exige workflows em `main`, começa em dry run e se recusa a sobrescrever proteções sem `--replace-protection`.
 
 ## Storybook: homologação e produção
 
