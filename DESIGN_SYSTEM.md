@@ -18,6 +18,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
+- **GitFlow planejado:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
 
 Essas decisões descrevem a base atual. Novas dependências devem ser adicionadas quando houver uma necessidade concreta de produto ou desenvolvimento.
 
@@ -46,7 +47,7 @@ Fonte: `packages/tokens/src/index.ts`.
 
 Contém componentes acessíveis e reutilizáveis para React. O pacote importa tokens e mantém React e Emotion como `peerDependencies`, evitando incorporá-los como cópias privadas da biblioteca no projeto consumidor.
 
-O componente inicial é `Button`, com variantes `primary` e `secondary`, suporte aos atributos nativos de botão e estado desabilitado.
+O componente inicial é `Button`, com variantes `primary` e `secondary`, suporte aos atributos nativos de botão e estado desabilitado. Cada componente separa sua implementação (`Component.tsx`) de seus estilos Emotion (`Component.style.ts`); estilos podem consumir os tipos do componente via `import type`.
 
 Fontes: `packages/react/src/` e `packages/react/package.json`.
 
@@ -82,11 +83,13 @@ O comando de Storybook compila tokens e componentes antes de iniciar o servidor 
 
 ## Criar ou alterar um componente
 
-1. Implemente o componente em `packages/react/src/` usando React, TypeScript, Emotion e tokens sempre que aplicável.
-2. Exporte o componente e seus tipos em `packages/react/src/index.ts`.
-3. Adicione ou atualize uma story ao lado do componente para documentar variantes e estados.
-4. Adicione testes focados no comportamento observável em `packages/react/src/`.
-5. Use o playground para confirmar a integração fora do Storybook.
+1. Coloque a API e o comportamento do componente em `packages/react/src/Component.tsx`.
+2. Coloque os estilos Emotion em `packages/react/src/Component.style.ts` e reutilize tokens sempre que aplicável.
+3. Se estilos precisarem dos tipos definidos pelo componente, importe-os usando `import type`.
+4. Exporte o componente e seus tipos em `packages/react/src/index.ts`.
+5. Adicione ou atualize uma story ao lado do componente para documentar variantes e estados.
+6. Adicione testes focados no comportamento observável em `packages/react/src/`.
+7. Use o playground para confirmar a integração fora do Storybook.
 
 Componentes compartilhados devem evitar decisões específicas de um único sistema. Se uma solução depender do domínio ou identidade de um projeto, considere colocá-la em um UI Kit próprio.
 
@@ -96,6 +99,7 @@ Componentes compartilhados devem evitar decisões específicas de um único sist
 npm test
 npm run lint
 npm run build
+npm run ci
 ```
 
 - `npm test` compila tokens e executa os testes Vitest do pacote React.
@@ -103,6 +107,20 @@ npm run build
 - `npm run build` compila tokens, empacota o React e compila o playground.
 
 Os pacotes React e tokens são compilados antes do Storybook para que os workspaces consumam seus artefatos `dist`.
+
+`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
+
+## GitFlow e template de branches
+
+O contrato do fluxo e os arquivos reutilizáveis estão em `.github/workflows/` e `templates/gitflow/README.md`.
+
+- `main`: produção; aceita apenas PRs cuja origem seja `develop`.
+- `develop`: homologação e branch padrão; aceita PRs de qualquer branch.
+- Ambas: PR obrigatório, checks `Quality gates` e `Allowed source branch`, sem bypass administrativo, force-push ou exclusão.
+
+O workflow `PR branch policy` falha se um PR destinado a `main` vier de outra branch que não `develop`. O script `scripts/setup-gitflow.sh` pode criar `develop`, configurar as proteções e defini-la como branch padrão. Ele executa dry run por padrão e requer `--apply` mais confirmação literal.
+
+Na configuração atual deste repositório, `main` ainda é a branch padrão, não há branch `develop` e a verificação mais recente não encontrou proteções. O script interrompe a aplicação se os workflows não estiverem em `main` e não substitui proteções existentes sem `--replace-protection`. Não aplique regras remotas até que os workflows estejam na branch padrão e os checks tenham sido observados funcionando. O guia em `templates/gitflow/README.md` descreve o bootstrap inicial e a adoção em outros repositórios.
 
 ## Storybook: homologação e produção
 

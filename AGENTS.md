@@ -33,6 +33,9 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
 - O Storybook tem builds estáticos separados para homologação e produção.
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
+- O fluxo GitFlow planejado usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
+- A configuração remota de branches só deve ser aplicada depois que os workflows estejam em `main` e os checks obrigatórios tenham sido observados funcionando; o último estado confirmado ainda tinha somente `main` como default e sem proteções.
+- O template de GitFlow reutilizável fica em `templates/gitflow/README.md`; o bootstrap remoto tem dry run em `scripts/setup-gitflow.sh`.
 - Agentes especializados não são necessários neste estágio; não criar agentes, workflows ou automações extras sem necessidade clara.
 
 ## Mapa do repositório
@@ -42,6 +45,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - `apps/storybook`: configuração e execução local do Storybook.
 - `apps/playground`: app Vite usado como consumidor de teste.
 - `DESIGN_SYSTEM.md`: documentação completa para pessoas desenvolvedoras.
+- `templates/gitflow/README.md`: instruções para adotar o fluxo em outros repositórios.
 - `README.md`: início rápido e comandos mais usados.
 
 ## Comandos principais
@@ -54,6 +58,7 @@ npm run storybook
 npm run dev --workspace @art-liz/playground
 npm test
 npm run lint
+npm run ci
 npm run build
 npm run build:storybook:homolog
 npm run build:storybook:prod
@@ -67,10 +72,13 @@ npm run build:storybook:prod
 - Não invente APIs públicas, requisitos visuais ou decisões de arquitetura sem base no pedido, no código ou na documentação.
 - Prefira tokens compartilhados a valores visuais duplicados. Os tokens atuais são iniciais, não uma especificação final.
 - Componentes do pacote React devem ser genéricos e úteis a mais de um produto. Regras específicas de um sistema pertencem ao UI Kit correspondente.
+- Alterações nos workflows e proteções do GitHub devem respeitar o fluxo GitFlow registrado e preservar os gates obrigatórios de CI.
+- Separe implementação e estilos dos componentes React: `Component.tsx` contém API e comportamento; `Component.style.ts` contém os estilos Emotion e seus elementos estilizados.
+- Ao referenciar tipos do componente no arquivo de estilos, use `import type` para não criar uma dependência de runtime circular.
 - Para novos componentes, avalie export público, story, teste de comportamento e uso no playground.
 - Mantenha React e Emotion como dependências peer do pacote de componentes; confira os manifests antes de mudar essa estratégia.
 - Não publique pacotes, altere credenciais, faça deploy ou execute ações externas sem solicitação explícita.
-- Não crie commits ou inicialize Git sem pedido. O último estado conhecido não tinha repositório Git inicializado; confira antes de usar comandos Git.
+- Não crie commits ou inicialize Git sem pedido. Este workspace já tem Git e remoto configurados; confirme branch atual, mudanças locais e permissões antes de operar no histórico ou no remoto.
 - Nunca reverta mudanças do usuário. Antes de editar um arquivo que tenha sido alterado durante a sessão, leia seu estado atual e trabalhe sobre ele.
 - Após uma alteração, rode a verificação mais específica disponível e informe o que foi validado e o que não foi.
 

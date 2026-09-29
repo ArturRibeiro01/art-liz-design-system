@@ -1,6 +1,7 @@
 {
   "name": "art-liz-design-system",
   "version": "0.1.0",
+  "packageManager": "npm@11.6.2",
   "private": true,
   "description": "Design system pessoal com React, TypeScript e Emotion.",
   "license": "MIT",
@@ -12,6 +13,7 @@
     "build": "npm run build -w @art-liz/tokens && npm run build -w @art-liz/react && npm run build -w @art-liz/playground",
     "test": "npm run build -w @art-liz/tokens && npm run test -w @art-liz/react",
     "lint": "npm run lint -w @art-liz/playground",
+    "ci": "npm test && npm run lint && npm run build && npm run build:storybook:homolog && npm run build:storybook:prod",
     "storybook": "npm run build -w @art-liz/tokens && npm run build -w @art-liz/react && npm run storybook -w @art-liz/storybook",
     "build:storybook:homolog": "npm run build -w @art-liz/tokens && npm run build -w @art-liz/react && npm run build:homolog -w @art-liz/storybook",
     "build:storybook:prod": "npm run build -w @art-liz/tokens && npm run build -w @art-liz/react && npm run build:prod -w @art-liz/storybook",
