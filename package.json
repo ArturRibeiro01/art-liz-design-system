@@ -1,6 +1,7 @@
 {
   "name": "art-liz-design-system",
   "version": "0.1.0",
+  "packageManager": "npm@11.6.2",
   "private": true,
   "description": "Design system pessoal com React, TypeScript e Emotion.",
   "license": "MIT",
