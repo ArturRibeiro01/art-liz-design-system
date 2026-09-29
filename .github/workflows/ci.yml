@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+  push:
+    branches:
+      - develop
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gates:
+    name: Quality gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Pin npm version
+        run: npm install --global npm@11.6.2
+
+      - name: Install dependencies
+        run: |
+          npm --version
+          npm ci
+
+      - name: Run quality gates
+        run: npm run ci
