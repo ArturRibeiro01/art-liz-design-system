@@ -33,9 +33,11 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
 - O Storybook tem builds estáticos separados para homologação e produção.
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
-- O fluxo GitFlow planejado usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
-- A configuração remota de branches só deve ser aplicada depois que os workflows estejam em `main` e os checks obrigatórios tenham sido observados funcionando; o último estado confirmado ainda tinha somente `main` como default e sem proteções.
-- O template de GitFlow reutilizável fica em `templates/gitflow/README.md`; o bootstrap remoto tem dry run em `scripts/setup-gitflow.sh`.
+- O fluxo GitFlow usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
+- `main` e `develop` estão protegidas contra push direto, force-push, exclusão e bypass administrativo; ambas exigem os checks `Quality gates` e `Allowed source branch`.
+- O PR #11 (`initial_config` -> `develop`) foi mesclado e seus checks passaram; confirme o estado remoto antes de continuar o bootstrap.
+- O template de GitFlow reutilizável fica em `templates/gitflow/README.md`; o bootstrap remoto cria rulesets, tem dry run em `scripts/setup-gitflow.sh` e permite substituir os rulesets de nome esperado apenas com `--replace-rulesets`.
+- A exclusão automática de branches após merge está habilitada; rulesets de `main` e `develop` bloqueiam a exclusão dessas duas branches.
 - Agentes especializados não são necessários neste estágio; não criar agentes, workflows ou automações extras sem necessidade clara.
 
 ## Mapa do repositório
@@ -99,6 +101,7 @@ Não trate o reinício como correção de código se um build limpo também falh
 - O Storybook tem stories de Button e scripts de build estático para homologação e produção.
 - Os testes, lint, build integrado e builds estáticos do Storybook passaram na validação inicial.
 - A resolução de `@art-liz/react` no playground exigiu reiniciar o servidor Vite depois da instalação dos workspaces; o comando com `--force` passou a transformar o import para o artefato local.
+- O repositório fixa npm `11.6.2` em `package.json` e no workflow para manter instalações limpas reproduzíveis entre macOS e Linux.
 - Esses resultados são registros históricos, não garantias de que o estado atual continua igual. Reexecute as verificações relevantes antes de afirmar que ainda passam.
 
 ## Pendências conhecidas
