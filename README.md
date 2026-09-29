@@ -32,7 +32,7 @@ Os builds do Storybook ficam em `storybook-static/homolog` e `storybook-static/p
 
 ## GitFlow
 
-O fluxo usa `develop` como homologação/default e `main` como produção. Consulte [templates/gitflow/README.md](templates/gitflow/README.md) para copiar os workflows, fazer o bootstrap inicial e configurar as proteções. O PR de bootstrap #11 está aberto; não o mescle sem revisar os checks e o diff.
+O fluxo usa `develop` como homologação/default e `main` como produção. Consulte [templates/gitflow/README.md](templates/gitflow/README.md) para copiar os workflows e fazer o bootstrap dos rulesets. Branches de origem são apagadas após merge, enquanto `main` e `develop` permanecem protegidas.
 
 ## Publicação npm
 

@@ -118,9 +118,9 @@ O contrato do fluxo e os arquivos reutilizáveis estão em `.github/workflows/` 
 - `develop`: homologação e branch padrão; aceita PRs de qualquer branch.
 - Ambas: PR obrigatório, checks `Quality gates` e `Allowed source branch`, sem bypass administrativo, force-push ou exclusão.
 
-O workflow `PR branch policy` falha se um PR destinado a `main` vier de outra branch que não `develop`. O script `scripts/setup-gitflow.sh` pode criar `develop`, configurar as proteções e defini-la como branch padrão. Ele executa dry run por padrão e requer `--apply` mais confirmação literal.
+O workflow `PR branch policy` falha se um PR destinado a `main` vier de outra branch que não `develop`. O script `scripts/setup-gitflow.sh` cria rulesets via API REST, pode criar `develop`, ativa exclusão automática de branches mescladas e define `develop` como default por último. Ele executa dry run por padrão e requer `--apply` mais confirmação literal. Rulesets existentes com os nomes esperados só são substituídos com `--replace-rulesets`.
 
-No estado remoto confirmado em 2026-09-29, `develop` é a branch padrão e `main` continua sendo produção. Ambas exigem PR e os checks `Quality gates` e `Allowed source branch`, bloqueiam bypass administrativo, force-push e exclusão. O PR #11 (`initial_config` -> `develop`) está aberto e com os dois checks aprovados, mas ainda não foi mesclado. Confirme o GitHub antes de assumir que esse estado não mudou. O script `scripts/setup-gitflow.sh` continua sendo um bootstrap para outros repositórios cujo default branch atual seja `main`; ele exige workflows em `main`, começa em dry run e se recusa a sobrescrever proteções sem `--replace-protection`.
+No estado remoto confirmado em 2026-09-29, `develop` é a branch padrão e `main` continua sendo produção. Ambas têm rulesets ativos exigindo PR e os checks `Quality gates` e `Allowed source branch`, sem bypass, force-push ou exclusão. `delete_branch_on_merge` está habilitado. O PR #11 (`initial_config` -> `develop`) foi mesclado com os dois checks aprovados. Confirme o GitHub antes de assumir que esse estado não mudou. O script reutilizável cria rulesets de repositório e mantém os existentes por padrão; use `--replace-rulesets` apenas após revisar o diff/configuração.
 
 ## Storybook: homologação e produção
 

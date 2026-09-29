@@ -35,8 +35,9 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
 - O fluxo GitFlow usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
 - `main` e `develop` estão protegidas contra push direto, force-push, exclusão e bypass administrativo; ambas exigem os checks `Quality gates` e `Allowed source branch`.
-- O PR #11 (`initial_config` -> `develop`) está aberto e seus checks passaram; ainda não foi mesclado. Confirme o estado remoto antes de continuar o bootstrap.
-- O template de GitFlow reutilizável fica em `templates/gitflow/README.md`; o bootstrap remoto tem dry run em `scripts/setup-gitflow.sh`.
+- O PR #11 (`initial_config` -> `develop`) foi mesclado e seus checks passaram; confirme o estado remoto antes de continuar o bootstrap.
+- O template de GitFlow reutilizável fica em `templates/gitflow/README.md`; o bootstrap remoto cria rulesets, tem dry run em `scripts/setup-gitflow.sh` e permite substituir os rulesets de nome esperado apenas com `--replace-rulesets`.
+- A exclusão automática de branches após merge está habilitada; rulesets de `main` e `develop` bloqueiam a exclusão dessas duas branches.
 - Agentes especializados não são necessários neste estágio; não criar agentes, workflows ou automações extras sem necessidade clara.
 
 ## Mapa do repositório
