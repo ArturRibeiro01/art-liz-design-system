@@ -108,9 +108,7 @@ npm run ci
 
 Os pacotes React e tokens são compilados antes do Storybook para que os workspaces consumam seus artefatos `dist`.
 
-`npm run ci` reúne os gates locais usados pelo workflow do GitHub: testes, lint, build integrado e builds do Storybook para homologação e produção. O check do job de CI chama-se `CI / Quality gates`.
-
-`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `CI / Quality gates`.
+`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
 
 ## GitFlow e template de branches
 
@@ -118,7 +116,7 @@ O contrato do fluxo e os arquivos reutilizáveis estão em `.github/workflows/` 
 
 - `main`: produção; aceita apenas PRs cuja origem seja `develop`.
 - `develop`: homologação e branch padrão; aceita PRs de qualquer branch.
-- Ambas: PR obrigatório, checks `CI / Quality gates` e `PR branch policy / Allowed source branch`, sem bypass administrativo, force-push ou exclusão.
+- Ambas: PR obrigatório, checks `Quality gates` e `Allowed source branch`, sem bypass administrativo, force-push ou exclusão.
 
 O workflow `PR branch policy` falha se um PR destinado a `main` vier de outra branch que não `develop`. O script `scripts/setup-gitflow.sh` pode criar `develop`, configurar as proteções e defini-la como branch padrão. Ele executa dry run por padrão e requer `--apply` mais confirmação literal.
 

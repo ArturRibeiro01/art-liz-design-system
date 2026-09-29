@@ -116,7 +116,7 @@ if [[ "$develop_action" != 'keep existing develop branch unchanged' ]]; then
     -f sha="$main_sha" >/dev/null
 fi
 
-protection_payload='{"required_status_checks":{"strict":true,"contexts":["CI / Quality gates","PR branch policy / Allowed source branch"]},"enforce_admins":true,"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":0},"restrictions":null,"allow_force_pushes":false,"allow_deletions":false}'
+protection_payload='{"required_status_checks":{"strict":true,"contexts":["Quality gates","Allowed source branch"]},"enforce_admins":true,"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":0},"restrictions":null,"allow_force_pushes":false,"allow_deletions":false}'
 
 for branch in main develop; do
   gh api --method PUT "repos/$repository/branches/$branch/protection" \

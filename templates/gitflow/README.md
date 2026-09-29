@@ -8,7 +8,7 @@ Este repositório mantém um fluxo reutilizável com `main` como produção e `d
 - `.github/workflows/pr-branch-policy.yml`
 - `scripts/setup-gitflow.sh`
 
-Copie os arquivos preservando os caminhos. O workflow de CI usa `npm ci` e `npm run ci`; em outro repositório, adapte apenas o comando de validação ao stack local e mantenha o mesmo nome do job `Quality gates` ou atualize os required check contexts do script.
+Copie os arquivos preservando os caminhos. O workflow de CI usa `npm ci` e `npm run ci`; em outro repositório, adapte apenas o comando de validação ao stack local e mantenha os nomes dos jobs `Quality gates` e `Allowed source branch`, ou atualize os required check contexts do script.
 
 ## Pré-requisitos
 
@@ -27,7 +27,7 @@ bash scripts/setup-gitflow.sh --repo OWNER/REPO
 
 O script exige que os dois workflows estejam em `main` antes de aplicar as regras, pois GitHub Actions usa a versão do workflow da branch base para validar pull requests. O dry run informa se isso ainda falta e lista proteções existentes.
 
-Confirme que os workflows estão instalados e que os checks `CI / Quality gates` e `PR branch policy / Allowed source branch` aparecem nos pull requests. Revise o plano e aplique explicitamente:
+Confirme que os workflows estão instalados e que os checks `Quality gates` e `Allowed source branch` aparecem nos pull requests. Revise o plano e aplique explicitamente:
 
 ```sh
 bash scripts/setup-gitflow.sh --repo OWNER/REPO --apply
