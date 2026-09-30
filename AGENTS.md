@@ -60,6 +60,7 @@ npm run storybook
 npm run dev --workspace @art-liz/playground
 npm test
 npm run lint
+npm run format:check
 npm run ci
 npm run build
 npm run build:storybook:homolog
@@ -75,6 +76,8 @@ npm run build:storybook:prod
 - Prefira tokens compartilhados a valores visuais duplicados. Os tokens atuais são iniciais, não uma especificação final.
 - Componentes do pacote React devem ser genéricos e úteis a mais de um produto. Regras específicas de um sistema pertencem ao UI Kit correspondente.
 - Alterações nos workflows e proteções do GitHub devem respeitar o fluxo GitFlow registrado e preservar os gates obrigatórios de CI.
+- ESLint é compartilhado na raiz, mas cada workspace mantém um script `lint` de escopo local; Prettier é o formatador e Husky/lint-staged executa correções rápidas de arquivos staged no pre-commit.
+- Não adicionar pre-push com a suíte completa: CI nos PRs e branches protegidas é a validação definitiva.
 - Separe implementação e estilos dos componentes React: `Component.tsx` contém API e comportamento; `Component.style.ts` contém os estilos Emotion e seus elementos estilizados.
 - Ao referenciar tipos do componente no arquivo de estilos, use `import type` para não criar uma dependência de runtime circular.
 - Para novos componentes, avalie export público, story, teste de comportamento e uso no playground.

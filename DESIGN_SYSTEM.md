@@ -98,17 +98,22 @@ Componentes compartilhados devem evitar decisões específicas de um único sist
 ```sh
 npm test
 npm run lint
+npm run format
+npm run format:check
 npm run build
 npm run ci
 ```
 
 - `npm test` compila tokens e executa os testes Vitest do pacote React.
-- `npm run lint` executa ESLint no playground. O escopo atual do script pode ser ampliado para os pacotes quando suas configurações de lint estiverem definidas.
+- `npm run lint` executa ESLint em cada workspace e valida sintaxe do script shell.
+- `npm run format` aplica Prettier; `npm run format:check` verifica o padrão sem modificar arquivos.
 - `npm run build` compila tokens, empacota o React e compila o playground.
 
 Os pacotes React e tokens são compilados antes do Storybook para que os workspaces consumam seus artefatos `dist`.
 
-`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
+`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
+
+O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. Husky/lint-staged executa ESLint autofix e Prettier somente nos arquivos staged durante o pre-commit. Não há pre-push: a validação completa é feita pelo CI obrigatório em PRs.
 
 ## GitFlow e template de branches
 
