@@ -2,12 +2,12 @@
 set -euo pipefail
 
 usage() {
-  printf 'Usage: bash scripts/setup-gitflow.sh --repo OWNER/REPO [--apply] [--replace-protection]\n'
+  printf 'Usage: bash scripts/setup-gitflow.sh --repo OWNER/REPO [--apply] [--replace-rulesets]\n'
 }
 
 repository=''
 apply_changes=false
-replace_protection=false
+replace_rulesets=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -19,8 +19,8 @@ while [[ $# -gt 0 ]]; do
       apply_changes=true
       shift
       ;;
-    --replace-protection)
-      replace_protection=true
+    --replace-rulesets)
+      replace_rulesets=true
       shift
       ;;
     -h|--help)
@@ -52,17 +52,17 @@ if [[ "$permission" != 'ADMIN' ]]; then
 fi
 
 default_branch="$(gh repo view "$repository" --json defaultBranchRef --jq '.defaultBranchRef.name')"
-if [[ "$default_branch" != 'main' ]]; then
-  printf 'Expected main as the current default branch; found %s. Review the migration before continuing.\n' "$default_branch" >&2
+if [[ "$default_branch" != 'main' && "$default_branch" != 'develop' ]]; then
+  printf 'Expected main or develop as the current default branch; found %s. Review the migration before continuing.\n' "$default_branch" >&2
   exit 1
 fi
 
 main_sha="$(gh api "repos/$repository/git/ref/heads/main" --jq '.object.sha')"
 workflows_ready=true
 for workflow in ci.yml pr-branch-policy.yml; do
-  if ! gh api "repos/$repository/contents/.github/workflows/$workflow" -f ref=main --jq '.path' >/dev/null 2>&1; then
+  if ! gh api --method GET "repos/$repository/contents/.github/workflows/$workflow?ref=$default_branch" --jq '.path' >/dev/null 2>&1; then
     workflows_ready=false
-    printf 'Missing on main: .github/workflows/%s\n' "$workflow"
+    printf 'Missing on default branch (%s): .github/workflows/%s\n' "$default_branch" "$workflow"
   fi
 done
 
@@ -72,35 +72,74 @@ else
   develop_action="create develop at main commit $main_sha"
 fi
 
-protected_branches=()
+ruleset_records="$(gh api "repos/$repository/rulesets?includes_parents=false" --jq '.[] | [.id, .name, .source_type, .enforcement, .target] | @tsv')"
+legacy_protected_branches=()
 for branch in main develop; do
   if gh api "repos/$repository/branches/$branch/protection" >/dev/null 2>&1; then
-    protected_branches+=("$branch")
+    legacy_protected_branches+=("$branch")
   fi
 done
 
+find_ruleset_id() {
+  local wanted_name="$1"
+  local branch_name="$2"
+  local branch_ref="refs/heads/$branch_name"
+  local found_id=''
+  local id name source_type enforcement target includes
+
+  while IFS=$'\t' read -r id name source_type enforcement target; do
+    [[ -z "$id" ]] && continue
+    includes="$(gh api "repos/$repository/rulesets/$id" --jq '.conditions.ref_name.include // [] | join("|")')"
+
+    if [[ "$name" == "$wanted_name" ]]; then
+      if [[ "$source_type" != 'Repository' || "$target" != 'branch' || "$includes" != "$branch_ref" ]]; then
+        printf 'Ruleset name collision: %s exists but does not target only %s in this repository.\n' "$wanted_name" "$branch_ref" >&2
+        return 1
+      fi
+      found_id="$id"
+    elif [[ "$target" == 'branch' ]]; then
+      case "|$includes|" in
+        *"|$branch_ref|"*)
+          printf 'Another ruleset (%s) already targets %s; review it before adding the GitFlow ruleset.\n' "$name" "$branch_ref" >&2
+          return 1
+          ;;
+      esac
+    fi
+  done <<< "$ruleset_records"
+
+  printf '%s' "$found_id"
+}
+
+if ! main_ruleset_id="$(find_ruleset_id 'main Rules' 'main')"; then
+  exit 1
+fi
+if ! develop_ruleset_id="$(find_ruleset_id 'Develop Rules' 'develop')"; then
+  exit 1
+fi
+
 printf 'Repository: %s\n' "$repository"
 printf 'Current default branch: %s\n' "$default_branch"
-printf 'Plan: %s; require pull requests and CI checks on main/develop; block admin bypass, force-pushes, and deletion; set develop as default last.\n' "$develop_action"
+printf 'Plan: %s; create/update repository rulesets for main/develop with required PRs and checks, no bypass, deletion/force-push blocks; enable delete-after-merge; set develop as default last.\n' "$develop_action"
 if [[ "$workflows_ready" != true ]]; then
-  printf 'The required workflows are not both present on main yet.\n'
+  printf 'The required workflows are not both present on the current default branch yet.\n'
 fi
-if [[ ${#protected_branches[@]} -gt 0 ]]; then
-  printf 'Existing protection found on: %s\n' "${protected_branches[*]}"
+if [[ -n "$main_ruleset_id" ]]; then
+  printf 'Existing ruleset found: main Rules (id %s); it will be left unchanged unless --replace-rulesets is passed.\n' "$main_ruleset_id"
+fi
+if [[ -n "$develop_ruleset_id" ]]; then
+  printf 'Existing ruleset found: Develop Rules (id %s); it will be left unchanged unless --replace-rulesets is passed.\n' "$develop_ruleset_id"
+fi
+if [[ ${#legacy_protected_branches[@]} -gt 0 ]]; then
+  printf 'Legacy branch protection also exists on: %s; rulesets will layer with it.\n' "${legacy_protected_branches[*]}"
 fi
 
 if [[ "$apply_changes" != true ]]; then
-  printf 'Dry run only. Merge and validate both workflows on main, review existing protections, then rerun with --apply.\n'
+  printf 'Dry run only. Confirm both workflows and required checks on the current default branch, then rerun with --apply.\n'
   exit 0
 fi
 
 if [[ "$workflows_ready" != true ]]; then
-  printf 'Refusing to apply: publish both required workflows to main first.\n' >&2
-  exit 1
-fi
-
-if [[ ${#protected_branches[@]} -gt 0 && "$replace_protection" != true ]]; then
-  printf 'Refusing to overwrite existing branch protection. Review it, then explicitly pass --replace-protection if replacement is intended.\n' >&2
+  printf 'Refusing to apply: publish both required workflows to the current default branch first.\n' >&2
   exit 1
 fi
 
@@ -116,12 +155,31 @@ if [[ "$develop_action" != 'keep existing develop branch unchanged' ]]; then
     -f sha="$main_sha" >/dev/null
 fi
 
-protection_payload='{"required_status_checks":{"strict":true,"contexts":["Quality gates","Allowed source branch"]},"enforce_admins":true,"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":0},"restrictions":null,"allow_force_pushes":false,"allow_deletions":false}'
+apply_ruleset() {
+  local branch_name="$1"
+  local ruleset_name="$2"
+  local existing_id="$3"
+  local branch_ref="refs/heads/$branch_name"
+  local ruleset_payload
 
-for branch in main develop; do
-  gh api --method PUT "repos/$repository/branches/$branch/protection" \
-    --input - <<<"$protection_payload" >/dev/null
-done
+  ruleset_payload="$(printf '{"name":"%s","target":"branch","enforcement":"active","conditions":{"ref_name":{"include":["%s"],"exclude":[]}},"rules":[{"type":"deletion"},{"type":"non_fast_forward"},{"type":"required_status_checks","parameters":{"strict_required_status_checks_policy":true,"do_not_enforce_on_create":true,"required_status_checks":[{"context":"Quality gates","integration_id":15368},{"context":"Allowed source branch","integration_id":15368}]}},{"type":"pull_request","parameters":{"required_approving_review_count":0,"dismiss_stale_reviews_on_push":true,"require_code_owner_review":false,"require_last_push_approval":false,"required_review_thread_resolution":false,"require_extra_approval_for_unattributed_changes":true,"allowed_merge_methods":["merge","squash","rebase"]}},{"type":"copilot_code_review","parameters":{"review_on_push":true,"review_draft_pull_requests":false}}],"bypass_actors":[]}' "$ruleset_name" "$branch_ref")"
 
+  if [[ -n "$existing_id" ]]; then
+    if [[ "$replace_rulesets" == true ]]; then
+      gh api --method PUT "repos/$repository/rulesets/$existing_id" --input - <<<"$ruleset_payload" >/dev/null
+      printf 'Updated ruleset: %s\n' "$ruleset_name"
+    else
+      printf 'Kept existing ruleset unchanged: %s\n' "$ruleset_name"
+    fi
+  else
+    gh api --method POST "repos/$repository/rulesets" --input - <<<"$ruleset_payload" >/dev/null
+    printf 'Created ruleset: %s\n' "$ruleset_name"
+  fi
+}
+
+apply_ruleset 'develop' 'Develop Rules' "$develop_ruleset_id"
+apply_ruleset 'main' 'main Rules' "$main_ruleset_id"
+
+gh api --method PATCH "repos/$repository" -F delete_branch_on_merge=true >/dev/null
 gh api --method PATCH "repos/$repository" -f default_branch=develop >/dev/null
-printf 'GitFlow settings applied. Verify the default branch, protection rules, and required checks in GitHub.\n'
+printf 'GitFlow rulesets applied. Verify rulesets, required checks, default branch, and automatic branch deletion in GitHub.\n'

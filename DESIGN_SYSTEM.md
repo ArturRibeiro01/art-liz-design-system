@@ -18,7 +18,8 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
-- **GitFlow planejado:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
+- **GitFlow:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
+- **Qualidade:** ESLint flat compartilhado com comando por workspace, Prettier, format-on-save no VS Code e Husky/lint-staged no pre-commit.
 
 Essas decisões descrevem a base atual. Novas dependências devem ser adicionadas quando houver uma necessidade concreta de produto ou desenvolvimento.
 
@@ -98,17 +99,26 @@ Componentes compartilhados devem evitar decisões específicas de um único sist
 ```sh
 npm test
 npm run lint
+npm run format
+npm run format:check
 npm run build
 npm run ci
 ```
 
 - `npm test` compila tokens e executa os testes Vitest do pacote React.
-- `npm run lint` executa ESLint no playground. O escopo atual do script pode ser ampliado para os pacotes quando suas configurações de lint estiverem definidas.
+- `npm run lint` executa ESLint em cada workspace e valida sintaxe do script shell.
+- `npm run format` aplica Prettier; `npm run format:check` verifica o padrão sem modificar arquivos.
 - `npm run build` compila tokens, empacota o React e compila o playground.
 
 Os pacotes React e tokens são compilados antes do Storybook para que os workspaces consumam seus artefatos `dist`.
 
-`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
+`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
+
+O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. Husky/lint-staged executa ESLint autofix e Prettier somente nos arquivos staged durante o pre-commit. Não há pre-push: a validação completa é feita pelo CI obrigatório em PRs.
+
+## Trabalho com Codex
+
+O Codex deve começar por `AGENTS.md`, que registra instruções persistentes do repositório e aponta para esta documentação. O código e os manifests atuais prevalecem sobre o histórico de conversas. Para uma tarefa vinculada a issue, confira critérios de aceite, trabalhe em branch baseada em `develop`, preserve alterações locais e execute os checks relevantes antes de propor PR. Não publique, faça deploy, altere rulesets remotos, nem crie commit/merge sem autorização explícita.
 
 ## GitFlow e template de branches
 
@@ -118,9 +128,9 @@ O contrato do fluxo e os arquivos reutilizáveis estão em `.github/workflows/` 
 - `develop`: homologação e branch padrão; aceita PRs de qualquer branch.
 - Ambas: PR obrigatório, checks `Quality gates` e `Allowed source branch`, sem bypass administrativo, force-push ou exclusão.
 
-O workflow `PR branch policy` falha se um PR destinado a `main` vier de outra branch que não `develop`. O script `scripts/setup-gitflow.sh` pode criar `develop`, configurar as proteções e defini-la como branch padrão. Ele executa dry run por padrão e requer `--apply` mais confirmação literal.
+O workflow `PR branch policy` falha se um PR destinado a `main` vier de outra branch que não `develop`. O script `scripts/setup-gitflow.sh` cria rulesets via API REST, pode criar `develop`, ativa exclusão automática de branches mescladas e define `develop` como default por último. Ele executa dry run por padrão e requer `--apply` mais confirmação literal. Rulesets existentes com os nomes esperados só são substituídos com `--replace-rulesets`.
 
-Na configuração atual deste repositório, `main` ainda é a branch padrão, não há branch `develop` e a verificação mais recente não encontrou proteções. O script interrompe a aplicação se os workflows não estiverem em `main` e não substitui proteções existentes sem `--replace-protection`. Não aplique regras remotas até que os workflows estejam na branch padrão e os checks tenham sido observados funcionando. O guia em `templates/gitflow/README.md` descreve o bootstrap inicial e a adoção em outros repositórios.
+No estado remoto confirmado em 2026-09-29, `develop` é a branch padrão e `main` continua sendo produção. Ambas têm rulesets ativos exigindo PR e os checks `Quality gates` e `Allowed source branch`, sem bypass, force-push ou exclusão. `delete_branch_on_merge` está habilitado. O PR #11 (`initial_config` -> `develop`) foi mesclado com os dois checks aprovados. Confirme o GitHub antes de assumir que esse estado não mudou. O script reutilizável cria rulesets de repositório e mantém os existentes por padrão; use `--replace-rulesets` apenas após revisar o diff/configuração.
 
 ## Storybook: homologação e produção
 
@@ -197,14 +207,13 @@ Antes de criar um UI Kit, confirme que existe um conjunto real de componentes ou
 
 ## Agentes e automação
 
-Agentes especializados não são necessários para a fase atual. As responsabilidades estão organizadas por pacote e documentadas aqui; automações de CI, deploy do Storybook e publicação automatizada podem ser adicionadas depois que o repositório tiver Git remoto, fluxo de branches e ambientes definidos.
+Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI e rulesets GitFlow já estão configurados; deploy do Storybook e publicação npm automatizada ainda dependem de decisões sobre ambientes, hosting e credenciais.
 
 ## Itens ainda em aberto
 
 - Definir escalas completas de tipografia, cores, espaçamento e elevação.
 - Definir temas e estratégia para modo claro/escuro, se os produtos precisarem.
 - Estabelecer critérios de acessibilidade e compatibilidade de navegadores para os componentes.
-- Ampliar lint, cobertura de testes e validação dos artefatos npm.
-- Inicializar/versionar o repositório Git e escolher branch principal e fluxo de release.
+- Ampliar cobertura de testes e validação dos artefatos npm.
 - Escolher hospedagem e configurar deploy separado do Storybook de homologação e produção.
 - Confirmar disponibilidade e controle do escopo `@art-liz` no npm antes da primeira publicação.

@@ -22,6 +22,8 @@ npm run dev --workspace @art-liz/playground
 ```sh
 npm test
 npm run lint
+npm run format
+npm run format:check
 npm run ci
 npm run build
 npm run build:storybook:homolog
@@ -30,9 +32,13 @@ npm run build:storybook:prod
 
 Os builds do Storybook ficam em `storybook-static/homolog` e `storybook-static/prod`, prontos para publicação em destinos de homologação e produção separados.
 
+## Qualidade de código
+
+Cada workspace tem um script `lint` local; `npm run lint` executa todos. `npm run format` aplica o padrão Prettier e `npm run format:check` verifica sem modificar arquivos. O workspace VS Code habilita format-on-save e recomenda as extensões Prettier e ESLint. O hook Husky/lint-staged executa autofix apenas nos arquivos staged antes do commit; os gates completos continuam no CI.
+
 ## GitFlow
 
-O fluxo planejado usa `develop` como homologação/default e `main` como produção. Consulte [templates/gitflow/README.md](templates/gitflow/README.md) para copiar os workflows, fazer o bootstrap inicial e configurar as proteções. O script de configuração inicia em dry run e exige confirmação explícita para alterar configurações remotas.
+O fluxo usa `develop` como homologação/default e `main` como produção. Consulte [templates/gitflow/README.md](templates/gitflow/README.md) para copiar os workflows e fazer o bootstrap dos rulesets. Branches de origem são apagadas após merge, enquanto `main` e `develop` permanecem protegidas.
 
 ## Publicação npm
 
