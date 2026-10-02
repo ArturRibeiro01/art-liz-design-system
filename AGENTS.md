@@ -1,6 +1,6 @@
 # Contexto para IAs e agentes
 
-Este arquivo é o ponto de entrada para assistentes de programação que trabalhem neste repositório. Leia-o antes de alterar arquivos. Use [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) como documentação técnica completa e confirme sempre os manifests e o código atuais antes de agir: arquivos e dependências podem ter mudado desde a última conversa.
+Este arquivo é o ponto de entrada para assistentes de programação que trabalhem neste repositório, incluindo OpenAI Codex. Codex lê `AGENTS.md` para receber instruções do projeto; não é necessário manter um segundo arquivo `CODEX.md`. Leia este arquivo e [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) antes de alterar arquivos, e confirme sempre manifests e código atuais: arquivos e dependências podem ter mudado desde a última conversa.
 
 ## Identidade e objetivo
 
@@ -32,6 +32,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Pacotes publicáveis planejados: `@art-liz/tokens` e `@art-liz/react`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
 - O Storybook tem builds estáticos separados para homologação e produção.
+- ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged no pre-commit.
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
 - O fluxo GitFlow usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
 - `main` e `develop` estão protegidas contra push direto, force-push, exclusão e bypass administrativo; ambas exigem os checks `Quality gates` e `Allowed source branch`.
@@ -60,6 +61,8 @@ npm run storybook
 npm run dev --workspace @art-liz/playground
 npm test
 npm run lint
+npm run format
+npm run format:check
 npm run ci
 npm run build
 npm run build:storybook:homolog
@@ -75,6 +78,10 @@ npm run build:storybook:prod
 - Prefira tokens compartilhados a valores visuais duplicados. Os tokens atuais são iniciais, não uma especificação final.
 - Componentes do pacote React devem ser genéricos e úteis a mais de um produto. Regras específicas de um sistema pertencem ao UI Kit correspondente.
 - Alterações nos workflows e proteções do GitHub devem respeitar o fluxo GitFlow registrado e preservar os gates obrigatórios de CI.
+- ESLint é compartilhado na raiz, mas cada workspace mantém um script `lint` de escopo local; Prettier é o formatador e Husky/lint-staged executa correções rápidas de arquivos staged no pre-commit.
+- Não adicionar pre-push com a suíte completa: CI nos PRs e branches protegidas é a validação definitiva.
+- Para formatar manualmente, use `npm run format`; para verificar sem modificar, use `npm run format:check`.
+- Ao trabalhar como Codex, consulte os critérios da issue ativa, implemente na branch de trabalho baseada em `develop`, rode a verificação específica e o gate apropriado, e não faça commit/push/merge sem pedido explícito.
 - Separe implementação e estilos dos componentes React: `Component.tsx` contém API e comportamento; `Component.style.ts` contém os estilos Emotion e seus elementos estilizados.
 - Ao referenciar tipos do componente no arquivo de estilos, use `import type` para não criar uma dependência de runtime circular.
 - Para novos componentes, avalie export público, story, teste de comportamento e uso no playground.
@@ -94,7 +101,7 @@ npm run dev --workspace @art-liz/playground -- --force
 
 Não trate o reinício como correção de código se um build limpo também falhar: nesse caso investigue package names, workspaces, `exports`, artefatos e lockfile.
 
-## Estado confirmado na documentação inicial
+## Baseline e validações históricas
 
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
 - O pacote React contém o componente `Button`, com variantes `primary` e `secondary`.
@@ -106,6 +113,6 @@ Não trate o reinício como correção de código se um build limpo também falh
 
 ## Pendências conhecidas
 
-Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências registradas estão escala visual completa, critérios de acessibilidade, expansão do lint/testes, Git remoto e branch principal, hospedagem/deploy do Storybook e confirmação de acesso ao escopo npm `@art-liz`.
+Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa, critérios de acessibilidade/cobertura, hospedagem/deploy do Storybook e confirmação de acesso ao escopo npm `@art-liz`.
 
 Ao concluir um trabalho que altere essas decisões ou pendências, atualize este resumo e `DESIGN_SYSTEM.md` para que a próxima sessão possa continuar sem depender desta conversa.
