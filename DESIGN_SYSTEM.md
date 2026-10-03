@@ -40,9 +40,40 @@ O glob `packages/*` permite adicionar UI Kits no futuro. Por exemplo, um kit esp
 
 ### `@art-liz/tokens`
 
-Contém valores reutilizáveis e independentes de framework, como cores, espaçamentos e raios de borda. Os tokens atuais são um ponto inicial, não uma especificação visual definitiva.
+Contém valores reutilizáveis e independentes de framework, como cores, espaçamentos, raios de borda, tipografia, sombras, foco, movimento, breakpoints e camadas de z-index. Os tokens atuais são um ponto inicial, não uma especificação visual definitiva.
 
-Fonte: `packages/tokens/src/index.ts`.
+Os tokens ficam organizados por família em `packages/tokens/src/`, por exemplo `colors.ts`, `spacing.ts`, `radii.ts`, `typography.ts`, `shadows.ts`, `focus.ts`, `motion.ts`, `breakpoints.ts` e `zIndices.ts`. O arquivo `index.ts` é o ponto público do pacote e agrega as famílias exportadas, preservando também o objeto `tokens`.
+
+A família `colors` usa escalas de `50` a `900` para `neutral`, `primary`, `auxiliary`, `danger`, `warning`, `success` e `info`. Os tons `50` a `700` seguem a referência visual inicial; `800` e `900` completam cada escala com tons mais escuros equivalentes.
+
+A tipografia define uma fonte padrão para componentes em `typography.fontFamilies.component`, mas permite troca pelo produto consumidor com a variável CSS `--art-liz-font-family`. Por exemplo, um projeto pode definir `:root { --art-liz-font-family: "Roboto", sans-serif; }` para aplicar outra fonte aos componentes sem alterar a biblioteca.
+
+As cores também são exportadas como valores CSS sobrescrevíveis. `colors.primary[50]`, por exemplo, resolve para `var(--art-liz-color-primary-50, #f9ffff)`. Um consumidor pode trocar um token isolado:
+
+```css
+:root {
+  --art-liz-color-primary-50: #faf5ff;
+}
+```
+
+Ou pode trocar uma família inteira definindo todos os tons do grupo:
+
+```css
+:root {
+  --art-liz-color-primary-50: #faf5ff;
+  --art-liz-color-primary-100: #f3e8ff;
+  --art-liz-color-primary-200: #e9d5ff;
+  --art-liz-color-primary-300: #d8b4fe;
+  --art-liz-color-primary-400: #c084fc;
+  --art-liz-color-primary-500: #a855f7;
+  --art-liz-color-primary-600: #9333ea;
+  --art-liz-color-primary-700: #7e22ce;
+  --art-liz-color-primary-800: #6b21a8;
+  --art-liz-color-primary-900: #581c87;
+}
+```
+
+Para documentação visual, o Storybook inclui páginas em `Tokens/*` para cores, tipografia, espaçamento, raios, sombras, foco, movimento, breakpoints e z-index. As páginas mostram valores, exemplos e playgrounds de sobrescrita quando aplicável.
 
 ### `@art-liz/react`
 

@@ -32,6 +32,8 @@ npm run build:storybook:prod
 
 Os builds do Storybook ficam em `storybook-static/homolog` e `storybook-static/prod`, prontos para publicação em destinos de homologação e produção separados.
 
+O Storybook também documenta os tokens em páginas `Tokens/*`, incluindo exemplos de como trocar fonte e cores via CSS custom properties no projeto consumidor.
+
 ## Qualidade de código
 
 Cada workspace tem um script `lint` local; `npm run lint` executa todos. `npm run format` aplica o padrão Prettier e `npm run format:check` verifica sem modificar arquivos. O workspace VS Code habilita format-on-save e recomenda as extensões Prettier e ESLint. O hook Husky/lint-staged executa autofix apenas nos arquivos staged antes do commit; os gates completos continuam no CI.
