@@ -240,9 +240,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Catalog: Story = {
-  args: {
-    colorToken: 'White',
-  },
+    colorToken: 'Primary / 600',
 
   render: ({ colorMode, colorToken, customColor, iconName, size, weight }) => {
     const icon = iconGroups.flatMap(({ icons }) => icons).find(({ name }) => name === iconName)
