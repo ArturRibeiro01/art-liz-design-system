@@ -79,7 +79,7 @@ Para documentação visual, o Storybook inclui páginas em `Tokens/*` para cores
 
 Contém componentes acessíveis e reutilizáveis para React. O pacote importa tokens e mantém React e Emotion como `peerDependencies`, evitando incorporá-los como cópias privadas da biblioteca no projeto consumidor.
 
-O componente inicial é `Button`, com variantes `primary` e `secondary`, suporte aos atributos nativos de botão e estado desabilitado. Cada componente separa sua implementação (`Component.tsx`) de seus estilos Emotion (`Component.style.ts`); estilos podem consumir os tipos do componente via `import type`.
+O componente inicial é `Button`, com aparências `primary`, `outline`, `ghost` e `link`; intents semânticos `primary`, `danger`, `success`, `info` e `warning`; tamanhos `small`, `medium` e `large`; slots opcionais `startIcon`/`endIcon`; suporte aos atributos nativos; e estados hover, pressed, focus-visible e disabled para todas as combinações. Ícones com rótulo textual são tratados como decorativos e ocultos da árvore acessível. Cada componente separa implementação (`Component.tsx`) e estilos Emotion (`Component.style.ts`); estilos podem importar tipos do componente usando `import type`.
 
 Fontes: `packages/react/src/` e `packages/react/package.json`.
 

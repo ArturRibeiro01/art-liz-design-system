@@ -13,7 +13,7 @@ function App() {
         <h2 id="button-title">Button</h2>
         <div className="button-row">
           <Button>Primary action</Button>
-          <Button variant="secondary">Secondary action</Button>
+          <Button variant="outline">Outline action</Button>
           <Button disabled>Disabled</Button>
         </div>
       </section>

@@ -104,7 +104,7 @@ Não trate o reinício como correção de código se um build limpo também falh
 ## Baseline e validações históricas
 
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
-- O pacote React contém o componente `Button`, com variantes `primary` e `secondary`.
+- O pacote React contém o componente `Button`, com aparências `primary`, `outline`, `ghost` e `link`, e intents semânticos `primary`, `danger`, `success`, `info` e `warning`.
 - O Storybook tem stories de Button e scripts de build estático para homologação e produção.
 - Os testes, lint, build integrado e builds estáticos do Storybook passaram na validação inicial.
 - A resolução de `@art-liz/react` no playground exigiu reiniciar o servidor Vite depois da instalação dos workspaces; o comando com `--force` passou a transformar o import para o artefato local.
