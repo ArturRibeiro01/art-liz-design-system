@@ -1,3 +1,4 @@
+import { typography } from '@art-liz/tokens'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import type { ButtonIntent, ButtonVariant } from './Button'
@@ -63,6 +64,25 @@ describe('Button', () => {
 
     expect(screen.getByRole('button', { name: 'Adicionar' }).textContent).toBe('+Adicionar')
     expect(screen.getByRole('button', { name: 'Prosseguir' }).textContent).toBe('Prosseguir+')
+  })
+
+  it('renders start and end icons at the xl typography size', () => {
+    render(
+      <>
+        <Button startIcon={<svg data-testid="start-icon" />}>Adicionar</Button>
+        <Button endIcon={<svg data-testid="end-icon" />}>Prosseguir</Button>
+      </>,
+    )
+
+    const iconSlots = [
+      screen.getByTestId('start-icon').parentElement,
+      screen.getByTestId('end-icon').parentElement,
+    ].filter((slot): slot is HTMLElement => slot !== null)
+
+    expect(iconSlots).toHaveLength(2)
+    for (const iconSlot of iconSlots) {
+      expect(window.getComputedStyle(iconSlot).fontSize).toBe(typography.fontSizes.xl)
+    }
   })
 
   it('supports the three visual sizes without forwarding its size prop to the DOM', () => {

@@ -1,9 +1,31 @@
+import { ArrowRightIcon } from '@phosphor-icons/react/dist/csr/ArrowRight'
+import { CheckIcon } from '@phosphor-icons/react/dist/csr/Check'
+import { PlusIcon } from '@phosphor-icons/react/dist/csr/Plus'
+import { TrashIcon } from '@phosphor-icons/react/dist/csr/Trash'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ButtonIntent, ButtonVariant } from './Button'
+import type { ButtonIntent, ButtonProps, ButtonVariant } from './Button'
 import { Button } from './Button'
 
 const intents: ButtonIntent[] = ['primary', 'danger', 'success', 'info', 'warning']
 const variants: ButtonVariant[] = ['primary', 'outline', 'ghost', 'link']
+const iconComponents = {
+  None: null,
+  ArrowRight: ArrowRightIcon,
+  Check: CheckIcon,
+  Plus: PlusIcon,
+  Trash: TrashIcon,
+} as const
+
+type ButtonIconName = keyof typeof iconComponents
+type ButtonStoryArgs = Omit<ButtonProps, 'startIcon' | 'endIcon'> & {
+  startIcon?: ButtonIconName
+  endIcon?: ButtonIconName
+}
+
+const renderIcon = (iconName?: ButtonIconName) => {
+  const Icon = iconName ? iconComponents[iconName] : null
+  return Icon ? <Icon size="1em" weight="regular" /> : undefined
+}
 
 const meta = {
   title: 'Actions/Button',
@@ -13,10 +35,14 @@ const meta = {
     variant: { control: 'inline-radio', options: variants },
     size: { control: 'inline-radio', options: ['small', 'medium', 'large'] },
     disabled: { control: 'boolean' },
-    startIcon: { control: false },
-    endIcon: { control: false },
+    startIcon: { control: 'select', options: Object.keys(iconComponents) },
+    endIcon: { control: 'select', options: Object.keys(iconComponents) },
   },
-} satisfies Meta<typeof Button>
+  args: { startIcon: 'None', endIcon: 'None' },
+  render: ({ startIcon, endIcon, ...args }) => (
+    <Button {...args} startIcon={renderIcon(startIcon)} endIcon={renderIcon(endIcon)} />
+  ),
+} satisfies Meta<ButtonStoryArgs>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -125,13 +151,11 @@ export const SizeScale: Story = {
 }
 
 export const StartIcon: Story = {
-  args: { children: 'Text' },
-  render: (args) => <Button {...args} startIcon={<span>+</span>} />,
+  args: { children: 'Text', startIcon: 'Plus' },
 }
 
 export const EndIcon: Story = {
-  args: { children: 'Text' },
-  render: (args) => <Button {...args} endIcon={<span>+</span>} />,
+  args: { children: 'Text', endIcon: 'Plus' },
 }
 
 export const Disabled: Story = {

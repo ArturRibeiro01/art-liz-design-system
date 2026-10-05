@@ -204,6 +204,7 @@ export const StyledButton = styled('button', {
     align-items: center;
     display: inline-flex;
     flex: 0 0 auto;
+    font-size: ${typography.fontSizes.xl};
     justify-content: center;
     line-height: 1;
   }
