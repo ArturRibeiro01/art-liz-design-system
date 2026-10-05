@@ -200,7 +200,7 @@ export const StyledButton = styled('button', {
     outline-offset: ${focus.ringOffset};
   }
 
-  & > span {
+  & > span[aria-hidden='true'] {
     align-items: center;
     display: inline-flex;
     flex: 0 0 auto;
