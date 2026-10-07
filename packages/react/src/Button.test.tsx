@@ -66,23 +66,41 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Prosseguir' }).textContent).toBe('Prosseguir+')
   })
 
-  it('renders start and end icons at the xl typography size', () => {
+  it('scales icon slots with the Button size', () => {
     render(
       <>
-        <Button startIcon={<svg data-testid="start-icon" />}>Adicionar</Button>
-        <Button endIcon={<svg data-testid="end-icon" />}>Prosseguir</Button>
+        <Button size="small" startIcon={<svg data-testid="small-icon" />}>
+          Small icon
+        </Button>
+        <Button endIcon={<svg data-testid="medium-icon" />}>Medium icon</Button>
+        <Button size="large" startIcon={<svg data-testid="large-icon" />}>
+          Large icon
+        </Button>
       </>,
     )
 
     const iconSlots = [
-      screen.getByTestId('start-icon').parentElement,
-      screen.getByTestId('end-icon').parentElement,
+      screen.getByTestId('small-icon').parentElement,
+      screen.getByTestId('medium-icon').parentElement,
+      screen.getByTestId('large-icon').parentElement,
     ].filter((slot): slot is HTMLElement => slot !== null)
 
-    expect(iconSlots).toHaveLength(2)
-    for (const iconSlot of iconSlots) {
-      expect(window.getComputedStyle(iconSlot).fontSize).toBe(typography.fontSizes.xl)
-    }
+    expect(iconSlots).toHaveLength(3)
+    expect(window.getComputedStyle(iconSlots[0]).fontSize).toBe(typography.fontSizes.md)
+    expect(window.getComputedStyle(iconSlots[1]).fontSize).toBe(typography.fontSizes.xl)
+    expect(window.getComputedStyle(iconSlots[2]).fontSize).toBe(typography.fontSizes['2xl'])
+  })
+
+  it('requires an accessible name for icon-only buttons', () => {
+    expect(() => render(<Button startIcon="+" />)).toThrow(
+      'Button requires children or an accessible name when rendered with icons only.',
+    )
+  })
+
+  it('supports icon-only buttons with an accessible name', () => {
+    render(<Button aria-label="Excluir" startIcon="+" />)
+
+    expect(screen.getByRole('button', { name: 'Excluir' })).toBeTruthy()
   })
 
   it('supports the three visual sizes without forwarding its size prop to the DOM', () => {

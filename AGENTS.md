@@ -28,7 +28,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Vite para desenvolvimento e build.
 - Vitest, Testing Library e jsdom para testes.
 - Storybook com Vite para catálogo e documentação visual.
-- Phosphor Icons (`@phosphor-icons/react`) para o catálogo e exemplos de ícones no Storybook; o pacote React mantém slots genéricos `ReactNode` e não depende da biblioteca em runtime.
+- Phosphor Icons (`@phosphor-icons/react`) para o catálogo e exemplos de ícones no Storybook; `packages/react` pode usá-la como dependência de desenvolvimento para suas stories, mas mantém slots genéricos `ReactNode` e não depende da biblioteca em runtime.
 - Changesets para controle de versões.
 - Pacotes publicáveis planejados: `@art-liz/tokens` e `@art-liz/react`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.

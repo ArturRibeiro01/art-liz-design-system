@@ -16,142 +16,503 @@ type ButtonVariantStyles = {
   disabled: ButtonVisualState
 }
 
-type IntentPalette = typeof colors.primary
-
-const intentPalettes: Record<ButtonIntent, IntentPalette> = {
-  primary: colors.primary,
-  danger: colors.danger,
-  success: colors.success,
-  info: colors.info,
-  warning: colors.warning,
-}
-
-const createVariantStyles = (
-  palette: IntentPalette,
-): Record<ButtonVariant, ButtonVariantStyles> => ({
-  primary: {
-    base: {
-      background: palette[600],
-      borderColor: palette[600],
-      color: colors.white,
-    },
-    hover: {
-      background: palette[400],
-      borderColor: palette[400],
-      color: colors.white,
-    },
-    active: {
-      background: palette[700],
-      borderColor: palette[700],
-      color: colors.white,
-    },
-    disabled: {
-      background: palette[300],
-      borderColor: palette[300],
-      color: colors.white,
-    },
-  },
-  outline: {
-    base: {
-      background: 'transparent',
-      borderColor: palette[300],
-      color: palette[600],
-    },
-    hover: {
-      background: palette[50],
-      borderColor: palette[400],
-      color: palette[700],
-    },
-    active: {
-      background: palette[100],
-      borderColor: palette[700],
-      color: palette[800],
-    },
-    disabled: {
-      background: 'transparent',
-      borderColor: colors.neutral[300],
-      color: colors.neutral[400],
-    },
-  },
-  ghost: {
-    base: {
-      background: 'transparent',
-      borderColor: 'transparent',
-      color: palette[600],
-    },
-    hover: {
-      background: palette[50],
-      borderColor: 'transparent',
-      color: palette[700],
-    },
-    active: {
-      background: palette[100],
-      borderColor: 'transparent',
-      color: palette[800],
-    },
-    disabled: {
-      background: 'transparent',
-      borderColor: 'transparent',
-      color: colors.neutral[400],
-    },
-  },
-  link: {
-    base: {
-      background: 'transparent',
-      borderColor: 'transparent',
-      color: palette[600],
-      textDecoration: 'none',
-    },
-    hover: {
-      background: 'transparent',
-      borderColor: 'transparent',
-      color: palette[700],
-      textDecoration: 'underline',
-    },
-    active: {
-      background: 'transparent',
-      borderColor: 'transparent',
-      color: palette[800],
-      textDecoration: 'underline',
-    },
-    disabled: {
-      background: 'transparent',
-      borderColor: 'transparent',
-      color: palette[300],
-      textDecoration: 'none',
-    },
-  },
-})
-
 const intentVariantStyles: Record<ButtonIntent, Record<ButtonVariant, ButtonVariantStyles>> = {
-  primary: createVariantStyles(intentPalettes.primary),
-  danger: createVariantStyles(intentPalettes.danger),
-  success: createVariantStyles(intentPalettes.success),
-  info: createVariantStyles(intentPalettes.info),
-  warning: createVariantStyles(intentPalettes.warning),
+  primary: {
+    primary: {
+      base: {
+        background: colors.primary[600],
+        borderColor: colors.primary[600],
+        color: colors.white,
+      },
+      hover: {
+        background: colors.primary[400],
+        borderColor: colors.primary[400],
+        color: colors.white,
+      },
+      active: {
+        background: colors.primary[700],
+        borderColor: colors.primary[700],
+        color: colors.white,
+      },
+      disabled: {
+        background: colors.primary[300],
+        borderColor: colors.primary[300],
+        color: colors.white,
+      },
+    },
+    outline: {
+      base: {
+        background: colors.white,
+        borderColor: colors.neutral[300],
+        color: colors.neutral[600],
+      },
+      hover: {
+        background: colors.white,
+        borderColor: colors.primary[500],
+        color: colors.primary[500],
+      },
+      active: {
+        background: colors.white,
+        borderColor: colors.primary[700],
+        color: colors.primary[700],
+      },
+      disabled: {
+        background: colors.white,
+        borderColor: colors.neutral[300],
+        color: colors.neutral[400],
+      },
+    },
+    ghost: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.neutral[600],
+      },
+      hover: {
+        background: colors.neutral[50],
+        borderColor: 'transparent',
+        color: colors.neutral[600],
+      },
+      active: {
+        background: colors.neutral[200],
+        borderColor: 'transparent',
+        color: colors.neutral[600],
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.neutral[400],
+      },
+    },
+    link: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.primary[600],
+        textDecoration: 'none',
+      },
+      hover: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.primary[600],
+        textDecoration: 'underline',
+      },
+      active: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.primary[700],
+        textDecoration: 'underline',
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.primary[300],
+        textDecoration: 'none',
+      },
+    },
+  },
+  danger: {
+    primary: {
+      base: {
+        background: colors.danger[600],
+        borderColor: colors.danger[600],
+        color: colors.white,
+      },
+      hover: {
+        background: colors.danger[400],
+        borderColor: colors.danger[400],
+        color: colors.white,
+      },
+      active: {
+        background: colors.danger[700],
+        borderColor: colors.danger[700],
+        color: colors.white,
+      },
+      disabled: {
+        background: colors.danger[300],
+        borderColor: colors.danger[300],
+        color: colors.white,
+      },
+    },
+    outline: {
+      base: {
+        background: colors.white,
+        borderColor: colors.danger[600],
+        color: colors.danger[600],
+      },
+      hover: {
+        background: colors.white,
+        borderColor: colors.danger[400],
+        color: colors.danger[400],
+      },
+      active: {
+        background: colors.white,
+        borderColor: colors.danger[700],
+        color: colors.danger[700],
+      },
+      disabled: {
+        background: colors.white,
+        borderColor: colors.danger[300],
+        color: colors.danger[400],
+      },
+    },
+    ghost: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.danger[600],
+      },
+      hover: {
+        background: colors.danger[100],
+        borderColor: 'transparent',
+        color: colors.danger[600],
+      },
+      active: {
+        background: colors.danger[300],
+        borderColor: 'transparent',
+        color: colors.danger[600],
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.danger[400],
+      },
+    },
+    link: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.danger[600],
+        textDecoration: 'none',
+      },
+      hover: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.danger[400],
+        textDecoration: 'underline',
+      },
+      active: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.danger[700],
+        textDecoration: 'underline',
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.danger[300],
+        textDecoration: 'none',
+      },
+    },
+  },
+  success: {
+    primary: {
+      base: {
+        background: colors.success[600],
+        borderColor: colors.success[600],
+        color: colors.white,
+      },
+      hover: {
+        background: colors.success[400],
+        borderColor: colors.success[400],
+        color: colors.white,
+      },
+      active: {
+        background: colors.success[700],
+        borderColor: colors.success[700],
+        color: colors.white,
+      },
+      disabled: {
+        background: colors.success[300],
+        borderColor: colors.success[300],
+        color: colors.white,
+      },
+    },
+    outline: {
+      base: {
+        background: colors.white,
+        borderColor: colors.success[600],
+        color: colors.success[600],
+      },
+      hover: {
+        background: colors.white,
+        borderColor: colors.success[400],
+        color: colors.success[400],
+      },
+      active: {
+        background: colors.white,
+        borderColor: colors.success[700],
+        color: colors.success[700],
+      },
+      disabled: {
+        background: colors.white,
+        borderColor: colors.success[300],
+        color: colors.success[400],
+      },
+    },
+    ghost: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.success[600],
+      },
+      hover: {
+        background: colors.success[100],
+        borderColor: 'transparent',
+        color: colors.success[600],
+      },
+      active: {
+        background: colors.success[300],
+        borderColor: 'transparent',
+        color: colors.success[600],
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.success[400],
+      },
+    },
+    link: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.success[600],
+        textDecoration: 'none',
+      },
+      hover: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.success[400],
+        textDecoration: 'underline',
+      },
+      active: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.success[700],
+        textDecoration: 'underline',
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.success[300],
+        textDecoration: 'none',
+      },
+    },
+  },
+  info: {
+    primary: {
+      base: {
+        background: colors.info[600],
+        borderColor: colors.info[600],
+        color: colors.white,
+      },
+      hover: {
+        background: colors.info[400],
+        borderColor: colors.info[400],
+        color: colors.white,
+      },
+      active: {
+        background: colors.info[700],
+        borderColor: colors.info[700],
+        color: colors.white,
+      },
+      disabled: {
+        background: colors.info[300],
+        borderColor: colors.info[300],
+        color: colors.white,
+      },
+    },
+    outline: {
+      base: {
+        background: colors.white,
+        borderColor: colors.info[600],
+        color: colors.info[600],
+      },
+      hover: {
+        background: colors.white,
+        borderColor: colors.info[400],
+        color: colors.info[400],
+      },
+      active: {
+        background: colors.white,
+        borderColor: colors.info[700],
+        color: colors.info[700],
+      },
+      disabled: {
+        background: colors.white,
+        borderColor: colors.info[300],
+        color: colors.info[400],
+      },
+    },
+    ghost: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.info[600],
+      },
+      hover: {
+        background: colors.info[100],
+        borderColor: 'transparent',
+        color: colors.info[600],
+      },
+      active: {
+        background: colors.info[300],
+        borderColor: 'transparent',
+        color: colors.info[600],
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.info[400],
+      },
+    },
+    link: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.info[600],
+        textDecoration: 'none',
+      },
+      hover: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.info[400],
+        textDecoration: 'underline',
+      },
+      active: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.info[700],
+        textDecoration: 'underline',
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.info[300],
+        textDecoration: 'none',
+      },
+    },
+  },
+  warning: {
+    primary: {
+      base: {
+        background: colors.warning[600],
+        borderColor: colors.warning[600],
+        color: colors.white,
+      },
+      hover: {
+        background: colors.warning[400],
+        borderColor: colors.warning[400],
+        color: colors.white,
+      },
+      active: {
+        background: colors.warning[700],
+        borderColor: colors.warning[700],
+        color: colors.white,
+      },
+      disabled: {
+        background: colors.warning[300],
+        borderColor: colors.warning[300],
+        color: colors.white,
+      },
+    },
+    outline: {
+      base: {
+        background: colors.white,
+        borderColor: colors.warning[600],
+        color: colors.warning[600],
+      },
+      hover: {
+        background: colors.white,
+        borderColor: colors.warning[400],
+        color: colors.warning[400],
+      },
+      active: {
+        background: colors.white,
+        borderColor: colors.warning[700],
+        color: colors.warning[700],
+      },
+      disabled: {
+        background: colors.white,
+        borderColor: colors.warning[300],
+        color: colors.warning[400],
+      },
+    },
+    ghost: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.warning[600],
+      },
+      hover: {
+        background: colors.warning[100],
+        borderColor: 'transparent',
+        color: colors.warning[600],
+      },
+      active: {
+        background: colors.warning[300],
+        borderColor: 'transparent',
+        color: colors.warning[600],
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.warning[400],
+      },
+    },
+    link: {
+      base: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.warning[600],
+        textDecoration: 'none',
+      },
+      hover: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.warning[400],
+        textDecoration: 'underline',
+      },
+      active: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.warning[700],
+        textDecoration: 'underline',
+      },
+      disabled: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        color: colors.warning[300],
+        textDecoration: 'none',
+      },
+    },
+  },
 }
 
 const sizeStyles: Record<
   ButtonSize,
-  { gap: string; minHeight: string; padding: string; fontSize: string }
+  { gap: string; minHeight: string; padding: string; fontSize: string; iconSize: string }
 > = {
   small: {
     gap: spacing[2],
     minHeight: '32px',
     padding: `${spacing[2]} ${spacing[3]}`,
     fontSize: typography.fontSizes.sm,
+    iconSize: typography.fontSizes.md,
   },
   medium: {
     gap: spacing[2],
     minHeight: '40px',
     padding: `${spacing[3]} ${spacing[4]}`,
     fontSize: typography.fontSizes.md,
+    iconSize: typography.fontSizes.xl,
   },
   large: {
     gap: spacing[3],
     minHeight: '48px',
     padding: `${spacing[3]} ${spacing[6]}`,
     fontSize: typography.fontSizes.lg,
+    iconSize: typography.fontSizes['2xl'],
   },
 }
 
@@ -200,16 +561,16 @@ export const StyledButton = styled('button', {
     outline-offset: ${focus.ringOffset};
   }
 
-  & > span[aria-hidden='true'] {
+  & > span[data-button-icon] {
     align-items: center;
     display: inline-flex;
     flex: 0 0 auto;
-    font-size: ${typography.fontSizes.xl};
+    font-size: ${({ size }) => sizeStyles[size].iconSize};
     justify-content: center;
     line-height: 1;
   }
 
-  & > span > svg {
+  & > span[data-button-icon] > svg {
     display: block;
     height: 1em;
     width: 1em;

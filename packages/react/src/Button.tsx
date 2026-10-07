@@ -23,11 +23,26 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
+  const hasAccessibleName =
+    Boolean(props['aria-label']?.trim()) || Boolean(props['aria-labelledby']?.trim())
+
+  if (children == null && !hasAccessibleName) {
+    throw new Error('Button requires children or an accessible name when rendered with icons only.')
+  }
+
   return (
     <StyledButton intent={intent} variant={variant} size={size} type={type} {...props}>
-      {startIcon != null && <span aria-hidden="true">{startIcon}</span>}
+      {startIcon != null && (
+        <span aria-hidden="true" data-button-icon>
+          {startIcon}
+        </span>
+      )}
       {children}
-      {endIcon != null && <span aria-hidden="true">{endIcon}</span>}
+      {endIcon != null && (
+        <span aria-hidden="true" data-button-icon>
+          {endIcon}
+        </span>
+      )}
     </StyledButton>
   )
 }

@@ -158,6 +158,10 @@ export const EndIcon: Story = {
   args: { children: 'Text', endIcon: 'Plus' },
 }
 
+export const IconOnly: Story = {
+  args: { 'aria-label': 'Delete item', startIcon: 'Trash' },
+}
+
 export const Disabled: Story = {
   args: { children: 'Disabled', disabled: true },
 }
