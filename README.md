@@ -38,6 +38,49 @@ O Storybook também documenta os tokens em páginas `Tokens/*`, incluindo exempl
 
 Cada workspace tem um script `lint` local; `npm run lint` executa todos. `npm run format` aplica o padrão Prettier e `npm run format:check` verifica sem modificar arquivos. O workspace VS Code habilita format-on-save e recomenda as extensões Prettier e ESLint. O hook Husky/lint-staged executa autofix apenas nos arquivos staged antes do commit; os gates completos continuam no CI.
 
+## Button
+
+Importe `Button` de `@art-liz/react`. As props `variant`, `intent` e `size` escolhem a aparência, a intenção semântica e a escala; `startIcon` e `endIcon` aceitam qualquer elemento React.
+
+```tsx
+import { ArrowRightIcon } from '@phosphor-icons/react/dist/csr/ArrowRight'
+import { Button } from '@art-liz/react'
+
+export function ContinueButton() {
+  return (
+    <Button
+      endIcon={<ArrowRightIcon size="1em" weight="regular" />}
+      intent="success"
+      size="medium"
+      variant="outline"
+    >
+      Continuar
+    </Button>
+  )
+}
+```
+
+O texto do botão fornece seu nome acessível. Para ações somente com ícone, informe `aria-label` ou `aria-labelledby`.
+
+## Ícones
+
+O Storybook usa [Phosphor Icons](https://phosphoricons.com/) (`@phosphor-icons/react`, licença MIT) no catálogo `Foundations/Icons` e nos exemplos do Button. A biblioteca é dependência de runtime de `@art-liz/storybook` e dependência de desenvolvimento de `@art-liz/react` para compilar suas stories junto aos componentes. O pacote público continua independente em runtime e aceita qualquer elemento React em `startIcon`/`endIcon`.
+
+No catálogo, escolha um ícone por vez. Os controles permitem selecionar o tamanho pela escala `typography.fontSizes` (`xs` a `3xl`), peso Phosphor, cor dos tokens do DS ou uma cor HEX customizada. O line-height acompanha o tamanho tipográfico selecionado.
+
+Consumidores que adotarem Phosphor podem importar somente os ícones usados:
+
+```tsx
+import { PlusIcon } from '@phosphor-icons/react/dist/csr/Plus'
+import { Button } from '@art-liz/react'
+
+function AddButton() {
+  return <Button startIcon={<PlusIcon size="1em" weight="regular" />}>Adicionar</Button>
+}
+```
+
+Os ícones herdam `currentColor` quando não recebem `color`; `size="1em"` acompanha o tamanho do slot definido pelo Button: `md` em `small`, `xl` no padrão `medium` e `2xl` em `large`. Ícones decorativos ficam ocultos da árvore acessível. Um Button sem conteúdo textual exige `aria-label` ou `aria-labelledby`.
+
 ## GitFlow
 
 O fluxo usa `develop` como homologação/default e `main` como produção. Consulte [templates/gitflow/README.md](templates/gitflow/README.md) para copiar os workflows e fazer o bootstrap dos rulesets. Branches de origem são apagadas após merge, enquanto `main` e `develop` permanecem protegidas.

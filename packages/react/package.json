@@ -27,6 +27,9 @@
   "dependencies": {
     "@art-liz/tokens": "0.1.0"
   },
+  "devDependencies": {
+    "@phosphor-icons/react": "^2.1.10"
+  },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
     "test": "vitest run",

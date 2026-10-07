@@ -15,6 +15,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Build:** Vite em modo de biblioteca para os pacotes e para aplicações.
 - **Testes:** Vitest, Testing Library e jsdom.
 - **Documentação visual:** Storybook com integração Vite.
+- **Ícones:** Phosphor Icons (`@phosphor-icons/react`) no catálogo e nas stories; componentes React recebem ícones via `ReactNode` e não acoplam consumidores à biblioteca.
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
@@ -79,7 +80,7 @@ Para documentação visual, o Storybook inclui páginas em `Tokens/*` para cores
 
 Contém componentes acessíveis e reutilizáveis para React. O pacote importa tokens e mantém React e Emotion como `peerDependencies`, evitando incorporá-los como cópias privadas da biblioteca no projeto consumidor.
 
-O componente inicial é `Button`, com variantes `primary` e `secondary`, suporte aos atributos nativos de botão e estado desabilitado. Cada componente separa sua implementação (`Component.tsx`) de seus estilos Emotion (`Component.style.ts`); estilos podem consumir os tipos do componente via `import type`.
+O componente inicial é `Button`, com aparências `primary`, `outline`, `ghost` e `link`; intents semânticos `primary`, `danger`, `success`, `info` e `warning`; tamanhos `small`, `medium` e `large`; slots opcionais `startIcon`/`endIcon`; suporte aos atributos nativos; e estados hover, pressed, focus-visible e disabled para todas as combinações. Cada par intent/variant define suas próprias cores para base, hover, active e disabled, sem propagar escolhas entre combinações. A paleta de `primary` preserva as escolhas visuais do projeto; contrastes devem ser avaliados de acordo com os tokens definidos pelo produto consumidor. Ícones decorativos são ocultos da árvore acessível; quando o Button não tem conteúdo textual, `aria-label` ou `aria-labelledby` é obrigatório. O tamanho do ícone é `md` em `small`, `xl` no padrão `medium` e `2xl` em `large`. Cada componente separa implementação (`Component.tsx`) e estilos Emotion (`Component.style.ts`); estilos podem importar tipos do componente usando `import type`.
 
 Fontes: `packages/react/src/` e `packages/react/package.json`.
 
@@ -90,6 +91,14 @@ Aplicação privada de desenvolvimento que reúne stories dos pacotes. As storie
 ### `@art-liz/playground`
 
 Aplicação Vite privada usada para testar o pacote React em um consumidor real, fora do ambiente do Storybook.
+
+## Ícones
+
+Phosphor Icons (`@phosphor-icons/react`, licença MIT) é a biblioteca adotada para o catálogo visual e os exemplos do design system. É dependência de runtime de `apps/storybook` e dependência de desenvolvimento de `packages/react` para as stories co-localizadas; o pacote público `@art-liz/react` permanece agnóstico em runtime e recebe ícones como `ReactNode` por `startIcon`/`endIcon`.
+
+O catálogo `Foundations/Icons` importa ícones por subpath para reduzir o trabalho do Vite e mostra um ícone por vez. Seus controles selecionam o nome do ícone, o tamanho pela escala `typography.fontSizes` (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`), peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`) e origem da cor: paleta semântica do DS ou HEX customizado para casos especiais. O line-height do preview acompanha o tamanho selecionado. Phosphor usa `currentColor` por padrão, então ícones nos botões acompanham a cor do texto; `size="1em"` mantém alinhamento com a tipografia do botão.
+
+Ícones decorativos nos slots do Button recebem `aria-hidden`. Um Button sem conteúdo textual precisa de nome acessível por `aria-label` ou `aria-labelledby`. Evite controles Storybook para elementos React: crie o JSX da story no `render`, pois Controls serializam args.
 
 ## Instalação e desenvolvimento
 
@@ -146,6 +155,10 @@ Os pacotes React e tokens são compilados antes do Storybook para que os workspa
 `npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
 
 O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. Husky/lint-staged executa ESLint autofix e Prettier somente nos arquivos staged durante o pre-commit. Não há pre-push: a validação completa é feita pelo CI obrigatório em PRs.
+
+## Ícones
+
+O Storybook mantém um catálogo de ícones Phosphor em `Foundations/Icons`, com controles para cor, tamanho e peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`). As stories importam ícones por subpath para não carregar o barrel completo. `@art-liz/react` declara Phosphor como dependência de desenvolvimento para compilar suas stories; consumidores passam seus próprios componentes de ícone pelos slots genéricos `startIcon` e `endIcon`, sem dependência de Phosphor em runtime.
 
 ## Trabalho com Codex
 

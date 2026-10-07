@@ -28,6 +28,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Vite para desenvolvimento e build.
 - Vitest, Testing Library e jsdom para testes.
 - Storybook com Vite para catálogo e documentação visual.
+- Phosphor Icons (`@phosphor-icons/react`) para o catálogo e exemplos de ícones no Storybook; `packages/react` pode usá-la como dependência de desenvolvimento para suas stories, mas mantém slots genéricos `ReactNode` e não depende da biblioteca em runtime.
 - Changesets para controle de versões.
 - Pacotes publicáveis planejados: `@art-liz/tokens` e `@art-liz/react`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
@@ -104,7 +105,7 @@ Não trate o reinício como correção de código se um build limpo também falh
 ## Baseline e validações históricas
 
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
-- O pacote React contém o componente `Button`, com variantes `primary` e `secondary`.
+- O pacote React contém o componente `Button`, com aparências `primary`, `outline`, `ghost` e `link`, e intents semânticos `primary`, `danger`, `success`, `info` e `warning`.
 - O Storybook tem stories de Button e scripts de build estático para homologação e produção.
 - Os testes, lint, build integrado e builds estáticos do Storybook passaram na validação inicial.
 - A resolução de `@art-liz/react` no playground exigiu reiniciar o servidor Vite depois da instalação dos workspaces; o comando com `--force` passou a transformar o import para o artefato local.
