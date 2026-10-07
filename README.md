@@ -5,7 +5,7 @@ Design system pessoal em React e TypeScript, organizado como monorepo npm. Os pa
 ## Estrutura
 
 - `packages/tokens`: tokens e temas sem dependência de framework.
-- `packages/react`: componentes React estilizados com Emotion.
+- `packages/react`: componentes React estilizados com Emotion, organizados em `src/Box`, `src/Button` e `src/Container`.
 - `apps/storybook`: catálogo e documentação dos componentes.
 - `apps/playground`: aplicação Vite para testar os pacotes como consumidor.
 
@@ -61,6 +61,24 @@ export function ContinueButton() {
 ```
 
 O texto do botão fornece seu nome acessível. Para ações somente com ícone, informe `aria-label` ou `aria-labelledby`.
+
+## Layout
+
+Use `Container` para centralizar e limitar a largura do conteúdo da página, e `Box` para controlar a apresentação de uma seção:
+
+```tsx
+import { Box, Container } from '@art-liz/react'
+
+export function AccountPage() {
+  return (
+    <Container background="neutral.50" margin="auto" maxWidth="lg" padding={6}>
+      <Box background="white" borderRadius="small" padding={6} shadow="sm">
+        Dados da conta
+      </Box>
+    </Container>
+  )
+}
+```
 
 ## Ícones
 
