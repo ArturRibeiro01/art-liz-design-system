@@ -80,6 +80,12 @@ Para documentação visual, o Storybook inclui páginas em `Tokens/*` para cores
 
 Contém componentes acessíveis e reutilizáveis para React. O pacote importa tokens e mantém React e Emotion como `peerDependencies`, evitando incorporá-los como cópias privadas da biblioteca no projeto consumidor.
 
+Os componentes React ficam organizados em `packages/react/src/<Component>/`, com implementação, estilos, story e testes juntos. Cada pasta tem um `index.ts` e o `packages/react/src/index.ts` agrega a API pública do pacote.
+
+O componente `Box` é um contêiner `div` com padding por tokens de espaçamento e opções de fundo, raio e sombra. Cada opção visual é independente e opcional; atributos nativos de `div` e `children` são encaminhados ao elemento.
+
+O componente `Container` centraliza conteúdo com largura fluida e gutters horizontais de `spacing[4]` por padrão. A prop `maxWidth` escolhe um limite baseado nos breakpoints `sm`, `md`, `lg` e `xl`, ou `full` para ocupar toda a largura disponível; o padrão é `xl`. `background` aceita tokens escalares (`white`, `black`, `paper` etc.) e tokens de escala no formato `primary.600`; `padding` e `margin` aceitam valores da escala `spacing`, e `margin` também aceita `auto` (padrão centralizado). Use `Container` para limitar a largura da página e `Box` para compor superfícies dentro dele.
+
 O componente inicial é `Button`, com aparências `primary`, `outline`, `ghost` e `link`; intents semânticos `primary`, `danger`, `success`, `info` e `warning`; tamanhos `small`, `medium` e `large`; slots opcionais `startIcon`/`endIcon`; suporte aos atributos nativos; e estados hover, pressed, focus-visible e disabled para todas as combinações. Cada par intent/variant define suas próprias cores para base, hover, active e disabled, sem propagar escolhas entre combinações. A paleta de `primary` preserva as escolhas visuais do projeto; contrastes devem ser avaliados de acordo com os tokens definidos pelo produto consumidor. Ícones decorativos são ocultos da árvore acessível; quando o Button não tem conteúdo textual, `aria-label` ou `aria-labelledby` é obrigatório. O tamanho do ícone é `md` em `small`, `xl` no padrão `medium` e `2xl` em `large`. Cada componente separa implementação (`Component.tsx`) e estilos Emotion (`Component.style.ts`); estilos podem importar tipos do componente usando `import type`.
 
 Fontes: `packages/react/src/` e `packages/react/package.json`.
@@ -124,10 +130,10 @@ O comando de Storybook compila tokens e componentes antes de iniciar o servidor 
 
 ## Criar ou alterar um componente
 
-1. Coloque a API e o comportamento do componente em `packages/react/src/Component.tsx`.
-2. Coloque os estilos Emotion em `packages/react/src/Component.style.ts` e reutilize tokens sempre que aplicável.
+1. Crie `packages/react/src/Component/` e coloque a API e o comportamento em `Component.tsx`.
+2. Coloque os estilos Emotion em `Component.style.ts` e reutilize tokens sempre que aplicável.
 3. Se estilos precisarem dos tipos definidos pelo componente, importe-os usando `import type`.
-4. Exporte o componente e seus tipos em `packages/react/src/index.ts`.
+4. Exporte o componente e seus tipos no `index.ts` da pasta e reexporte-os em `packages/react/src/index.ts`.
 5. Adicione ou atualize uma story ao lado do componente para documentar variantes e estados.
 6. Adicione testes focados no comportamento observável em `packages/react/src/`.
 7. Use o playground para confirmar a integração fora do Storybook.
