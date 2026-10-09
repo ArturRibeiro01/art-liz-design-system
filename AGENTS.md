@@ -30,7 +30,8 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Storybook com Vite para catálogo e documentação visual.
 - Phosphor Icons (`@phosphor-icons/react`) para o catálogo e exemplos de ícones no Storybook; `packages/react` pode usá-la como dependência de desenvolvimento para suas stories, mas mantém slots genéricos `ReactNode` e não depende da biblioteca em runtime.
 - Changesets para controle de versões.
-- Pacotes publicáveis planejados: `@art-liz/tokens` e `@art-liz/react`.
+- `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores.
+- Pacotes publicáveis planejados: `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
 - O Storybook tem builds estáticos separados para homologação e produção.
 - ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged no pre-commit.
@@ -46,6 +47,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 
 - `packages/tokens`: valores de design compartilhados e sem dependência de React.
 - `packages/react`: componentes React reutilizáveis, suas stories e testes.
+- `packages/create-app`: CLI `@art-liz/create-app` e projeto modelo autocontido em `template/`.
 - `apps/storybook`: configuração e execução local do Storybook.
 - `apps/playground`: app Vite usado como consumidor de teste.
 - `DESIGN_SYSTEM.md`: documentação completa para pessoas desenvolvedoras.
