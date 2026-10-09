@@ -1,0 +1,46 @@
+name: Changesets version PR
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions: {}
+
+concurrency:
+  group: changesets-version-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    if: github.repository == 'ArturRibeiro01/art-liz-design-system'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Pin npm version
+        run: npm install --global npm@11.6.2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create or update version PR
+        uses: changesets/action@v1
+        with:
+          version: npm run version-packages
+          commit: 'chore: version packages'
+          title: 'chore: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

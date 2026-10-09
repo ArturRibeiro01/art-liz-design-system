@@ -1,0 +1,52 @@
+name: Publish stable packages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.changeset/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/verify-release-artifacts.mjs'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: publish-stable-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: vars.NPM_RELEASES_ENABLED == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: npm-production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js for npm Trusted Publishing
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          package-manager-cache: false
+          registry-url: https://registry.npmjs.org
+
+      - name: Pin npm version
+        run: npm install --global npm@11.6.2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test, build, and validate package tarballs
+        run: npm run ci
+
+      - name: Publish stable latest dist-tag
+        run: npx changeset publish --no-git-tag

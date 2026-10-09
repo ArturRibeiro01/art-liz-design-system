@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "Componentes React do Art-Liz Design System.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArturRibeiro01/art-liz-design-system.git",
+    "directory": "packages/react"
+  },
   "type": "module",
   "files": [
     "dist"
