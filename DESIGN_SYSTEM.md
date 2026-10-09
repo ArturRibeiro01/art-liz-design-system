@@ -17,6 +17,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Documentação visual:** Storybook com integração Vite.
 - **Ícones:** Phosphor Icons (`@phosphor-icons/react`) no catálogo e nas stories; componentes React recebem ícones via `ReactNode` e não acoplam consumidores à biblioteca.
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
+- **Task runner:** scripts npm e workspaces; Nx/Turborepo não são necessários para a escala atual.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
 - **GitFlow:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
@@ -31,11 +32,14 @@ apps/
   playground/       Aplicação Vite para experimentar os pacotes como consumidor
   storybook/        Catálogo de componentes e documentação interativa
 packages/
+  create-app/       CLI npm e template monolítico para novos projetos React
   tokens/           Tokens de design sem dependência de React
   react/            Componentes React compartilhados e estilos Emotion
 ```
 
 O glob `packages/*` permite adicionar UI Kits no futuro. Por exemplo, um kit específico pode ser criado como `packages/ui-kit-nome-do-projeto`, publicado separadamente e composto sobre `@art-liz/tokens` e `@art-liz/react`.
+
+O pacote `@art-liz/create-app` contém o bin `create-app` e o scaffold em `template/`. O projeto gerado é um repositório React independente, não outro workspace do monorepo. Após a publicação do CLI e dos pacotes base, o uso será `npm create @art-liz/app@latest nome-do-projeto`; `--tag beta` seleciona dependências beta do Design System. Antes disso, o template pode ser exercitado localmente com `node packages/create-app/bin/create-app.js nome-do-projeto --no-install --no-git`. Novos projetos recebem as versões da tag no momento da criação; projetos existentes atualizam suas dependências explicitamente com npm. O template inclui Vite, React/TypeScript, React Router, Zustand, TanStack Query, Vitest/Testing Library, ESLint, Prettier e Husky/lint-staged. Storybook é opcional e fica fora do scaffold inicial.
 
 ## Responsabilidade dos pacotes
 
@@ -210,8 +214,9 @@ Os pacotes destinados à publicação são:
 
 - `@art-liz/tokens`
 - `@art-liz/react`
+- `@art-liz/create-app`
 
-Ambos declaram acesso público. É necessário ter uma conta npm autenticada e permissão para publicar no escopo `@art-liz`. A documentação não guarda tokens ou credenciais, e nenhuma publicação deve ser feita sem conferir a versão e o conteúdo dos pacotes.
+Os três pacotes declaram acesso público. É necessário ter uma conta npm autenticada e permissão para publicar no escopo `@art-liz`. A documentação não guarda tokens ou credenciais, e nenhuma publicação deve ser feita sem conferir a versão e o conteúdo dos pacotes.
 
 Registre as mudanças e atualize as versões:
 
@@ -225,13 +230,15 @@ Publique a versão de homologação com a tag `beta`:
 ```sh
 npm publish --workspace @art-liz/tokens --tag beta
 npm publish --workspace @art-liz/react --tag beta
+npm publish --workspace @art-liz/create-app --tag beta
 ```
 
-Publique a versão estável com a tag padrão `latest`:
+Publique `@art-liz/tokens` antes de `@art-liz/react`; publique `@art-liz/create-app` somente depois que ambos estiverem disponíveis na tag correspondente. A versão estável usa a tag padrão `latest`:
 
 ```sh
 npm publish --workspace @art-liz/tokens
 npm publish --workspace @art-liz/react
+npm publish --workspace @art-liz/create-app
 ```
 
 Instalação pelo consumidor:

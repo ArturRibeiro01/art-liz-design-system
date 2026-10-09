@@ -6,6 +6,7 @@ Design system pessoal em React e TypeScript, organizado como monorepo npm. Os pa
 
 - `packages/tokens`: tokens e temas sem dependência de framework.
 - `packages/react`: componentes React estilizados com Emotion, organizados em `src/Box`, `src/Button` e `src/Container`.
+- `packages/create-app`: CLI npm com um template monolítico React + Vite pronto para o Design System.
 - `apps/storybook`: catálogo e documentação dos componentes.
 - `apps/playground`: aplicação Vite para testar os pacotes como consumidor.
 
@@ -33,6 +34,18 @@ npm run build:storybook:prod
 Os builds do Storybook ficam em `storybook-static/homolog` e `storybook-static/prod`, prontos para publicação em destinos de homologação e produção separados.
 
 O Storybook também documenta os tokens em páginas `Tokens/*`, incluindo exemplos de como trocar fonte e cores via CSS custom properties no projeto consumidor.
+
+## Criar um projeto
+
+O scaffolder cria um projeto React independente, com o Design System configurado. Depois da publicação do CLI e dos pacotes do DS, o comando será:
+
+```sh
+npm create @art-liz/app@latest minha-aplicacao
+```
+
+O template inclui Vite, TypeScript, React Router, Zustand, TanStack Query, Vitest, Testing Library, ESLint, Prettier, Husky e lint-staged. Use `--tag beta` para testar versões beta do Design System. Projetos criados não se atualizam automaticamente; atualize `@art-liz/react` e `@art-liz/tokens` quando quiser adotar novas versões. Veja [packages/create-app/README.md](packages/create-app/README.md) para opções do CLI.
+
+Enquanto os pacotes base ainda não estão publicados, o template pode ser gerado localmente sem instalar dependências: `node packages/create-app/bin/create-app.js minha-aplicacao --no-install --no-git`.
 
 ## Qualidade de código
 

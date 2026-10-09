@@ -1,0 +1,26 @@
+{
+  "name": "@art-liz/create-app",
+  "version": "0.1.0",
+  "description": "Cria aplicações React com Vite já conectadas ao Art-Liz Design System.",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "bin",
+    "template",
+    "README.md"
+  ],
+  "bin": {
+    "create-app": "./bin/create-app.js"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/create-app.test.js",
+    "lint": "eslint bin test template --config ../../eslint.config.js",
+    "pack:dry-run": "npm pack --dry-run"
+  }
+}
