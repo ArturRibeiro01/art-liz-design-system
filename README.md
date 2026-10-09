@@ -78,9 +78,14 @@ export function PageHeading() {
 }
 ```
 
-Variantes: `h1`, `h2`, `h3`, `title`, `subtitle`, `body` e `caption`. Os valores de font-size e line-height vêm de `typography.textStyles`; `color` aceita tokens de cor escalares ou tokens de escala, como `danger.600`.
+Variantes: `h1`, `h2`, `h3`, `title`, `subtitle`, `body` e `caption`. Os valores de font-size e line-height vêm de `typography.textStyles`; `color` aceita tokens de cor escalares ou tokens de escala, como `danger.600`. `fontFamily` aceita `component`, `sans`, `mono` ou uma stack CSS personalizada; fontes externas precisam ser carregadas pelo produto consumidor.
 
 ## Layout
+
+```tsx
+<Text fontFamily="sans">Fonte padrão sans</Text>
+<Text fontFamily='"Figtree", sans-serif'>Fonte do produto</Text>
+```
 
 Use `Container` para centralizar e limitar a largura do conteúdo da página, e `Box` para controlar a apresentação de uma seção:
 

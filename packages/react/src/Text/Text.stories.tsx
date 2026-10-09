@@ -17,11 +17,16 @@ const meta = {
     variant: { control: 'select', options: textVariants },
     weight: { control: 'select', options: textWeights },
     color: { control: 'select', options: textColors },
+    fontFamily: {
+      control: 'text',
+      description: 'Use component, sans, mono ou informe uma stack CSS personalizada.',
+    },
     as: { control: 'select', options: ['p', 'span', 'h1', 'h2', 'h3', 'div'] },
   },
   args: {
     children: 'Texto de exemplo do Design System',
     color: 'neutral.900',
+    fontFamily: 'component',
     variant: 'body',
     weight: 'regular',
   },
@@ -31,6 +36,20 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const StandardFonts: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 16 }}>
+      <Text fontFamily="component">Fonte padrão dos componentes</Text>
+      <Text fontFamily="sans">Sans</Text>
+      <Text fontFamily="mono">Monospace</Text>
+    </div>
+  ),
+}
+
+export const CustomFont: Story = {
+  args: { children: 'Fonte personalizada', fontFamily: 'Georgia, serif' },
+}
 
 export const TypeScale: Story = {
   render: () => (

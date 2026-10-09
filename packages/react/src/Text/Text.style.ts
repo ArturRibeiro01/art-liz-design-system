@@ -4,6 +4,7 @@ import type { TextColor, TextVariant, TextWeight } from './Text'
 
 type StyledTextProps = {
   color: TextColor
+  fontFamily: string
   variant: TextVariant
   weight: TextWeight
 }
@@ -41,10 +42,13 @@ export const textColorTokens = {
 } as Record<TextColor, string>
 
 export const StyledText = styled('p', {
-  shouldForwardProp: (prop) => !['as', 'color', 'variant', 'weight'].includes(prop),
+  shouldForwardProp: (prop) => !['as', 'color', 'fontFamily', 'variant', 'weight'].includes(prop),
 })<StyledTextProps>`
   color: ${({ color }) => textColorTokens[color]};
-  font-family: ${typography.fontFamilies.component};
+  font-family: ${({ fontFamily }) =>
+    fontFamily in typography.fontFamilies
+      ? typography.fontFamilies[fontFamily as keyof typeof typography.fontFamilies]
+      : fontFamily};
   font-size: ${({ variant }) => typography.textStyles[variant].fontSize};
   font-weight: ${({ weight }) => typography.fontWeights[weight]};
   line-height: ${({ variant }) => typography.textStyles[variant].lineHeight};

@@ -58,6 +58,31 @@ describe('Text', () => {
     )
   })
 
+  it('accepts a standard design-system font-family token', () => {
+    render(
+      <Text data-testid="mono-text" fontFamily="mono">
+        Code
+      </Text>,
+    )
+
+    expect(window.getComputedStyle(screen.getByTestId('mono-text')).fontFamily).toBe(
+      typography.fontFamilies.mono,
+    )
+  })
+
+  it('accepts a custom font-family stack', () => {
+    const customFontFamily = '"Figtree", sans-serif'
+    render(
+      <Text data-testid="custom-font-text" fontFamily={customFontFamily}>
+        Custom type
+      </Text>,
+    )
+
+    const text = screen.getByTestId('custom-font-text')
+    expect(window.getComputedStyle(text).fontFamily).toBe(customFontFamily)
+    expect(text.hasAttribute('fontfamily')).toBe(false)
+  })
+
   it('applies a selected design-system color token without forwarding color to the DOM', () => {
     render(
       <Text color="danger.600" data-testid="danger-text">
