@@ -1,6 +1,6 @@
 {
   "name": "@art-liz/create-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Cria aplicações React com Vite já conectadas ao Art-Liz Design System.",
   "license": "MIT",
   "repository": {
