@@ -40,6 +40,16 @@ test('copies a complete project template and applies its directory name', async 
     assert.ok(files.includes('vite.config.ts'))
     assert.ok(files.includes('README.md'))
     assert.match(await readFile(join(projectDirectory, '.gitignore'), 'utf8'), /node_modules/)
+
+    const entrypoint = await readFile(join(projectDirectory, 'src', 'main.tsx'), 'utf8')
+    assert.match(entrypoint, /createRoot/)
+    assert.match(entrypoint, /from '\.\/App'/)
+    assert.match(entrypoint, /import '\.\/index\.css'/)
+
+    const appSource = await readFile(join(projectDirectory, 'src', 'App.tsx'), 'utf8')
+    assert.match(appSource, /colors\.white/)
+    assert.match(appSource, /colors\.neutral\[900\]/)
+    assert.match(appSource, /typography\.fontFamilies\.component/)
   } finally {
     await rm(temporaryDirectory, { force: true, recursive: true })
   }
