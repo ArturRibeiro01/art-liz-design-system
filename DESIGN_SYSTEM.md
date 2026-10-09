@@ -86,9 +86,15 @@ O componente `Box` é um contêiner `div` com padding por tokens de espaçamento
 
 O componente `Container` centraliza conteúdo com largura fluida e gutters horizontais de `spacing[4]` por padrão. A prop `maxWidth` escolhe um limite baseado nos breakpoints `sm`, `md`, `lg` e `xl`, ou `full` para ocupar toda a largura disponível; o padrão é `xl`. `background` aceita tokens escalares (`white`, `black`, `paper` etc.) e tokens de escala no formato `primary.600`; `padding` e `margin` aceitam valores da escala `spacing`, e `margin` também aceita `auto` (padrão centralizado). Use `Container` para limitar a largura da página e `Box` para compor superfícies dentro dele.
 
+O componente `Text` aplica os padrões tipográficos definidos em `typography.textStyles`: `h1` (30/38), `h2` (24/32), `h3` (20/28), `title` (18/26), `subtitle` (16/24), `body` (14/22) e `caption` (12/18), em pixels com base de 16px. `variant` seleciona o padrão, `weight` escolhe um token de peso, `color` escolhe uma cor do sistema de tokens e `as` escolhe o elemento HTML semântico (`h1`, `p`, `span` etc.). A escala de tamanho continua centralizada em `typography.fontSizes`.
+
 O componente inicial é `Button`, com aparências `primary`, `outline`, `ghost` e `link`; intents semânticos `primary`, `danger`, `success`, `info` e `warning`; tamanhos `small`, `medium` e `large`; slots opcionais `startIcon`/`endIcon`; suporte aos atributos nativos; e estados hover, pressed, focus-visible e disabled para todas as combinações. Cada par intent/variant define suas próprias cores para base, hover, active e disabled, sem propagar escolhas entre combinações. A paleta de `primary` preserva as escolhas visuais do projeto; contrastes devem ser avaliados de acordo com os tokens definidos pelo produto consumidor. Ícones decorativos são ocultos da árvore acessível; quando o Button não tem conteúdo textual, `aria-label` ou `aria-labelledby` é obrigatório. O tamanho do ícone é `md` em `small`, `xl` no padrão `medium` e `2xl` em `large`. Cada componente separa implementação (`Component.tsx`) e estilos Emotion (`Component.style.ts`); estilos podem importar tipos do componente usando `import type`.
 
 Fontes: `packages/react/src/` e `packages/react/package.json`.
+
+### Baseline de acessibilidade e validação
+
+Componentes interativos usam elementos HTML nativos, labels explícitos para campos, nomes acessíveis para ações sem texto e foco visível pelos tokens de `focus`. Estados `disabled`, `required` e `readOnly` preservam a semântica nativa. Testes usam Testing Library e `user-event` para nomes acessíveis, ordem de Tab e ativação de botões por Enter/Espaço. jsdom valida comportamento e semântica, mas não renderiza o indicador visual de pseudo-classe; confirme o anel de foco em navegador no Storybook. O projeto ainda não inclui axe ou execução de navegador headless; contraste e aparência de foco permanecem verificações manuais até haver ferramenta e CI de navegador configurados.
 
 ### `@art-liz/storybook`
 

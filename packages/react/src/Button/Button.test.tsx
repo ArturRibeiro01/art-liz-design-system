@@ -1,8 +1,11 @@
 import { typography } from '@art-liz/tokens'
-import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { ButtonIntent, ButtonVariant } from './Button'
 import { Button } from './Button'
+
+afterEach(cleanup)
 
 const intents: ButtonIntent[] = ['primary', 'danger', 'success', 'info', 'warning']
 const variants: ButtonVariant[] = ['primary', 'outline', 'ghost', 'link']
@@ -19,6 +22,45 @@ describe('Button', () => {
     render(<Button>Continuar</Button>)
 
     expect(screen.getByRole('button', { name: 'Continuar' })).toBeTruthy()
+  })
+
+  it('defaults to type button and forwards an explicitly supplied type', () => {
+    render(
+      <>
+        <Button data-testid="default-type">Default type</Button>
+        <Button data-testid="submit-type" type="submit">
+          Submit type
+        </Button>
+      </>,
+    )
+
+    expect(screen.getByTestId('default-type').getAttribute('type')).toBe('button')
+    expect(screen.getByTestId('submit-type').getAttribute('type')).toBe('submit')
+  })
+
+  it('calls its click handler when enabled', async () => {
+    const user = userEvent.setup()
+    const onClick = vi.fn()
+    render(<Button onClick={onClick}>Save</Button>)
+
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(onClick).toHaveBeenCalledOnce()
+  })
+
+  it('is keyboard reachable and activates with Enter and Space', async () => {
+    const user = userEvent.setup()
+    const onClick = vi.fn()
+    render(<Button onClick={onClick}>Keyboard action</Button>)
+
+    const button = screen.getByRole('button', { name: 'Keyboard action' })
+    await user.tab()
+    expect(document.activeElement).toBe(button)
+
+    await user.keyboard('{Enter}')
+    expect(onClick).toHaveBeenCalledOnce()
+    await user.keyboard(' ')
+    expect(onClick).toHaveBeenCalledTimes(2)
   })
 
   it.each(combinations)(
