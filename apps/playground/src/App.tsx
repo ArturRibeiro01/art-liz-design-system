@@ -1,4 +1,4 @@
-import { Button } from '@art-liz/react'
+import { Button, Text } from '@art-liz/react'
 import './App.css'
 
 function App() {
@@ -15,6 +15,17 @@ function App() {
           <Button>Primary action</Button>
           <Button variant="outline">Outline action</Button>
           <Button disabled>Disabled</Button>
+        </div>
+      </section>
+      <section aria-labelledby="typography-title">
+        <h2 id="typography-title">Typography</h2>
+        <div className="typography-example">
+          <Text as="h1" variant="h1">
+            Título principal
+          </Text>
+          <Text as="p" variant="body">
+            Texto de corpo usa a escala tipográfica definida nos tokens do design system.
+          </Text>
         </div>
       </section>
     </main>

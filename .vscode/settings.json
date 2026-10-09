@@ -29,5 +29,9 @@
   "[markdown]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "chat.tools.terminal.autoApprove": {
+    "git merge-base": true,
+    "npx prettier": true
   }
 }

@@ -1,9 +1,17 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { TextVariant } from '../Text'
+import { Text } from '../Text'
 import { StyledButton } from './Button.style'
 
 export type ButtonVariant = 'primary' | 'outline' | 'ghost' | 'link'
 export type ButtonIntent = 'primary' | 'danger' | 'success' | 'info' | 'warning'
 export type ButtonSize = 'small' | 'medium' | 'large'
+
+const buttonTextVariants: Record<ButtonSize, TextVariant> = {
+  small: 'body',
+  medium: 'subtitle',
+  large: 'title',
+}
 
 export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'size'> {
   variant?: ButtonVariant
@@ -37,7 +45,11 @@ export function Button({
           {startIcon}
         </span>
       )}
-      {children}
+      {children != null && (
+        <Text as="span" color="inherit" data-button-label variant={buttonTextVariants[size]}>
+          {children}
+        </Text>
+      )}
       {endIcon != null && (
         <span aria-hidden="true" data-button-icon>
           {endIcon}

@@ -491,27 +491,24 @@ const intentVariantStyles: Record<ButtonIntent, Record<ButtonVariant, ButtonVari
 
 const sizeStyles: Record<
   ButtonSize,
-  { gap: string; minHeight: string; padding: string; fontSize: string; iconSize: string }
+  { gap: string; minHeight: string; padding: string; iconSize: string }
 > = {
   small: {
     gap: spacing[2],
     minHeight: '32px',
     padding: `${spacing[2]} ${spacing[3]}`,
-    fontSize: typography.fontSizes.sm,
     iconSize: typography.fontSizes.md,
   },
   medium: {
     gap: spacing[2],
     minHeight: '40px',
     padding: `${spacing[3]} ${spacing[4]}`,
-    fontSize: typography.fontSizes.md,
     iconSize: typography.fontSizes.xl,
   },
   large: {
     gap: spacing[3],
     minHeight: '48px',
     padding: `${spacing[3]} ${spacing[6]}`,
-    fontSize: typography.fontSizes.lg,
     iconSize: typography.fontSizes['2xl'],
   },
 }
@@ -527,12 +524,8 @@ export const StyledButton = styled('button', {
   color: ${({ intent, variant }) => intentVariantStyles[intent][variant].base.color};
   cursor: pointer;
   display: inline-flex;
-  font-family: ${typography.fontFamilies.component};
-  font-size: ${({ size }) => sizeStyles[size].fontSize};
-  font-weight: ${typography.fontWeights.regular};
   gap: ${({ size }) => sizeStyles[size].gap};
   justify-content: center;
-  line-height: ${typography.lineHeights.normal};
   min-height: ${({ size }) => sizeStyles[size].minHeight};
   padding: ${({ size }) => sizeStyles[size].padding};
   transition:
