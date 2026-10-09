@@ -44,7 +44,7 @@ export const textColorTokens = {
 export const StyledText = styled('p', {
   shouldForwardProp: (prop) => !['as', 'color', 'fontFamily', 'variant', 'weight'].includes(prop),
 })<StyledTextProps>`
-  color: ${({ color }) => textColorTokens[color]};
+  color: ${({ color }) => (color === 'inherit' ? 'inherit' : textColorTokens[color])};
   font-family: ${({ fontFamily }) =>
     fontFamily in typography.fontFamilies
       ? typography.fontFamilies[fontFamily as keyof typeof typography.fontFamilies]

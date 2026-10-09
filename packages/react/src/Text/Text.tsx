@@ -7,7 +7,7 @@ type ColorScaleName =
   'neutral' | 'primary' | 'auxiliary' | 'danger' | 'warning' | 'success' | 'info'
 type SingleColorName = 'white' | 'black' | 'ink' | 'forest' | 'moss' | 'paper' | 'muted' | 'border'
 type ColorScaleTone = keyof typeof tokenColors.neutral
-export type TextColor = SingleColorName | `${ColorScaleName}.${ColorScaleTone}`
+export type TextColor = 'inherit' | SingleColorName | `${ColorScaleName}.${ColorScaleTone}`
 export type TextFontFamily = string
 export type TextVariant = keyof typeof typography.textStyles
 export type TextWeight = keyof typeof typography.fontWeights

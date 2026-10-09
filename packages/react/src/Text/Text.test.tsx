@@ -102,4 +102,14 @@ describe('Text', () => {
       colors.neutral[900],
     )
   })
+
+  it('inherits color when composed inside a color-controlled component', () => {
+    render(
+      <Text color="inherit" data-testid="inherited-color">
+        Inherited color
+      </Text>,
+    )
+
+    expect(window.getComputedStyle(screen.getByTestId('inherited-color')).color).toBe('inherit')
+  })
 })

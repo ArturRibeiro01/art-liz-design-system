@@ -158,4 +158,21 @@ describe('Button', () => {
       expect(screen.getByRole('button', { name }).hasAttribute('size')).toBe(false)
     }
   })
+
+  it.each([
+    ['small', typography.textStyles.body],
+    ['medium', typography.textStyles.subtitle],
+    ['large', typography.textStyles.title],
+  ] as const)('uses the Text %s variant for its label', (size, textStyle) => {
+    render(
+      <Button data-testid="text-button" size={size}>
+        Action
+      </Button>,
+    )
+
+    const label = screen.getByTestId('text-button').querySelector('[data-button-label]')
+    expect(label).not.toBeNull()
+    expect(window.getComputedStyle(label as Element).fontSize).toBe(textStyle.fontSize)
+    expect(window.getComputedStyle(label as Element).lineHeight).toBe(textStyle.lineHeight)
+  })
 })

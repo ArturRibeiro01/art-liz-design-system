@@ -35,22 +35,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Playground: Story = {}
-
-export const StandardFonts: Story = {
-  render: () => (
-    <div style={{ display: 'grid', gap: 16 }}>
-      <Text fontFamily="component">Fonte padrão dos componentes</Text>
-      <Text fontFamily="sans">Sans</Text>
-      <Text fontFamily="mono">Monospace</Text>
-    </div>
-  ),
-}
-
-export const CustomFont: Story = {
-  args: { children: 'Fonte personalizada', fontFamily: 'Georgia, serif' },
-}
-
 export const TypeScale: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 20 }}>
@@ -79,3 +63,5 @@ export const TypeScale: Story = {
     </div>
   ),
 }
+
+export const Playground: Story = {}
