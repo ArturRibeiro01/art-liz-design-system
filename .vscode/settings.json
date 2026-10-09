@@ -31,9 +31,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "chat.tools.terminal.autoApprove": {
-    "gh": true,
     "git merge-base": true,
-    "npx prettier": true,
-    "mv": true
+    "npx prettier": true
   }
 }

@@ -87,6 +87,8 @@ Variantes: `h1`, `h2`, `h3`, `title`, `subtitle`, `body` e `caption`. Os valores
 <Text fontFamily='"Figtree", sans-serif'>Fonte do produto</Text>
 ```
 
+## Layout
+
 Use `Container` para centralizar e limitar a largura do conteúdo da página, e `Box` para controlar a apresentação de uma seção:
 
 ```tsx

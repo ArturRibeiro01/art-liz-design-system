@@ -37,14 +37,15 @@ const colorScaleTokens = Object.fromEntries(
 ) as Record<Extract<TextColor, `${string}.${number}`>, string>
 
 export const textColorTokens = {
+  inherit: 'inherit',
   ...singleColorTokens,
   ...colorScaleTokens,
-} as Record<TextColor, string>
+} satisfies Record<TextColor, string>
 
 export const StyledText = styled('p', {
   shouldForwardProp: (prop) => !['as', 'color', 'fontFamily', 'variant', 'weight'].includes(prop),
 })<StyledTextProps>`
-  color: ${({ color }) => (color === 'inherit' ? 'inherit' : textColorTokens[color])};
+  color: ${({ color }) => textColorTokens[color]};
   font-family: ${({ fontFamily }) =>
     fontFamily in typography.fontFamilies
       ? typography.fontFamilies[fontFamily as keyof typeof typography.fontFamilies]

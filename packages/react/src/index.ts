@@ -5,4 +5,4 @@ export type { ButtonIntent, ButtonProps, ButtonSize, ButtonVariant } from './But
 export { Container } from './Container/index'
 export type { ContainerMaxWidth, ContainerProps } from './Container/index'
 export { Text } from './Text/index'
-export type { TextColor, TextProps, TextVariant, TextWeight } from './Text/index'
+export type { TextColor, TextFontFamily, TextProps, TextVariant, TextWeight } from './Text/index'

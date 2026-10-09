@@ -38,6 +38,19 @@ describe('Text', () => {
     expect(heading.hasAttribute('as')).toBe(false)
   })
 
+  it('accepts attributes specific to the selected element', () => {
+    render(
+      <Text as="a" data-testid="docs-link" href="/design-system" target="_blank">
+        Documentation
+      </Text>,
+    )
+
+    const link = screen.getByRole('link', { name: 'Documentation' })
+    expect(link).toBe(screen.getByTestId('docs-link'))
+    expect(link.getAttribute('href')).toBe('/design-system')
+    expect(link.getAttribute('target')).toBe('_blank')
+  })
+
   it('uses the body variant and regular weight by default', () => {
     render(<Text data-testid="default-text">Default text</Text>)
 
