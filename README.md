@@ -47,6 +47,8 @@ O template inclui Vite, TypeScript, React Router, Zustand, TanStack Query, Vites
 
 Enquanto os pacotes base ainda não estão publicados, o template pode ser gerado localmente sem instalar dependências: `node packages/create-app/bin/create-app.js minha-aplicacao --no-install --no-git`.
 
+Os tarballs publicados são verificados por `npm run release:verify`; a automação beta/latest está protegida por `NPM_RELEASES_ENABLED` e Trusted Publishing. Veja o bootstrap e os ambientes necessários em [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md#publicação-npm).
+
 ## Qualidade de código
 
 Cada workspace tem um script `lint` local; `npm run lint` executa todos. `npm run format` aplica o padrão Prettier e `npm run format:check` verifica sem modificar arquivos. O workspace VS Code habilita format-on-save e recomenda as extensões Prettier e ESLint. O hook Husky/lint-staged executa autofix apenas nos arquivos staged antes do commit; os gates completos continuam no CI.

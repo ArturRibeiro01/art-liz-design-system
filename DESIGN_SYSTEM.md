@@ -216,30 +216,33 @@ Os pacotes destinados à publicação são:
 - `@art-liz/react`
 - `@art-liz/create-app`
 
-Os três pacotes declaram acesso público. É necessário ter uma conta npm autenticada e permissão para publicar no escopo `@art-liz`. A documentação não guarda tokens ou credenciais, e nenhuma publicação deve ser feita sem conferir a versão e o conteúdo dos pacotes.
+Os três pacotes declaram acesso público. É necessário ter uma conta npm autenticada e permissão para publicar no escopo `@art-liz`. Nenhuma publicação é feita automaticamente até a primeira publicação estável dos três pacotes, a configuração dos Trusted Publishers no npm e a ativação da variável de repositório `NPM_RELEASES_ENABLED=true`.
 
-Registre as mudanças e atualize as versões:
-
-```sh
-npm run changeset
-npm run version-packages
-```
-
-Publique a versão de homologação com a tag `beta`:
+Antes de habilitar os workflows, valide os tarballs em instalação limpa:
 
 ```sh
-npm publish --workspace @art-liz/tokens --tag beta
-npm publish --workspace @art-liz/react --tag beta
-npm publish --workspace @art-liz/create-app --tag beta
+npm run release:verify
 ```
 
-Publique `@art-liz/tokens` antes de `@art-liz/react`; publique `@art-liz/create-app` somente depois que ambos estiverem disponíveis na tag correspondente. A versão estável usa a tag padrão `latest`:
+Como o escopo npm ainda não foi inicializado, a primeira publicação estável é manual e só deve ocorrer depois dessa validação. Publique `tokens`, depois `react` e por fim `create-app`:
 
 ```sh
-npm publish --workspace @art-liz/tokens
-npm publish --workspace @art-liz/react
-npm publish --workspace @art-liz/create-app
+npm publish --workspace @art-liz/tokens --access public
+npm publish --workspace @art-liz/react --access public
+npm publish --workspace @art-liz/create-app --access public
 ```
+
+Em seguida, configure cada pacote no npm para Trusted Publishing com os workflows `publish-beta.yml`/ambiente `npm-beta` e `publish-stable.yml`/ambiente `npm-production`. O publisher precisa permitir `npm publish`; a primeira publicação de cada configuração confiável deve acontecer em até dois dias após criá-la.
+
+## Releases automatizados
+
+Cada mudança publicável recebe um Changeset. O workflow `changesets-version.yml` abre/atualiza uma PR de versionamento em `develop`. O workflow `publish-beta.yml` usa `changeset version --snapshot beta` e publica snapshots `0.0.0-beta-*` na dist-tag `beta`; as versões snapshot não são commitadas. A promoção aprovada de `develop` para `main` aciona `publish-stable.yml`, que publica as versões estáveis com a dist-tag `latest` após aprovação no environment protegido `npm-production`.
+
+Configure no GitHub o environment `npm-beta` e o environment `npm-production` com required reviewers. Mantenha `NPM_RELEASES_ENABLED` ausente/falso até concluir a publicação inicial e cadastrar os Trusted Publishers. Para a action de versionamento criar PRs, habilite em Settings → Actions → General a opção que permite ao GitHub Actions criar PRs. PRs criadas com `GITHUB_TOKEN` podem não iniciar outros workflows automaticamente; nesse caso, rode `Quality gates` pelo `workflow_dispatch` ou configure um GitHub App token.
+
+Não configure `NPM_TOKEN`: os jobs de publicação usam OIDC e limitam `id-token: write` ao job que publica. O workflow beta publica `tokens`/`react`/`create-app`; o workflow estável usa os manifests versionados pela PR de Changesets e publica na ordem declarada pelas dependências. A issue #6 permanece aberta até confirmar acesso ao escopo e concluir a primeira instalação a partir do registry.
+
+O beta usa snapshots efêmeros (`0.0.0-beta-*`) e dist-tag `beta`; stable publica versões sem snapshot como `latest`. Para interromper releases automáticos, remova ou desative a variável `NPM_RELEASES_ENABLED`. Um snapshot beta problemático é substituído por outro; uma versão stable é corrigida com novo Changeset patch e promoção aprovada para `main`.
 
 Instalação pelo consumidor:
 
