@@ -10,8 +10,8 @@
     "lint": "eslint .storybook src --config ../../eslint.config.js"
   },
   "dependencies": {
-    "@art-liz/react": "0.1.0",
-    "@art-liz/tokens": "0.1.0",
+    "@art-liz/react": "1.0.0",
+    "@art-liz/tokens": "0.2.0",
     "@phosphor-icons/react": "^2.1.10"
   }
 }

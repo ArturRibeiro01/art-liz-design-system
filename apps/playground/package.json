@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@art-liz/react": "0.1.0",
+    "@art-liz/react": "1.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
