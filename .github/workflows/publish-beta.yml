@@ -49,12 +49,40 @@ jobs:
         id: changesets
         shell: bash
         run: |
-          COUNT=$(find .changeset -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')
+          COUNT=$(
+            node --input-type=module <<'NODE'
+          import { readdirSync, readFileSync } from 'node:fs'
+
+          const packageReleasePattern =
+            /^\s*['"]?@art-liz\/(?:tokens|react|create-app)['"]?\s*:\s*(?:patch|minor|major)\s*$/
+
+          let count = 0
+
+          for (const entry of readdirSync('.changeset', { withFileTypes: true })) {
+            if (!entry.isFile() || !entry.name.endsWith('.md') || entry.name.toLowerCase() === 'readme.md') {
+              continue
+            }
+
+            const contents = readFileSync(`.changeset/${entry.name}`, 'utf8')
+            const frontmatter = contents.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+
+            if (!frontmatter) {
+              continue
+            }
+
+            if (frontmatter[1].split(/\r?\n/).some((line) => packageReleasePattern.test(line))) {
+              count += 1
+            }
+          }
+
+          console.log(count)
+          NODE
+          )
 
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
           if [ "$COUNT" -gt 0 ]; then
-            echo "Pending changesets found: $COUNT"
+            echo "Pending release changesets found: $COUNT"
           else
             echo "No pending changesets. Beta publication will be skipped."
           fi

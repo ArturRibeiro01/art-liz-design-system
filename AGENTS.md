@@ -33,6 +33,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores.
 - Pacotes publicáveis planejados: `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
+- Versões pré-release de `@art-liz/create-app` usam dependências `@art-liz/react` e `@art-liz/tokens` na tag `beta` por padrão; versões estáveis usam `latest`. O usuário ainda pode sobrescrever com `--tag latest|beta`.
 - O Storybook tem builds estáticos separados para homologação e produção.
 - ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged no pre-commit.
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
@@ -112,7 +113,7 @@ Não trate o reinício como correção de código se um build limpo também falh
 - O Storybook tem stories de Button e scripts de build estático para homologação e produção.
 - Os testes, lint, build integrado e builds estáticos do Storybook passaram na validação inicial.
 - A resolução de `@art-liz/react` no playground exigiu reiniciar o servidor Vite depois da instalação dos workspaces; o comando com `--force` passou a transformar o import para o artefato local.
-- O repositório fixa npm `11.6.2` em `package.json` e no workflow para manter instalações limpas reproduzíveis entre macOS e Linux.
+- O repositório fixa npm `11.6.2` em `package.json` e nos workflows para manter instalações limpas reproduzíveis entre macOS e Linux. O workflow stable atualiza para `npm@11.21.0` apenas antes de `npm dist-tag`, porque essa operação via OIDC exige npm 11.21.0+.
 - Esses resultados são registros históricos, não garantias de que o estado atual continua igual. Reexecute as verificações relevantes antes de afirmar que ainda passam.
 
 ## Pendências conhecidas

@@ -52,6 +52,9 @@ jobs:
       - name: Publish unpublished stable versions
         run: npx changeset publish --no-git-tag
 
+      - name: Upgrade npm for OIDC dist-tag
+        run: npm install --global npm@11.21.0
+
       - name: Promote current package versions to latest
         shell: bash
         run: |
