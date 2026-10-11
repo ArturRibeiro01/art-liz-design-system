@@ -4,12 +4,14 @@ Gera uma aplicação monolítica React + TypeScript + Vite pronta para consumir 
 
 ```sh
 npm create @art-liz/app@latest minha-aplicacao
+npm create @art-liz/app@beta minha-aplicacao-beta
 ```
 
-O comando cria a aplicação, inicializa um repositório Git e instala as dependências. Para usar a tag beta do design system ou pular etapas:
+O comando cria a aplicação, inicializa um repositório Git e instala as dependências. Versões estáveis do CLI usam `@art-liz/react` e `@art-liz/tokens` na tag `latest` por padrão; versões pré-release usam `beta`. Para sobrescrever a tag do design system ou pular etapas:
 
 ```sh
 npm create @art-liz/app@latest -- minha-aplicacao --tag beta
+npm create @art-liz/app@beta -- minha-aplicacao --tag latest
 npm create @art-liz/app@latest -- minha-aplicacao --no-git --no-install
 ```
 

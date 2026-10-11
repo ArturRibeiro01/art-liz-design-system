@@ -41,11 +41,12 @@ O scaffolder cria um projeto React independente, com o Design System configurado
 
 ```sh
 npm create @art-liz/app@latest minha-aplicacao
+npm create @art-liz/app@beta minha-aplicacao-beta
 ```
 
-O template inclui Vite, TypeScript, React Router, Zustand, TanStack Query, Vitest, Testing Library, ESLint, Prettier, Husky e lint-staged. Use `--tag beta` para testar versões beta do Design System. Projetos criados não se atualizam automaticamente; atualize `@art-liz/react` e `@art-liz/tokens` quando quiser adotar novas versões. Veja [packages/create-app/README.md](packages/create-app/README.md) para opções do CLI.
+O template inclui Vite, TypeScript, React Router, Zustand, TanStack Query, Vitest, Testing Library, ESLint, Prettier, Husky e lint-staged. O CLI estável usa dependências `latest`; o CLI beta usa dependências `beta`, e `--tag latest|beta` sobrescreve essa escolha. Projetos criados não se atualizam automaticamente; atualize `@art-liz/react` e `@art-liz/tokens` quando quiser adotar novas versões. Veja [packages/create-app/README.md](packages/create-app/README.md) para opções do CLI.
 
-Enquanto os pacotes base ainda não estão publicados, o template pode ser gerado localmente sem instalar dependências: `node packages/create-app/bin/create-app.js minha-aplicacao --no-install --no-git`.
+Para exercitar o template localmente sem instalar dependências, use `node packages/create-app/bin/create-app.js minha-aplicacao --no-install --no-git`.
 
 Os tarballs publicados são verificados por `npm run release:verify`; a automação beta/latest está protegida por `NPM_RELEASES_ENABLED` e Trusted Publishing. Veja o bootstrap e os ambientes necessários em [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md#publicação-npm).
 
@@ -145,7 +146,7 @@ O fluxo usa `develop` como homologação/default e `main` como produção. Consu
 
 ## Publicação npm
 
-Os pacotes publicáveis são `@art-liz/tokens` e `@art-liz/react`. O campo `publishConfig.access` configura o acesso público. Use Changesets para registrar a alteração e calcular versões:
+Os pacotes publicáveis são `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`. O campo `publishConfig.access` configura o acesso público. Use Changesets para registrar a alteração e calcular versões:
 
 ```sh
 npm run changeset
@@ -157,6 +158,7 @@ Depois de autenticar com `npm login` e executar os builds, publique uma versão 
 ```sh
 npm publish --workspace @art-liz/tokens --tag beta
 npm publish --workspace @art-liz/react --tag beta
+npm publish --workspace @art-liz/create-app --tag beta
 ```
 
 Para produção, publique na tag padrão `latest`:
@@ -164,6 +166,7 @@ Para produção, publique na tag padrão `latest`:
 ```sh
 npm publish --workspace @art-liz/tokens
 npm publish --workspace @art-liz/react
+npm publish --workspace @art-liz/create-app
 ```
 
 Consumidores podem instalar homologação com `npm install @art-liz/react@beta` e produção com `npm install @art-liz/react`.

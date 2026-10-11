@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import { access, cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, dirname, resolve } from 'node:path'
 import { createInterface } from 'node:readline/promises'
@@ -10,8 +11,19 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const templateRoot = resolve(packageRoot, 'template')
 const allowedTags = new Set(['latest', 'beta'])
 
+function defaultDependencyTag() {
+  try {
+    const manifest = JSON.parse(readFileSync(resolve(packageRoot, 'package.json'), 'utf8'))
+    return typeof manifest.version === 'string' && manifest.version.includes('-')
+      ? 'beta'
+      : 'latest'
+  } catch {
+    return 'latest'
+  }
+}
+
 function parseArguments(args) {
-  const options = { help: false, install: true, initializeGit: true, tag: 'latest' }
+  const options = { help: false, install: true, initializeGit: true, tag: defaultDependencyTag() }
   const positionalArguments = []
 
   for (let index = 0; index < args.length; index += 1) {

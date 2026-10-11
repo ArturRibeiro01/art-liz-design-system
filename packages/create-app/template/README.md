@@ -24,7 +24,7 @@ npm run preview
 
 ## Design System
 
-O template instala `@art-liz/react` e `@art-liz/tokens` usando a tag `latest` por padrão. Para criar um novo projeto com a tag beta, use `npm create @art-liz/app@latest -- meu-projeto --tag beta`.
+O template instala `@art-liz/react` e `@art-liz/tokens` usando a tag escolhida pelo CLI. Versões estáveis do CLI usam `latest` por padrão; versões pré-release usam `beta`. Para sobrescrever explicitamente a tag, use `npm create @art-liz/app@latest -- meu-projeto --tag beta` ou `npm create @art-liz/app@beta -- meu-projeto --tag latest`.
 
 Projetos existentes não atualizam suas dependências automaticamente. Atualize o Design System quando estiver pronto para receber uma nova versão:
 

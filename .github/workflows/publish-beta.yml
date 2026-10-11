@@ -49,12 +49,27 @@ jobs:
         id: changesets
         shell: bash
         run: |
-          COUNT=$(find .changeset -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')
+          STATUS_FILE="$RUNNER_TEMP/changeset-status.json"
+          npx changeset status --output "$STATUS_FILE"
+
+          COUNT=$(STATUS_FILE="$STATUS_FILE" node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs'
+
+          const publicPackages = new Set([
+            '@art-liz/tokens',
+            '@art-liz/react',
+            '@art-liz/create-app',
+          ])
+          const status = JSON.parse(readFileSync(process.env.STATUS_FILE, 'utf8'))
+
+          console.log(status.releases.filter(({ name }) => publicPackages.has(name)).length)
+          NODE
+          )
 
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
           if [ "$COUNT" -gt 0 ]; then
-            echo "Pending changesets found: $COUNT"
+            echo "Pending release changesets found: $COUNT"
           else
             echo "No pending changesets. Beta publication will be skipped."
           fi
