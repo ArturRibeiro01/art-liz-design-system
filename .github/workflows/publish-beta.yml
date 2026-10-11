@@ -49,33 +49,20 @@ jobs:
         id: changesets
         shell: bash
         run: |
-          COUNT=$(
-            node --input-type=module <<'NODE'
-          import { readdirSync, readFileSync } from 'node:fs'
+          STATUS_FILE="$RUNNER_TEMP/changeset-status.json"
+          npx changeset status --output "$STATUS_FILE"
 
-          const packageReleasePattern =
-            /^\s*['"]?@art-liz\/(?:tokens|react|create-app)['"]?\s*:\s*(?:patch|minor|major)\s*$/
+          COUNT=$(STATUS_FILE="$STATUS_FILE" node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs'
 
-          let count = 0
+          const publicPackages = new Set([
+            '@art-liz/tokens',
+            '@art-liz/react',
+            '@art-liz/create-app',
+          ])
+          const status = JSON.parse(readFileSync(process.env.STATUS_FILE, 'utf8'))
 
-          for (const entry of readdirSync('.changeset', { withFileTypes: true })) {
-            if (!entry.isFile() || !entry.name.endsWith('.md') || entry.name.toLowerCase() === 'readme.md') {
-              continue
-            }
-
-            const contents = readFileSync(`.changeset/${entry.name}`, 'utf8')
-            const frontmatter = contents.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-
-            if (!frontmatter) {
-              continue
-            }
-
-            if (frontmatter[1].split(/\r?\n/).some((line) => packageReleasePattern.test(line))) {
-              count += 1
-            }
-          }
-
-          console.log(count)
+          console.log(status.releases.filter(({ name }) => publicPackages.has(name)).length)
           NODE
           )
 
