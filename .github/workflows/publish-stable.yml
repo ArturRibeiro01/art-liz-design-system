@@ -23,9 +23,11 @@ jobs:
     if: vars.NPM_RELEASES_ENABLED == 'true' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: npm-production
+
     permissions:
       contents: read
       id-token: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,7 +38,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          package-manager-cache: false
           registry-url: https://registry.npmjs.org
 
       - name: Pin npm version
@@ -48,5 +49,31 @@ jobs:
       - name: Test, build, and validate package tarballs
         run: npm run ci
 
-      - name: Publish stable latest dist-tag
+      - name: Publish unpublished stable versions
         run: npx changeset publish --no-git-tag
+
+      - name: Promote current package versions to latest
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PACKAGES=(
+            "packages/tokens"
+            "packages/react"
+            "packages/create-app"
+          )
+
+          for PACKAGE_DIR in "${PACKAGES[@]}"; do
+            NAME=$(node -p "require('./${PACKAGE_DIR}/package.json').name")
+            VERSION=$(node -p "require('./${PACKAGE_DIR}/package.json').version")
+
+            echo "Checking ${NAME}@${VERSION}..."
+
+            if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+              echo "${NAME}@${VERSION} exists. Promoting it to latest..."
+              npm dist-tag add "${NAME}@${VERSION}" latest
+            else
+              echo "ERROR: ${NAME}@${VERSION} was not found after publish."
+              exit 1
+            fi
+          done
