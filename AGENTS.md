@@ -34,7 +34,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Pacotes publicáveis planejados: `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
 - Versões pré-release de `@art-liz/create-app` usam dependências `@art-liz/react` e `@art-liz/tokens` na tag `beta` por padrão; versões estáveis usam `latest`. O usuário ainda pode sobrescrever com `--tag latest|beta`.
-- O Storybook tem builds estáticos separados para homologação e produção.
+- O Storybook tem builds estáticos separados para homologação e produção e deploy automático no GitHub Pages via `.github/workflows/deploy-storybook.yml`.
 - ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged no pre-commit.
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
 - O fluxo GitFlow usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
@@ -118,6 +118,6 @@ Não trate o reinício como correção de código se um build limpo também falh
 
 ## Pendências conhecidas
 
-Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa, critérios de acessibilidade/cobertura, hospedagem/deploy do Storybook e confirmação de acesso ao escopo npm `@art-liz`.
+Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa, critérios de acessibilidade/cobertura, confirmação da primeira publicação do Storybook no GitHub Pages e confirmação de acesso ao escopo npm `@art-liz`.
 
 Ao concluir um trabalho que altere essas decisões ou pendências, atualize este resumo e `DESIGN_SYSTEM.md` para que a próxima sessão possa continuar sem depender desta conversa.
