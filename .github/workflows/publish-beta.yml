@@ -49,20 +49,21 @@ jobs:
         id: changesets
         shell: bash
         run: |
-          STATUS_FILE="$RUNNER_TEMP/changeset-status.json"
-          npx changeset status --output "$STATUS_FILE"
-
-          COUNT=$(STATUS_FILE="$STATUS_FILE" node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs'
+          COUNT=$(node --input-type=module <<'NODE'
+          import readChangesets from '@changesets/read'
 
           const publicPackages = new Set([
             '@art-liz/tokens',
             '@art-liz/react',
             '@art-liz/create-app',
           ])
-          const status = JSON.parse(readFileSync(process.env.STATUS_FILE, 'utf8'))
+          const changesets = await readChangesets(process.cwd())
 
-          console.log(status.releases.filter(({ name }) => publicPackages.has(name)).length)
+          console.log(
+            changesets.filter(({ releases }) =>
+              releases.some(({ name }) => publicPackages.has(name)),
+            ).length,
+          )
           NODE
           )
 
