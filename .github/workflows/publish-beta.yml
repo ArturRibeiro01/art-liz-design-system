@@ -104,6 +104,7 @@ jobs:
             "packages/react"
             "packages/create-app"
           )
+          RECOVERY_TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
 
           for PACKAGE_DIR in "${PACKAGES[@]}"; do
             NAME=$(node -p "require('./${PACKAGE_DIR}/package.json').name")
@@ -120,7 +121,9 @@ jobs:
                 exit 1
               fi
             else
-              echo "Publishing ${NAME}@${VERSION} with beta dist-tag..."
+              SNAPSHOT_VERSION="${VERSION}-beta-recovery.${RECOVERY_TIMESTAMP}"
+              echo "Publishing ${NAME}@${SNAPSHOT_VERSION} with beta dist-tag from current ${VERSION}..."
+              PACKAGE_DIR="$PACKAGE_DIR" SNAPSHOT_VERSION="$SNAPSHOT_VERSION" node -e "const { readFileSync, writeFileSync } = require('node:fs'); const { resolve } = require('node:path'); const manifestPath = resolve(process.env.PACKAGE_DIR, 'package.json'); const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')); manifest.version = process.env.SNAPSHOT_VERSION; writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n')"
               npm publish --workspace "$PACKAGE_DIR" --tag beta --access public
             fi
           done
