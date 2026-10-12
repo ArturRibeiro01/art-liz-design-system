@@ -119,6 +119,6 @@ Não trate o reinício como correção de código se um build limpo também falh
 
 ## Pendências conhecidas
 
-Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa, critérios de acessibilidade/cobertura, confirmação da primeira publicação do Storybook no GitHub Pages e confirmação de acesso ao escopo npm `@art-liz`.
+Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa e critérios de acessibilidade/cobertura.
 
 Ao concluir um trabalho que altere essas decisões ou pendências, atualize este resumo e `DESIGN_SYSTEM.md` para que a próxima sessão possa continuar sem depender desta conversa.
