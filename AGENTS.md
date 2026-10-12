@@ -33,7 +33,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores.
 - Pacotes publicáveis planejados: `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
-- O workflow `publish-beta.yml` tem uma recuperação manual por `workflow_dispatch` com `publish-current=true` para publicar versões atuais ainda ausentes do npm quando os changesets já foram consumidos.
+- O workflow `publish-beta.yml` tem uma recuperação manual por `workflow_dispatch` com `publish-current=true` para publicar snapshots pré-release das versões atuais ainda ausentes do npm quando os changesets já foram consumidos.
 - Versões pré-release de `@art-liz/create-app` usam dependências `@art-liz/react` e `@art-liz/tokens` na tag `beta` por padrão; versões estáveis usam `latest`. O usuário ainda pode sobrescrever com `--tag latest|beta`.
 - O Storybook tem builds estáticos separados para homologação e produção e deploy automático no GitHub Pages via `.github/workflows/deploy-storybook.yml`.
 - ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged no pre-commit.
