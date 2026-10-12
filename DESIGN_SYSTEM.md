@@ -219,7 +219,7 @@ Rotas publicadas:
 - Homologação: `/homolog/`, compilada a partir da branch `develop`.
 - Produção: `/prod/`, compilada a partir da branch `main`.
 
-Para o primeiro deploy, configure no GitHub a fonte do Pages em Settings → Pages → Build and deployment → Source → GitHub Actions. O workflow usa as actions oficiais de Pages, com `pages: write` e `id-token: write`, sem `NPM_TOKEN` ou segredo adicional. Como cada deploy do GitHub Pages substitui o artefato publicado, o workflow sempre faz checkout de `develop` e `main`, recompila os dois destinos e publica ambos no mesmo artefato.
+O Pages do repositório usa a fonte `GitHub Actions`. O workflow usa as actions oficiais de Pages, com `pages: write` e `id-token: write`, sem `NPM_TOKEN` ou segredo adicional. Como cada deploy do GitHub Pages substitui o artefato publicado, o workflow sempre faz checkout de `develop` e `main`, recompila os dois destinos e publica ambos no mesmo artefato.
 
 ## Publicação npm
 
@@ -229,23 +229,15 @@ Os pacotes destinados à publicação são:
 - `@art-liz/react`
 - `@art-liz/create-app`
 
-Os três pacotes declaram acesso público. É necessário ter uma conta npm autenticada e permissão para publicar no escopo `@art-liz`. Nenhuma publicação é feita automaticamente até a primeira publicação estável dos três pacotes, a configuração dos Trusted Publishers no npm e a ativação da variável de repositório `NPM_RELEASES_ENABLED=true`.
+Os três pacotes declaram acesso público. A publicação automatizada usa Trusted Publishing/OIDC, sem `NPM_TOKEN`, e depende da variável de repositório `NPM_RELEASES_ENABLED=true` e dos environments `npm-beta` e `npm-production`.
 
-Antes de habilitar os workflows, valide os tarballs em instalação limpa:
+Antes de publicar uma mudança, valide os tarballs em instalação limpa:
 
 ```sh
 npm run release:verify
 ```
 
-Como o escopo npm ainda não foi inicializado, a primeira publicação estável é manual e só deve ocorrer depois dessa validação. Publique `tokens`, depois `react` e por fim `create-app`:
-
-```sh
-npm publish --workspace @art-liz/tokens --access public
-npm publish --workspace @art-liz/react --access public
-npm publish --workspace @art-liz/create-app --access public
-```
-
-Em seguida, configure cada pacote no npm para Trusted Publishing com os workflows `publish-beta.yml`/ambiente `npm-beta` e `publish-stable.yml`/ambiente `npm-production`. O publisher precisa permitir `npm publish`; a primeira publicação de cada configuração confiável deve acontecer em até dois dias após criá-la.
+Cada pacote no npm tem Trusted Publishers para os workflows `publish-beta.yml`/ambiente `npm-beta` e `publish-stable.yml`/ambiente `npm-production`. O publisher beta permite `npm publish`; o publisher estável permite `npm publish` e `npm dist-tag`.
 
 ## Releases automatizados
 
@@ -253,7 +245,7 @@ Cada mudança publicável recebe um Changeset. O workflow `changesets-version.ym
 
 Configure no GitHub o environment `npm-beta` e o environment `npm-production` com required reviewers. Mantenha `NPM_RELEASES_ENABLED` ausente/falso até concluir a publicação inicial e cadastrar os Trusted Publishers. Para a action de versionamento criar PRs, habilite em Settings → Actions → General a opção que permite ao GitHub Actions criar PRs. PRs criadas com `GITHUB_TOKEN` podem não iniciar outros workflows automaticamente; nesse caso, rode `Quality gates` pelo `workflow_dispatch` ou configure um GitHub App token.
 
-Não configure `NPM_TOKEN`: os jobs de publicação usam OIDC e limitam `id-token: write` ao job que publica. O workflow beta publica `tokens`/`react`/`create-app`; o workflow estável usa os manifests versionados pela PR de Changesets e publica na ordem declarada pelas dependências. O stable mantém `npm@11.6.2` para instalação e CI, mas atualiza para `npm@11.21.0` antes de executar `npm dist-tag add`, porque dist-tags via OIDC exigem npm 11.21.0+ e permissão `Allow npm dist-tag` no Trusted Publisher de produção. A issue #6 permanece aberta até confirmar acesso ao escopo e concluir a primeira instalação a partir do registry.
+Não configure `NPM_TOKEN`: os jobs de publicação usam OIDC e limitam `id-token: write` ao job que publica. O workflow beta publica `tokens`/`react`/`create-app`; o workflow estável usa os manifests versionados pela PR de Changesets e publica na ordem declarada pelas dependências. O stable mantém `npm@11.6.2` para instalação e CI, mas atualiza para `npm@11.21.0` antes de executar `npm dist-tag add`, porque dist-tags via OIDC exigem npm 11.21.0+ e permissão `Allow npm dist-tag` no Trusted Publisher de produção.
 
 O beta usa snapshots efêmeros (`0.0.0-beta-*`) e dist-tag `beta`; stable publica versões sem snapshot como `latest`. Para interromper releases automáticos, remova ou desative a variável `NPM_RELEASES_ENABLED`. Um snapshot beta problemático é substituído por outro; uma versão stable é corrigida com novo Changeset patch e promoção aprovada para `main`.
 
@@ -280,19 +272,111 @@ Esse passo limpa a otimização/cache de dependências do processo de desenvolvi
 
 ## UI Kits futuros
 
-UI Kits específicos devem ser adicionados como pacotes independentes em `packages/`, com nome e escopo consistentes, por exemplo `@art-liz/ui-kit-nome-do-projeto`. Um kit pode depender de tokens e componentes base, acrescentando composições, regras ou identidade próprias do sistema correspondente.
+UI Kits específicos devem ser adicionados apenas quando existir um produto consumidor real com componentes, composições ou decisões visuais que não pertençam ao núcleo compartilhado. Não crie pacote de demonstração, pacote vazio ou kit preventivo sem demanda concreta.
 
-Antes de criar um UI Kit, confirme que existe um conjunto real de componentes ou decisões que não pertence ao núcleo. Isso evita criar pacotes vazios e evita acoplar requisitos de um sistema aos consumidores dos demais.
+Use esta fronteira:
+
+- Núcleo (`@art-liz/tokens` e `@art-liz/react`): tokens, primitivas e componentes genéricos que servem a mais de um sistema. Exemplos: `Button`, `Text`, `Box`, `Container`, escala de cores, tipografia e foco.
+- UI Kit específico: composições, variações, regras de negócio visual ou identidade de um produto. Exemplos: `CitizenPortalHeader`, `InvoiceStatusBadge`, `AdminSidebar`, cards com copy/layout de um domínio ou tema visual exclusivo de um sistema.
+- Aplicação consumidora: fluxos, páginas, integração com API, permissões e estados que não precisam ser publicados para outros projetos.
+
+Crie um UI Kit quando pelo menos uma destas condições for verdadeira:
+
+- Dois ou mais componentes específicos do produto precisam ser reutilizados em mais de uma aplicação do mesmo domínio.
+- O produto tem identidade visual própria que não deve alterar o núcleo para todos os consumidores.
+- As composições usam componentes do núcleo, mas adicionam convenções de navegação, cards, headers, tabelas ou badges do domínio.
+- Manter a regra no app duplicaria código ou misturaria decisões de produto com o pacote compartilhado.
+
+Não crie um UI Kit quando a necessidade puder ser resolvida com props existentes, tokens configuráveis, CSS custom properties no app, ou quando houver apenas uma tela isolada sem reutilização prevista.
+
+### Convenções de pacote
+
+Um kit deve ser um workspace independente em `packages/`, com nome de diretório descritivo e estável:
+
+```text
+packages/ui-kit-nome-do-projeto/
+```
+
+O pacote npm deve usar o escopo `@art-liz`, por exemplo:
+
+```json
+{
+  "name": "@art-liz/ui-kit-nome-do-projeto",
+  "private": false,
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
+```
+
+Use `src/index.ts` como ponto público e exporte somente APIs intencionais. Evite exports profundos por componente enquanto não houver necessidade real, para preservar liberdade de reorganizar a estrutura interna.
+
+### Dependências
+
+Um UI Kit pode depender de `@art-liz/react` e `@art-liz/tokens` quando compõe componentes ou lê tokens diretamente. Mantenha `react`, `react-dom`, `@emotion/react` e `@emotion/styled` como `peerDependencies`, seguindo a estratégia do pacote React para evitar cópias duplicadas no consumidor.
+
+Não copie tokens ou componentes do núcleo para dentro do kit. O kit deve importar do núcleo e acrescentar somente a camada específica do produto. O núcleo não deve importar o kit em nenhuma hipótese; essa regra evita dependência circular e mantém o design system base reutilizável.
+
+### Implementação, stories e testes
+
+A estrutura deve seguir o padrão dos componentes do pacote React:
+
+```text
+packages/ui-kit-nome-do-projeto/src/
+  Component/
+    Component.tsx
+    Component.style.ts
+    Component.stories.tsx
+    Component.test.tsx
+    index.ts
+  index.ts
+```
+
+Separe API/comportamento em `Component.tsx` e estilos Emotion em `Component.style.ts`. Quando o estilo precisar de tipos do componente, use `import type`.
+
+Cada componente publicado pelo kit deve ter:
+
+- export público em `src/index.ts`;
+- story no Storybook, em grupo próprio do produto;
+- teste para comportamento observável e nomes acessíveis;
+- cobertura de estados relevantes para o domínio, como vazio, carregando, erro, permissões ou status.
+
+O Storybook deve carregar as stories do kit pelo glob de `apps/storybook/.storybook/main.ts`. Se o kit introduzir dependências visuais específicas, elas devem ficar no próprio kit ou no app Storybook conforme o uso, sem virar dependência runtime de `@art-liz/react`.
+
+### Versionamento e publicação
+
+Um UI Kit deve ter versionamento independente por Changesets. Uma mudança que afete apenas o kit recebe changeset apenas para o pacote do kit; mudanças que exigem nova API no núcleo recebem changesets separados para o núcleo e para o kit.
+
+O fluxo de publicação é o mesmo dos pacotes existentes:
+
+- beta a partir de `develop`, usando a dist-tag `beta`;
+- stable a partir de `main`, promovendo `latest` após aprovação;
+- Trusted Publishers cadastrados no npm para `publish-beta.yml`/`npm-beta` e `publish-stable.yml`/`npm-production`;
+- tarball validado por build, testes, lint e `release:verify` quando o script passar a cobrir o novo pacote.
+
+Antes de publicar o primeiro UI Kit, atualize os scripts de build, teste, release verification e Storybook para incluir o novo workspace. Registre no changeset se o kit depende de versões mínimas de `@art-liz/react` ou `@art-liz/tokens`.
+
+### Template
+
+O `@art-liz/create-app` não deve incluir UI Kits específicos por padrão. Avalie uma opção de template, flag ou preset somente quando existir um primeiro produto real usando o kit e houver benefício claro em automatizar essa instalação.
 
 ## Agentes e automação
 
-Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI, rulesets GitFlow e deploy do Storybook no GitHub Pages já estão configurados; publicação npm automatizada ainda depende da manutenção dos environments e dos Trusted Publishers.
+Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI, rulesets GitFlow, deploy do Storybook no GitHub Pages e publicação npm automatizada já estão configurados; os environments e Trusted Publishers precisam ser mantidos quando houver mudanças nos workflows ou nos pacotes.
 
 ## Itens ainda em aberto
 
 - Definir escalas completas de tipografia, cores, espaçamento e elevação.
 - Definir temas e estratégia para modo claro/escuro, se os produtos precisarem.
 - Estabelecer critérios de acessibilidade e compatibilidade de navegadores para os componentes.
-- Ampliar cobertura de testes e validação dos artefatos npm.
-- Confirmar o primeiro deploy do Storybook no GitHub Pages e registrar a URL final publicada.
-- Confirmar disponibilidade e controle do escopo `@art-liz` no npm antes da primeira publicação.
+- Ampliar cobertura de testes de componentes e validação visual.
