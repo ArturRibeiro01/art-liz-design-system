@@ -47,7 +47,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Primary: Story = {
+export const ButtonDefault: Story = {
   args: {
     children: 'Primary action',
     disabled: false,
@@ -56,112 +56,36 @@ export const Primary: Story = {
   },
 }
 
-export const Outline: Story = {
-  args: { children: 'Outline action', variant: 'outline' },
-}
-
-export const Ghost: Story = {
-  args: { children: 'Ghost action', variant: 'ghost' },
-}
-
-export const Link: Story = {
-  args: { children: 'Link action', variant: 'link' },
-}
-
-export const VariantMatrix: Story = {
-  render: () => (
-    <div
-      style={{
-        display: 'grid',
-        gap: 16,
-        gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
-      }}
-    >
-      {variants.map((variant) => (
-        <div key={variant} style={{ display: 'grid', gap: 8 }}>
-          <strong>{variant}</strong>
-          <Button variant={variant}>Text</Button>
-          <Button disabled variant={variant}>
-            Disabled
-          </Button>
-        </div>
-      ))}
-    </div>
-  ),
-}
-
 export const IntentMatrix: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 24 }}>
+      <strong>Tamanhos dos botões</strong>
+      <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
+        <Button size="small">Small</Button>
+        <Button size="medium">Medium</Button>
+        <Button size="large">Large</Button>
+      </div>
+
       {intents.map((intent) => (
-        <section key={intent} style={{ display: 'grid', gap: 12 }}>
-          <strong>{intent}</strong>
-          <div
-            style={{
-              display: 'grid',
-              gap: 12,
-              gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
-            }}
-          >
-            {variants.map((variant) => (
-              <Button intent={intent} key={`${intent}-${variant}`} variant={variant}>
-                {variant}
-              </Button>
-            ))}
-          </div>
-        </section>
+        <>
+          <section key={intent} style={{ display: 'grid', gap: 12 }}>
+            <strong>{intent}</strong>
+            <div
+              style={{
+                display: 'grid',
+                gap: 12,
+                gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
+              }}
+            >
+              {variants.map((variant) => (
+                <Button intent={intent} key={`${intent}-${variant}`} variant={variant}>
+                  {variant}
+                </Button>
+              ))}
+            </div>
+          </section>
+        </>
       ))}
     </div>
   ),
-}
-
-export const DisabledIntentMatrix: Story = {
-  render: () => (
-    <div style={{ display: 'grid', gap: 24 }}>
-      {intents.map((intent) => (
-        <section key={intent} style={{ display: 'grid', gap: 12 }}>
-          <strong>{intent}</strong>
-          <div
-            style={{
-              display: 'grid',
-              gap: 12,
-              gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
-            }}
-          >
-            {variants.map((variant) => (
-              <Button disabled intent={intent} key={`${intent}-${variant}`} variant={variant}>
-                {variant}
-              </Button>
-            ))}
-          </div>
-        </section>
-      ))}
-    </div>
-  ),
-}
-
-export const SizeScale: Story = {
-  render: () => (
-    <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-      <Button size="small">Small</Button>
-      <Button size="medium">Medium</Button>
-      <Button size="large">Large</Button>
-    </div>
-  ),
-}
-
-export const StartIcon: Story = {
-  args: { children: 'Text', startIcon: 'Plus' },
-}
-
-export const EndIcon: Story = {
-  args: { children: 'Text', endIcon: 'Plus' },
-}
-
-export const IconOnly: Story = {
-  args: { 'aria-label': 'Delete item', startIcon: 'Trash' },
-}
-
-export const Disabled: Story = {
-  args: { children: 'Disabled', disabled: true },
 }
