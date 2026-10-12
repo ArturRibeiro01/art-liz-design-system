@@ -35,6 +35,13 @@ Os builds do Storybook ficam em `storybook-static/homolog` e `storybook-static/p
 
 O Storybook também documenta os tokens em páginas `Tokens/*`, incluindo exemplos de como trocar fonte e cores via CSS custom properties no projeto consumidor.
 
+O deploy automático do Storybook usa GitHub Pages. A raiz do site aponta para os ambientes publicados:
+
+- Homologação: `https://arturribeiro01.github.io/art-liz-design-system/homolog/`
+- Produção: `https://arturribeiro01.github.io/art-liz-design-system/prod/`
+
+O workflow recompila e publica os dois ambientes quando há push em `develop` ou `main` com alterações em `packages/**`, `apps/storybook/**`, `package.json`, `package-lock.json` ou no próprio workflow. Para o primeiro uso, configure o Pages do repositório com source `GitHub Actions`.
+
 ## Criar um projeto
 
 O scaffolder cria um projeto React independente, com o Design System configurado. Depois da publicação do CLI e dos pacotes do DS, o comando será:

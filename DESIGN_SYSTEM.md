@@ -206,7 +206,20 @@ Saídas:
 - Homologação: `storybook-static/homolog`
 - Produção: `storybook-static/prod`
 
-Os comandos produzem o Storybook estático para publicação em destinos de hospedagem distintos. Atualmente, ambos usam a mesma configuração e as mesmas stories; a separação é de artefato/destino, não de conteúdo. Nenhum provedor de hospedagem ou pipeline de deploy está configurado ainda.
+Os comandos produzem o Storybook estático para publicação em destinos de hospedagem distintos. Ambos usam a mesma configuração e as mesmas stories; a separação é de artefato/destino, não de conteúdo.
+
+O workflow `.github/workflows/deploy-storybook.yml` publica o Storybook no GitHub Pages quando há push em `develop` ou `main` com alterações em `packages/**`, `apps/storybook/**`, `package.json`, `package-lock.json` ou no próprio workflow. Ele também pode ser executado manualmente por `workflow_dispatch`. O site raiz esperado é:
+
+```text
+https://arturribeiro01.github.io/art-liz-design-system/
+```
+
+Rotas publicadas:
+
+- Homologação: `/homolog/`, compilada a partir da branch `develop`.
+- Produção: `/prod/`, compilada a partir da branch `main`.
+
+Para o primeiro deploy, configure no GitHub a fonte do Pages em Settings → Pages → Build and deployment → Source → GitHub Actions. O workflow usa as actions oficiais de Pages, com `pages: write` e `id-token: write`, sem `NPM_TOKEN` ou segredo adicional. Como cada deploy do GitHub Pages substitui o artefato publicado, o workflow sempre faz checkout de `develop` e `main`, recompila os dois destinos e publica ambos no mesmo artefato.
 
 ## Publicação npm
 
@@ -273,7 +286,7 @@ Antes de criar um UI Kit, confirme que existe um conjunto real de componentes ou
 
 ## Agentes e automação
 
-Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI e rulesets GitFlow já estão configurados; deploy do Storybook e publicação npm automatizada ainda dependem de decisões sobre ambientes, hosting e credenciais.
+Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI, rulesets GitFlow e deploy do Storybook no GitHub Pages já estão configurados; publicação npm automatizada ainda depende da manutenção dos environments e dos Trusted Publishers.
 
 ## Itens ainda em aberto
 
@@ -281,5 +294,5 @@ Agentes especializados não são necessários para a fase atual. Codex e outros 
 - Definir temas e estratégia para modo claro/escuro, se os produtos precisarem.
 - Estabelecer critérios de acessibilidade e compatibilidade de navegadores para os componentes.
 - Ampliar cobertura de testes e validação dos artefatos npm.
-- Escolher hospedagem e configurar deploy separado do Storybook de homologação e produção.
+- Confirmar o primeiro deploy do Storybook no GitHub Pages e registrar a URL final publicada.
 - Confirmar disponibilidade e controle do escopo `@art-liz` no npm antes da primeira publicação.
