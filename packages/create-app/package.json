@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ArturRibeiro01/art-liz-design-system.git",
+    "url": "git+https://github.com/ArturRibeiro01/art-liz-design-system.git",
     "directory": "packages/create-app"
   },
   "type": "module",
@@ -15,7 +15,7 @@
     "README.md"
   ],
   "bin": {
-    "create-app": "./bin/create-app.js"
+    "create-app": "bin/create-app.js"
   },
   "engines": {
     "node": ">=20.19.0"

@@ -11,6 +11,12 @@ on:
       - 'package-lock.json'
       - 'scripts/verify-release-artifacts.mjs'
   workflow_dispatch:
+    inputs:
+      publish-current:
+        description: 'Publish current package versions to beta when no pending changesets exist'
+        required: false
+        default: false
+        type: boolean
 
 permissions: {}
 
@@ -80,9 +86,41 @@ jobs:
         run: npx changeset version --snapshot beta
 
       - name: Test, build, and validate package tarballs
-        if: steps.changesets.outputs.count != '0'
+        if: steps.changesets.outputs.count != '0' || inputs['publish-current']
         run: npm run ci
 
       - name: Publish beta dist-tag
         if: steps.changesets.outputs.count != '0'
         run: npx changeset publish --tag beta --no-git-tag
+
+      - name: Publish current versions to beta
+        if: steps.changesets.outputs.count == '0' && inputs['publish-current']
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PACKAGES=(
+            "packages/tokens"
+            "packages/react"
+            "packages/create-app"
+          )
+
+          for PACKAGE_DIR in "${PACKAGES[@]}"; do
+            NAME=$(node -p "require('./${PACKAGE_DIR}/package.json').name")
+            VERSION=$(node -p "require('./${PACKAGE_DIR}/package.json').version")
+            CURRENT_BETA=$(npm view "${NAME}@beta" version 2>/dev/null || true)
+
+            echo "Checking ${NAME}@${VERSION} for beta..."
+
+            if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+              if [ "$CURRENT_BETA" = "$VERSION" ]; then
+                echo "${NAME}@${VERSION} already exists and is already tagged as beta."
+              else
+                echo "::error::${NAME}@${VERSION} already exists, but beta points to ${CURRENT_BETA:-nothing}. This recovery path does not move dist-tags in npm-beta."
+                exit 1
+              fi
+            else
+              echo "Publishing ${NAME}@${VERSION} with beta dist-tag..."
+              npm publish --workspace "$PACKAGE_DIR" --tag beta --access public
+            fi
+          done
