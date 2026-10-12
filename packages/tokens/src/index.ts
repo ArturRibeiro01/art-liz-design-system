@@ -1,29 +1,35 @@
-export const colors = {
-  ink: '#142923',
-  forest: '#236b58',
-  moss: '#a9c6a1',
-  paper: '#f4f6f3',
-  white: '#ffffff',
-  muted: '#52615b',
-  border: '#d8dedb',
-  danger: '#b23a48',
-} as const
+export { breakpoints } from './breakpoints.js'
+export { colorCssVariables, colors, colorValues } from './colors.js'
+export { focus } from './focus.js'
+export { motion } from './motion.js'
+export { radii } from './radii.js'
+export { shadows } from './shadows.js'
+export { spacing } from './spacing.js'
+export { typography } from './typography.js'
+export { zIndices } from './zIndices.js'
 
-export const spacing = {
-  1: '4px',
-  2: '8px',
-  3: '12px',
-  4: '16px',
-  6: '24px',
-  8: '32px',
-} as const
+import { breakpoints } from './breakpoints.js'
+import { colorCssVariables, colors, colorValues } from './colors.js'
+import { focus } from './focus.js'
+import { motion } from './motion.js'
+import { radii } from './radii.js'
+import { shadows } from './shadows.js'
+import { spacing } from './spacing.js'
+import { typography } from './typography.js'
+import { zIndices } from './zIndices.js'
 
-export const radii = {
-  small: '4px',
-  medium: '8px',
-  pill: '999px',
+export const tokens = {
+  breakpoints,
+  colorCssVariables,
+  colorValues,
+  colors,
+  focus,
+  motion,
+  radii,
+  shadows,
+  spacing,
+  typography,
+  zIndices,
 } as const
-
-export const tokens = { colors, spacing, radii } as const
 
 export type DesignTokens = typeof tokens

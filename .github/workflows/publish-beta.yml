@@ -1,0 +1,129 @@
+name: Publish beta packages
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - '.changeset/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/verify-release-artifacts.mjs'
+  workflow_dispatch:
+    inputs:
+      publish-current:
+        description: 'Publish current package versions to beta when no pending changesets exist'
+        required: false
+        default: false
+        type: boolean
+
+permissions: {}
+
+concurrency:
+  group: publish-beta-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: vars.NPM_RELEASES_ENABLED == 'true' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment: npm-beta
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js for npm Trusted Publishing
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Pin npm version
+        run: npm install --global npm@11.6.2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for pending changesets
+        id: changesets
+        shell: bash
+        run: |
+          COUNT=$(node --input-type=module <<'NODE'
+          import readChangesets from '@changesets/read'
+
+          const publicPackages = new Set([
+            '@art-liz/tokens',
+            '@art-liz/react',
+            '@art-liz/create-app',
+          ])
+          const changesets = await readChangesets(process.cwd())
+
+          console.log(
+            changesets.filter(({ releases }) =>
+              releases.some(({ name }) => publicPackages.has(name)),
+            ).length,
+          )
+          NODE
+          )
+
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+          if [ "$COUNT" -gt 0 ]; then
+            echo "Pending release changesets found: $COUNT"
+          else
+            echo "No pending changesets. Beta publication will be skipped."
+          fi
+
+      - name: Create beta snapshot versions
+        if: steps.changesets.outputs.count != '0'
+        run: npx changeset version --snapshot beta
+
+      - name: Test, build, and validate package tarballs
+        if: steps.changesets.outputs.count != '0' || inputs['publish-current']
+        run: npm run ci
+
+      - name: Publish beta dist-tag
+        if: steps.changesets.outputs.count != '0'
+        run: npx changeset publish --tag beta --no-git-tag
+
+      - name: Publish current versions to beta
+        if: steps.changesets.outputs.count == '0' && inputs['publish-current']
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PACKAGES=(
+            "packages/tokens"
+            "packages/react"
+            "packages/create-app"
+          )
+          RECOVERY_TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
+
+          for PACKAGE_DIR in "${PACKAGES[@]}"; do
+            NAME=$(node -p "require('./${PACKAGE_DIR}/package.json').name")
+            VERSION=$(node -p "require('./${PACKAGE_DIR}/package.json').version")
+            CURRENT_BETA=$(npm view "${NAME}@beta" version 2>/dev/null || true)
+
+            echo "Checking ${NAME}@${VERSION} for beta..."
+
+            if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+              if [ "$CURRENT_BETA" = "$VERSION" ]; then
+                echo "${NAME}@${VERSION} already exists and is already tagged as beta."
+              else
+                echo "::error::${NAME}@${VERSION} already exists, but beta points to ${CURRENT_BETA:-nothing}. This recovery path does not move dist-tags in npm-beta."
+                exit 1
+              fi
+            else
+              SNAPSHOT_VERSION="${VERSION}-beta-recovery.${RECOVERY_TIMESTAMP}"
+              echo "Publishing ${NAME}@${SNAPSHOT_VERSION} with beta dist-tag from current ${VERSION}..."
+              PACKAGE_DIR="$PACKAGE_DIR" SNAPSHOT_VERSION="$SNAPSHOT_VERSION" node -e "const { readFileSync, writeFileSync } = require('node:fs'); const { resolve } = require('node:path'); const manifestPath = resolve(process.env.PACKAGE_DIR, 'package.json'); const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')); manifest.version = process.env.SNAPSHOT_VERSION; writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n')"
+              npm publish --workspace "$PACKAGE_DIR" --tag beta --access public
+            fi
+          done

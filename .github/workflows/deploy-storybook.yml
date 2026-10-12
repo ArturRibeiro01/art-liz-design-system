@@ -1,0 +1,203 @@
+name: Deploy Storybook
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - '.github/workflows/deploy-storybook.yml'
+      - 'apps/storybook/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: storybook-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.repository == 'ArturRibeiro01/art-liz-design-system'
+    name: Build Storybook pages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          path: develop
+          persist-credentials: false
+
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            develop/package-lock.json
+            main/package-lock.json
+
+      - name: Pin npm version
+        run: npm install --global npm@11.6.2
+
+      - name: Build homolog Storybook from develop
+        working-directory: develop
+        run: |
+          npm ci
+          npm run build:storybook:homolog
+
+      - name: Build production Storybook from main
+        working-directory: main
+        run: |
+          npm ci
+          npm run build:storybook:prod
+
+      - name: Assemble Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p pages
+          cp -R develop/storybook-static/homolog pages/homolog
+          cp -R main/storybook-static/prod pages/prod
+          touch pages/.nojekyll
+
+          cat > pages/index.html <<'HTML'
+          <!doctype html>
+          <html lang="pt-BR">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <title>Art-Liz Storybook</title>
+              <style>
+                :root {
+                  color-scheme: light dark;
+                  font-family:
+                    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                    sans-serif;
+                }
+
+                body {
+                  align-items: center;
+                  background: #f7f7f8;
+                  color: #202124;
+                  display: flex;
+                  margin: 0;
+                  min-height: 100vh;
+                }
+
+                main {
+                  margin: 0 auto;
+                  max-width: 680px;
+                  padding: 48px 24px;
+                }
+
+                h1 {
+                  font-size: 32px;
+                  line-height: 1.2;
+                  margin: 0 0 12px;
+                }
+
+                p {
+                  color: #5f6368;
+                  font-size: 16px;
+                  line-height: 1.6;
+                  margin: 0 0 24px;
+                }
+
+                nav {
+                  display: grid;
+                  gap: 12px;
+                }
+
+                a {
+                  background: #ffffff;
+                  border: 1px solid #dadce0;
+                  border-radius: 8px;
+                  color: #174ea6;
+                  display: block;
+                  font-weight: 700;
+                  padding: 16px 18px;
+                  text-decoration: none;
+                }
+
+                a:hover {
+                  border-color: #174ea6;
+                }
+
+                span {
+                  color: #5f6368;
+                  display: block;
+                  font-size: 14px;
+                  font-weight: 400;
+                  margin-top: 4px;
+                }
+
+                @media (prefers-color-scheme: dark) {
+                  body {
+                    background: #171717;
+                    color: #f1f3f4;
+                  }
+
+                  p,
+                  span {
+                    color: #c5c8cc;
+                  }
+
+                  a {
+                    background: #242628;
+                    border-color: #3c4043;
+                    color: #a8c7fa;
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              <main>
+                <h1>Art-Liz Storybook</h1>
+                <p>Catálogos publicados automaticamente a partir das branches do GitFlow.</p>
+                <nav aria-label="Ambientes do Storybook">
+                  <a href="./homolog/">Homologação<span>Build gerado a partir da branch develop.</span></a>
+                  <a href="./prod/">Produção<span>Build gerado a partir da branch main.</span></a>
+                </nav>
+              </main>
+            </body>
+          </html>
+          HTML
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages
+
+  deploy:
+    if: github.repository == 'ArturRibeiro01/art-liz-design-system'
+    name: Deploy Storybook to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

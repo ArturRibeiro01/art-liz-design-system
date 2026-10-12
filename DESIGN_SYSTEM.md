@@ -15,7 +15,9 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Build:** Vite em modo de biblioteca para os pacotes e para aplicações.
 - **Testes:** Vitest, Testing Library e jsdom.
 - **Documentação visual:** Storybook com integração Vite.
+- **Ícones:** Phosphor Icons (`@phosphor-icons/react`) no catálogo e nas stories; componentes React recebem ícones via `ReactNode` e não acoplam consumidores à biblioteca.
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
+- **Task runner:** scripts npm e workspaces; Nx/Turborepo não são necessários para a escala atual.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
 - **GitFlow:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
@@ -30,27 +32,73 @@ apps/
   playground/       Aplicação Vite para experimentar os pacotes como consumidor
   storybook/        Catálogo de componentes e documentação interativa
 packages/
+  create-app/       CLI npm e template monolítico para novos projetos React
   tokens/           Tokens de design sem dependência de React
   react/            Componentes React compartilhados e estilos Emotion
 ```
 
 O glob `packages/*` permite adicionar UI Kits no futuro. Por exemplo, um kit específico pode ser criado como `packages/ui-kit-nome-do-projeto`, publicado separadamente e composto sobre `@art-liz/tokens` e `@art-liz/react`.
 
+O pacote `@art-liz/create-app` contém o bin `create-app` e o scaffold em `template/`. O projeto gerado é um repositório React independente, não outro workspace do monorepo. Após a publicação do CLI e dos pacotes base, o uso estável será `npm create @art-liz/app@latest nome-do-projeto`. Versões estáveis do CLI usam `@art-liz/react` e `@art-liz/tokens` na tag `latest` por padrão; versões pré-release do CLI usam `beta` por padrão para testar uma combinação consistente de scaffolder e bibliotecas. Em qualquer versão, `--tag latest|beta` sobrescreve essa escolha. Antes disso, o template pode ser exercitado localmente com `node packages/create-app/bin/create-app.js nome-do-projeto --no-install --no-git`. Novos projetos recebem as versões da tag no momento da criação; projetos existentes atualizam suas dependências explicitamente com npm. O template inclui Vite, React/TypeScript, React Router, Zustand, TanStack Query, Vitest/Testing Library, ESLint, Prettier e Husky/lint-staged. Storybook é opcional e fica fora do scaffold inicial.
+
 ## Responsabilidade dos pacotes
 
 ### `@art-liz/tokens`
 
-Contém valores reutilizáveis e independentes de framework, como cores, espaçamentos e raios de borda. Os tokens atuais são um ponto inicial, não uma especificação visual definitiva.
+Contém valores reutilizáveis e independentes de framework, como cores, espaçamentos, raios de borda, tipografia, sombras, foco, movimento, breakpoints e camadas de z-index. Os tokens atuais são um ponto inicial, não uma especificação visual definitiva.
 
-Fonte: `packages/tokens/src/index.ts`.
+Os tokens ficam organizados por família em `packages/tokens/src/`, por exemplo `colors.ts`, `spacing.ts`, `radii.ts`, `typography.ts`, `shadows.ts`, `focus.ts`, `motion.ts`, `breakpoints.ts` e `zIndices.ts`. O arquivo `index.ts` é o ponto público do pacote e agrega as famílias exportadas, preservando também o objeto `tokens`.
+
+A família `colors` usa escalas de `50` a `900` para `neutral`, `primary`, `auxiliary`, `danger`, `warning`, `success` e `info`. Os tons `50` a `700` seguem a referência visual inicial; `800` e `900` completam cada escala com tons mais escuros equivalentes.
+
+A tipografia define uma fonte padrão para componentes em `typography.fontFamilies.component`, mas permite troca pelo produto consumidor com a variável CSS `--art-liz-font-family`. Por exemplo, um projeto pode definir `:root { --art-liz-font-family: "Roboto", sans-serif; }` para aplicar outra fonte aos componentes sem alterar a biblioteca.
+
+As cores também são exportadas como valores CSS sobrescrevíveis. `colors.primary[50]`, por exemplo, resolve para `var(--art-liz-color-primary-50, #f9ffff)`. Um consumidor pode trocar um token isolado:
+
+```css
+:root {
+  --art-liz-color-primary-50: #faf5ff;
+}
+```
+
+Ou pode trocar uma família inteira definindo todos os tons do grupo:
+
+```css
+:root {
+  --art-liz-color-primary-50: #faf5ff;
+  --art-liz-color-primary-100: #f3e8ff;
+  --art-liz-color-primary-200: #e9d5ff;
+  --art-liz-color-primary-300: #d8b4fe;
+  --art-liz-color-primary-400: #c084fc;
+  --art-liz-color-primary-500: #a855f7;
+  --art-liz-color-primary-600: #9333ea;
+  --art-liz-color-primary-700: #7e22ce;
+  --art-liz-color-primary-800: #6b21a8;
+  --art-liz-color-primary-900: #581c87;
+}
+```
+
+Para documentação visual, o Storybook inclui páginas em `Tokens/*` para cores, tipografia, espaçamento, raios, sombras, foco, movimento, breakpoints e z-index. As páginas mostram valores, exemplos e playgrounds de sobrescrita quando aplicável.
 
 ### `@art-liz/react`
 
 Contém componentes acessíveis e reutilizáveis para React. O pacote importa tokens e mantém React e Emotion como `peerDependencies`, evitando incorporá-los como cópias privadas da biblioteca no projeto consumidor.
 
-O componente inicial é `Button`, com variantes `primary` e `secondary`, suporte aos atributos nativos de botão e estado desabilitado. Cada componente separa sua implementação (`Component.tsx`) de seus estilos Emotion (`Component.style.ts`); estilos podem consumir os tipos do componente via `import type`.
+Os componentes React ficam organizados em `packages/react/src/<Component>/`, com implementação, estilos, story e testes juntos. Cada pasta tem um `index.ts` e o `packages/react/src/index.ts` agrega a API pública do pacote.
+
+O componente `Box` é um contêiner `div` com padding por tokens de espaçamento e opções de fundo, raio e sombra. Cada opção visual é independente e opcional; atributos nativos de `div` e `children` são encaminhados ao elemento.
+
+O componente `Container` centraliza conteúdo com largura fluida e gutters horizontais de `spacing[4]` por padrão. A prop `maxWidth` escolhe um limite baseado nos breakpoints `sm`, `md`, `lg` e `xl`, ou `full` para ocupar toda a largura disponível; o padrão é `xl`. `background` aceita tokens escalares (`white`, `black`, `paper` etc.) e tokens de escala no formato `primary.600`; `padding` e `margin` aceitam valores da escala `spacing`, e `margin` também aceita `auto` (padrão centralizado). Use `Container` para limitar a largura da página e `Box` para compor superfícies dentro dele.
+
+O componente `Text` aplica os padrões tipográficos definidos em `typography.textStyles`: `h1` (30/38), `h2` (24/32), `h3` (20/28), `title` (18/26), `subtitle` (16/24), `body` (14/22) e `caption` (12/18), em pixels com base de 16px. `variant` seleciona o padrão, `weight` escolhe um token de peso, `color` escolhe uma cor do sistema de tokens, `fontFamily` aceita aliases `component`/`sans`/`mono` ou uma stack CSS personalizada, e `as` escolhe o elemento HTML semântico (`h1`, `p`, `span` etc.). Fontes externas precisam ser carregadas pelo produto consumidor. A escala de tamanho continua centralizada em `typography.fontSizes`.
+
+O componente inicial é `Button`, com aparências `primary`, `outline`, `ghost` e `link`; intents semânticos `primary`, `danger`, `success`, `info` e `warning`; tamanhos `small`, `medium` e `large`; slots opcionais `startIcon`/`endIcon`; suporte aos atributos nativos; e estados hover, pressed, focus-visible e disabled para todas as combinações. Cada par intent/variant define suas próprias cores para base, hover, active e disabled, sem propagar escolhas entre combinações. A paleta de `primary` preserva as escolhas visuais do projeto; contrastes devem ser avaliados de acordo com os tokens definidos pelo produto consumidor. Os rótulos do Button usam `Text`: `body` em `small`, `subtitle` em `medium` e `title` em `large`, herdando a cor do intent. Ícones decorativos são ocultos da árvore acessível; quando o Button não tem conteúdo textual, `aria-label` ou `aria-labelledby` é obrigatório. O tamanho do ícone é `md` em `small`, `xl` no padrão `medium` e `2xl` em `large`. Cada componente separa implementação (`Component.tsx`) e estilos Emotion (`Component.style.ts`); estilos podem importar tipos do componente usando `import type`.
 
 Fontes: `packages/react/src/` e `packages/react/package.json`.
+
+### Baseline de acessibilidade e validação
+
+Componentes interativos usam elementos HTML nativos, labels explícitos para campos, nomes acessíveis para ações sem texto e foco visível pelos tokens de `focus`. Estados `disabled`, `required` e `readOnly` preservam a semântica nativa. Testes usam Testing Library e `user-event` para nomes acessíveis, ordem de Tab e ativação de botões por Enter/Espaço. jsdom valida comportamento e semântica, mas não renderiza o indicador visual de pseudo-classe; confirme o anel de foco em navegador no Storybook. O projeto ainda não inclui axe ou execução de navegador headless; contraste e aparência de foco permanecem verificações manuais até haver ferramenta e CI de navegador configurados.
 
 ### `@art-liz/storybook`
 
@@ -59,6 +107,14 @@ Aplicação privada de desenvolvimento que reúne stories dos pacotes. As storie
 ### `@art-liz/playground`
 
 Aplicação Vite privada usada para testar o pacote React em um consumidor real, fora do ambiente do Storybook.
+
+## Ícones
+
+Phosphor Icons (`@phosphor-icons/react`, licença MIT) é a biblioteca adotada para o catálogo visual e os exemplos do design system. É dependência de runtime de `apps/storybook` e dependência de desenvolvimento de `packages/react` para as stories co-localizadas; o pacote público `@art-liz/react` permanece agnóstico em runtime e recebe ícones como `ReactNode` por `startIcon`/`endIcon`.
+
+O catálogo `Foundations/Icons` importa ícones por subpath para reduzir o trabalho do Vite e mostra um ícone por vez. Seus controles selecionam o nome do ícone, o tamanho pela escala `typography.fontSizes` (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`), peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`) e origem da cor: paleta semântica do DS ou HEX customizado para casos especiais. O line-height do preview acompanha o tamanho selecionado. Phosphor usa `currentColor` por padrão, então ícones nos botões acompanham a cor do texto; `size="1em"` mantém alinhamento com a tipografia do botão.
+
+Ícones decorativos nos slots do Button recebem `aria-hidden`. Um Button sem conteúdo textual precisa de nome acessível por `aria-label` ou `aria-labelledby`. Evite controles Storybook para elementos React: crie o JSX da story no `render`, pois Controls serializam args.
 
 ## Instalação e desenvolvimento
 
@@ -84,10 +140,10 @@ O comando de Storybook compila tokens e componentes antes de iniciar o servidor 
 
 ## Criar ou alterar um componente
 
-1. Coloque a API e o comportamento do componente em `packages/react/src/Component.tsx`.
-2. Coloque os estilos Emotion em `packages/react/src/Component.style.ts` e reutilize tokens sempre que aplicável.
+1. Crie `packages/react/src/Component/` e coloque a API e o comportamento em `Component.tsx`.
+2. Coloque os estilos Emotion em `Component.style.ts` e reutilize tokens sempre que aplicável.
 3. Se estilos precisarem dos tipos definidos pelo componente, importe-os usando `import type`.
-4. Exporte o componente e seus tipos em `packages/react/src/index.ts`.
+4. Exporte o componente e seus tipos no `index.ts` da pasta e reexporte-os em `packages/react/src/index.ts`.
 5. Adicione ou atualize uma story ao lado do componente para documentar variantes e estados.
 6. Adicione testes focados no comportamento observável em `packages/react/src/`.
 7. Use o playground para confirmar a integração fora do Storybook.
@@ -115,6 +171,10 @@ Os pacotes React e tokens são compilados antes do Storybook para que os workspa
 `npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
 
 O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. Husky/lint-staged executa ESLint autofix e Prettier somente nos arquivos staged durante o pre-commit. Não há pre-push: a validação completa é feita pelo CI obrigatório em PRs.
+
+## Ícones
+
+O Storybook mantém um catálogo de ícones Phosphor em `Foundations/Icons`, com controles para cor, tamanho e peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`). As stories importam ícones por subpath para não carregar o barrel completo. `@art-liz/react` declara Phosphor como dependência de desenvolvimento para compilar suas stories; consumidores passam seus próprios componentes de ícone pelos slots genéricos `startIcon` e `endIcon`, sem dependência de Phosphor em runtime.
 
 ## Trabalho com Codex
 
@@ -146,7 +206,20 @@ Saídas:
 - Homologação: `storybook-static/homolog`
 - Produção: `storybook-static/prod`
 
-Os comandos produzem o Storybook estático para publicação em destinos de hospedagem distintos. Atualmente, ambos usam a mesma configuração e as mesmas stories; a separação é de artefato/destino, não de conteúdo. Nenhum provedor de hospedagem ou pipeline de deploy está configurado ainda.
+Os comandos produzem o Storybook estático para publicação em destinos de hospedagem distintos. Ambos usam a mesma configuração e as mesmas stories; a separação é de artefato/destino, não de conteúdo.
+
+O workflow `.github/workflows/deploy-storybook.yml` publica o Storybook no GitHub Pages quando há push em `develop` ou `main` com alterações em `packages/**`, `apps/storybook/**`, `package.json`, `package-lock.json` ou no próprio workflow. Ele também pode ser executado manualmente por `workflow_dispatch`. O site raiz esperado é:
+
+```text
+https://arturribeiro01.github.io/art-liz-design-system/
+```
+
+Rotas publicadas:
+
+- Homologação: `/homolog/`, compilada a partir da branch `develop`.
+- Produção: `/prod/`, compilada a partir da branch `main`.
+
+Para o primeiro deploy, configure no GitHub a fonte do Pages em Settings → Pages → Build and deployment → Source → GitHub Actions. O workflow usa as actions oficiais de Pages, com `pages: write` e `id-token: write`, sem `NPM_TOKEN` ou segredo adicional. Como cada deploy do GitHub Pages substitui o artefato publicado, o workflow sempre faz checkout de `develop` e `main`, recompila os dois destinos e publica ambos no mesmo artefato.
 
 ## Publicação npm
 
@@ -154,29 +227,35 @@ Os pacotes destinados à publicação são:
 
 - `@art-liz/tokens`
 - `@art-liz/react`
+- `@art-liz/create-app`
 
-Ambos declaram acesso público. É necessário ter uma conta npm autenticada e permissão para publicar no escopo `@art-liz`. A documentação não guarda tokens ou credenciais, e nenhuma publicação deve ser feita sem conferir a versão e o conteúdo dos pacotes.
+Os três pacotes declaram acesso público. É necessário ter uma conta npm autenticada e permissão para publicar no escopo `@art-liz`. Nenhuma publicação é feita automaticamente até a primeira publicação estável dos três pacotes, a configuração dos Trusted Publishers no npm e a ativação da variável de repositório `NPM_RELEASES_ENABLED=true`.
 
-Registre as mudanças e atualize as versões:
-
-```sh
-npm run changeset
-npm run version-packages
-```
-
-Publique a versão de homologação com a tag `beta`:
+Antes de habilitar os workflows, valide os tarballs em instalação limpa:
 
 ```sh
-npm publish --workspace @art-liz/tokens --tag beta
-npm publish --workspace @art-liz/react --tag beta
+npm run release:verify
 ```
 
-Publique a versão estável com a tag padrão `latest`:
+Como o escopo npm ainda não foi inicializado, a primeira publicação estável é manual e só deve ocorrer depois dessa validação. Publique `tokens`, depois `react` e por fim `create-app`:
 
 ```sh
-npm publish --workspace @art-liz/tokens
-npm publish --workspace @art-liz/react
+npm publish --workspace @art-liz/tokens --access public
+npm publish --workspace @art-liz/react --access public
+npm publish --workspace @art-liz/create-app --access public
 ```
+
+Em seguida, configure cada pacote no npm para Trusted Publishing com os workflows `publish-beta.yml`/ambiente `npm-beta` e `publish-stable.yml`/ambiente `npm-production`. O publisher precisa permitir `npm publish`; a primeira publicação de cada configuração confiável deve acontecer em até dois dias após criá-la.
+
+## Releases automatizados
+
+Cada mudança publicável recebe um Changeset. O workflow `changesets-version.yml` abre/atualiza uma PR de versionamento em `develop`. O workflow `publish-beta.yml` usa `@changesets/read` para confirmar que há arquivos de changeset pendentes com releases para `@art-liz/tokens`, `@art-liz/react` ou `@art-liz/create-app`; quando há releases, cria snapshots com `changeset version --snapshot beta` e publica `0.0.0-beta-*` na dist-tag `beta`. As versões snapshot não são commitadas. Como a checagem usa o parser do Changesets e não compara diffs com `develop`, `README.md`, changesets vazios, detalhes válidos de YAML e Release PRs já versionadas não disparam publicações indevidas nem pulam releases válidos. Em recuperação manual, `workflow_dispatch` aceita `publish-current=true` para publicar snapshots pré-release das versões atuais ainda inexistentes no npm quando os changesets já foram consumidos; esse caminho não move dist-tags de versões que já existem, para preservar a permissão limitada do ambiente `npm-beta`. A promoção aprovada de `develop` para `main` aciona `publish-stable.yml`, que publica as versões estáveis com a dist-tag `latest` após aprovação no environment protegido `npm-production`.
+
+Configure no GitHub o environment `npm-beta` e o environment `npm-production` com required reviewers. Mantenha `NPM_RELEASES_ENABLED` ausente/falso até concluir a publicação inicial e cadastrar os Trusted Publishers. Para a action de versionamento criar PRs, habilite em Settings → Actions → General a opção que permite ao GitHub Actions criar PRs. PRs criadas com `GITHUB_TOKEN` podem não iniciar outros workflows automaticamente; nesse caso, rode `Quality gates` pelo `workflow_dispatch` ou configure um GitHub App token.
+
+Não configure `NPM_TOKEN`: os jobs de publicação usam OIDC e limitam `id-token: write` ao job que publica. O workflow beta publica `tokens`/`react`/`create-app`; o workflow estável usa os manifests versionados pela PR de Changesets e publica na ordem declarada pelas dependências. O stable mantém `npm@11.6.2` para instalação e CI, mas atualiza para `npm@11.21.0` antes de executar `npm dist-tag add`, porque dist-tags via OIDC exigem npm 11.21.0+ e permissão `Allow npm dist-tag` no Trusted Publisher de produção. A issue #6 permanece aberta até confirmar acesso ao escopo e concluir a primeira instalação a partir do registry.
+
+O beta usa snapshots efêmeros (`0.0.0-beta-*`) e dist-tag `beta`; stable publica versões sem snapshot como `latest`. Para interromper releases automáticos, remova ou desative a variável `NPM_RELEASES_ENABLED`. Um snapshot beta problemático é substituído por outro; uma versão stable é corrigida com novo Changeset patch e promoção aprovada para `main`.
 
 Instalação pelo consumidor:
 
@@ -207,7 +286,7 @@ Antes de criar um UI Kit, confirme que existe um conjunto real de componentes ou
 
 ## Agentes e automação
 
-Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI e rulesets GitFlow já estão configurados; deploy do Storybook e publicação npm automatizada ainda dependem de decisões sobre ambientes, hosting e credenciais.
+Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI, rulesets GitFlow e deploy do Storybook no GitHub Pages já estão configurados; publicação npm automatizada ainda depende da manutenção dos environments e dos Trusted Publishers.
 
 ## Itens ainda em aberto
 
@@ -215,5 +294,5 @@ Agentes especializados não são necessários para a fase atual. Codex e outros 
 - Definir temas e estratégia para modo claro/escuro, se os produtos precisarem.
 - Estabelecer critérios de acessibilidade e compatibilidade de navegadores para os componentes.
 - Ampliar cobertura de testes e validação dos artefatos npm.
-- Escolher hospedagem e configurar deploy separado do Storybook de homologação e produção.
+- Confirmar o primeiro deploy do Storybook no GitHub Pages e registrar a URL final publicada.
 - Confirmar disponibilidade e controle do escopo `@art-liz` no npm antes da primeira publicação.

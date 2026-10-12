@@ -28,10 +28,14 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Vite para desenvolvimento e build.
 - Vitest, Testing Library e jsdom para testes.
 - Storybook com Vite para catálogo e documentação visual.
+- Phosphor Icons (`@phosphor-icons/react`) para o catálogo e exemplos de ícones no Storybook; `packages/react` pode usá-la como dependência de desenvolvimento para suas stories, mas mantém slots genéricos `ReactNode` e não depende da biblioteca em runtime.
 - Changesets para controle de versões.
-- Pacotes publicáveis planejados: `@art-liz/tokens` e `@art-liz/react`.
+- `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores.
+- Pacotes publicáveis planejados: `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
-- O Storybook tem builds estáticos separados para homologação e produção.
+- O workflow `publish-beta.yml` tem uma recuperação manual por `workflow_dispatch` com `publish-current=true` para publicar snapshots pré-release das versões atuais ainda ausentes do npm quando os changesets já foram consumidos.
+- Versões pré-release de `@art-liz/create-app` usam dependências `@art-liz/react` e `@art-liz/tokens` na tag `beta` por padrão; versões estáveis usam `latest`. O usuário ainda pode sobrescrever com `--tag latest|beta`.
+- O Storybook tem builds estáticos separados para homologação e produção e deploy automático no GitHub Pages via `.github/workflows/deploy-storybook.yml`.
 - ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged no pre-commit.
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
 - O fluxo GitFlow usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
@@ -45,6 +49,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 
 - `packages/tokens`: valores de design compartilhados e sem dependência de React.
 - `packages/react`: componentes React reutilizáveis, suas stories e testes.
+- `packages/create-app`: CLI `@art-liz/create-app` e projeto modelo autocontido em `template/`.
 - `apps/storybook`: configuração e execução local do Storybook.
 - `apps/playground`: app Vite usado como consumidor de teste.
 - `DESIGN_SYSTEM.md`: documentação completa para pessoas desenvolvedoras.
@@ -104,15 +109,16 @@ Não trate o reinício como correção de código se um build limpo também falh
 ## Baseline e validações históricas
 
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
-- O pacote React contém o componente `Button`, com variantes `primary` e `secondary`.
+- O pacote React contém o componente `Button`, com aparências `primary`, `outline`, `ghost` e `link`, e intents semânticos `primary`, `danger`, `success`, `info` e `warning`.
+- O pacote React também contém `Box`, `Container` e `Text`; `Text` aplica as variantes tipográficas definidas em `typography.textStyles`.
 - O Storybook tem stories de Button e scripts de build estático para homologação e produção.
 - Os testes, lint, build integrado e builds estáticos do Storybook passaram na validação inicial.
 - A resolução de `@art-liz/react` no playground exigiu reiniciar o servidor Vite depois da instalação dos workspaces; o comando com `--force` passou a transformar o import para o artefato local.
-- O repositório fixa npm `11.6.2` em `package.json` e no workflow para manter instalações limpas reproduzíveis entre macOS e Linux.
+- O repositório fixa npm `11.6.2` em `package.json` e nos workflows para manter instalações limpas reproduzíveis entre macOS e Linux. O workflow stable atualiza para `npm@11.21.0` apenas antes de `npm dist-tag`, porque essa operação via OIDC exige npm 11.21.0+.
 - Esses resultados são registros históricos, não garantias de que o estado atual continua igual. Reexecute as verificações relevantes antes de afirmar que ainda passam.
 
 ## Pendências conhecidas
 
-Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa, critérios de acessibilidade/cobertura, hospedagem/deploy do Storybook e confirmação de acesso ao escopo npm `@art-liz`.
+Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa, critérios de acessibilidade/cobertura, confirmação da primeira publicação do Storybook no GitHub Pages e confirmação de acesso ao escopo npm `@art-liz`.
 
 Ao concluir um trabalho que altere essas decisões ou pendências, atualize este resumo e `DESIGN_SYSTEM.md` para que a próxima sessão possa continuar sem depender desta conversa.

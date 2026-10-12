@@ -60,6 +60,12 @@ body {
   gap: 12px;
 }
 
+.typography-example {
+  display: grid;
+  gap: 16px;
+  max-width: 640px;
+}
+
 @media (max-width: 600px) {
   .playground {
     width: min(100% - 32px, 960px);

@@ -7,10 +7,11 @@
     "storybook": "storybook dev -p 6006",
     "build:homolog": "storybook build --output-dir ../../storybook-static/homolog",
     "build:prod": "storybook build --output-dir ../../storybook-static/prod",
-    "lint": "eslint .storybook --config ../../eslint.config.js"
+    "lint": "eslint .storybook src --config ../../eslint.config.js"
   },
   "dependencies": {
-    "@art-liz/react": "0.1.0",
-    "@art-liz/tokens": "0.1.0"
+    "@art-liz/react": "1.0.0",
+    "@art-liz/tokens": "0.2.0",
+    "@phosphor-icons/react": "^2.1.10"
   }
 }

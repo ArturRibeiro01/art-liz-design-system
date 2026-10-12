@@ -1,8 +1,13 @@
 {
   "name": "@art-liz/react",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Componentes React do Art-Liz Design System.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArturRibeiro01/art-liz-design-system.git",
+    "directory": "packages/react"
+  },
   "type": "module",
   "files": [
     "dist"
@@ -25,7 +30,11 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@art-liz/tokens": "0.1.0"
+    "@art-liz/tokens": "0.2.0"
+  },
+  "devDependencies": {
+    "@phosphor-icons/react": "^2.1.10",
+    "@testing-library/user-event": "^14.6.7"
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
