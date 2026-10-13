@@ -3,6 +3,7 @@ import { CheckIcon } from '@phosphor-icons/react/dist/csr/Check'
 import { PlusIcon } from '@phosphor-icons/react/dist/csr/Plus'
 import { TrashIcon } from '@phosphor-icons/react/dist/csr/Trash'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import type { ButtonIntent, ButtonProps, ButtonVariant } from './Button'
 import { Button } from './Button'
 
@@ -52,7 +53,16 @@ export const ButtonDefault: Story = {
     children: 'Primary action',
     disabled: false,
     intent: 'primary',
+    onClick: fn(),
     variant: 'primary',
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button', { name: 'Primary action' })
+
+    await expect(button).toBeEnabled()
+    await userEvent.click(button)
+    await expect(args.onClick).toHaveBeenCalledTimes(1)
   },
 }
 
@@ -67,24 +77,22 @@ export const IntentMatrix: Story = {
       </div>
 
       {intents.map((intent) => (
-        <>
-          <section key={intent} style={{ display: 'grid', gap: 12 }}>
-            <strong>{intent}</strong>
-            <div
-              style={{
-                display: 'grid',
-                gap: 12,
-                gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
-              }}
-            >
-              {variants.map((variant) => (
-                <Button intent={intent} key={`${intent}-${variant}`} variant={variant}>
-                  {variant}
-                </Button>
-              ))}
-            </div>
-          </section>
-        </>
+        <section key={intent} style={{ display: 'grid', gap: 12 }}>
+          <strong>{intent}</strong>
+          <div
+            style={{
+              display: 'grid',
+              gap: 12,
+              gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
+            }}
+          >
+            {variants.map((variant) => (
+              <Button intent={intent} key={`${intent}-${variant}`} variant={variant}>
+                {variant}
+              </Button>
+            ))}
+          </div>
+        </section>
       ))}
     </div>
   ),
