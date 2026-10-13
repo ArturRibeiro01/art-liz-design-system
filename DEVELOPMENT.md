@@ -38,6 +38,7 @@ npm run dev --workspace @art-liz/playground -- --force
 
 ```sh
 npm test
+npm run test:storybook
 npm run lint
 npm run format
 npm run format:check
@@ -46,11 +47,14 @@ npm run ci
 ```
 
 - `npm test`: compila tokens e executa testes dos pacotes.
+- `npm run test:storybook`: executa as stories como testes de componente em Chromium headless.
 - `npm run lint`: roda ESLint por workspace e valida sintaxe do script shell.
 - `npm run format`: aplica Prettier.
 - `npm run format:check`: verifica Prettier sem modificar arquivos.
 - `npm run build`: compila tokens, React e playground.
 - `npm run ci`: executa o gate completo usado no GitHub Actions.
+
+Em uma máquina nova, rode `npx playwright install chromium` uma vez antes de `npm run test:storybook`. No CI, essa instalação é feita pelo workflow.
 
 ## Qualidade De Código
 

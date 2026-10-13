@@ -27,7 +27,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Emotion para estilos (`@emotion/react` e `@emotion/styled`).
 - Vite para desenvolvimento e build.
 - Vitest, Testing Library e jsdom para testes.
-- Storybook com Vite para catálogo e documentação visual.
+- Storybook com Vite para catálogo, documentação visual, addon de acessibilidade e testes de stories via Vitest em navegador.
 - Phosphor Icons (`@phosphor-icons/react`) para o catálogo e exemplos de ícones no Storybook; `packages/react` pode usá-la como dependência de desenvolvimento para suas stories, mas mantém slots genéricos `ReactNode` e não depende da biblioteca em runtime.
 - Changesets para controle de versões.
 - `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores.
@@ -65,6 +65,7 @@ npm install
 npm run storybook
 npm run dev --workspace @art-liz/playground
 npm test
+npm run test:storybook
 npm run lint
 npm run format
 npm run format:check
@@ -74,7 +75,7 @@ npm run build:storybook:homolog
 npm run build:storybook:prod
 ```
 
-`npm run storybook` compila tokens e React antes de iniciar o servidor Storybook. Os builds estáticos ficam em `storybook-static/homolog` e `storybook-static/prod`. Confira `package.json` antes de citar comandos, pois scripts podem ser alterados.
+`npm run storybook` compila tokens e React antes de iniciar o servidor Storybook. `npm run test:storybook` executa as stories em modo browser com Vitest e Playwright/Chromium. Os builds estáticos ficam em `storybook-static/homolog` e `storybook-static/prod`. Confira `package.json` antes de citar comandos, pois scripts podem ser alterados.
 
 ## Regras ao implementar
 
@@ -111,7 +112,7 @@ Não trate o reinício como correção de código se um build limpo também falh
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
 - O pacote React contém o componente `Button`, com aparências `primary`, `outline`, `ghost` e `link`, e intents semânticos `primary`, `danger`, `success`, `info` e `warning`.
 - O pacote React também contém `Box`, `Container` e `Text`; `Text` aplica as variantes tipográficas definidas em `typography.textStyles`.
-- O Storybook tem stories de Button e scripts de build estático para homologação e produção.
+- O Storybook tem stories de Button, addon de acessibilidade, testes de stories via Vitest/Playwright e scripts de build estático para homologação e produção.
 - Os testes, lint, build integrado e builds estáticos do Storybook passaram na validação inicial.
 - A resolução de `@art-liz/react` no playground exigiu reiniciar o servidor Vite depois da instalação dos workspaces; o comando com `--force` passou a transformar o import para o artefato local.
 - O repositório fixa npm `11.6.2` em `package.json` e nos workflows para manter instalações limpas reproduzíveis entre macOS e Linux. O workflow stable atualiza para `npm@11.21.0` apenas antes de `npm dist-tag`, porque essa operação via OIDC exige npm 11.21.0+.

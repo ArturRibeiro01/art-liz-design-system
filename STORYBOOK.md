@@ -10,6 +10,22 @@ npm run storybook
 
 O comando compila `@art-liz/tokens` e `@art-liz/react` antes de iniciar o servidor.
 
+## Testes e Acessibilidade
+
+O Storybook usa `@storybook/addon-docs`, `@storybook/addon-a11y` e `@storybook/addon-vitest`.
+
+```sh
+npm run test:storybook
+```
+
+Esse comando executa as stories como testes de componente em Chromium headless via Vitest e Playwright. As stories também ficam marcadas para teste no painel do Storybook, permitindo rodar testes pela interface. Em uma máquina nova, baixe o navegador do Playwright uma vez:
+
+```sh
+npx playwright install chromium
+```
+
+No GitHub Actions, o workflow de CI instala o Chromium antes de rodar `npm run ci`.
+
 ## Builds Estáticos
 
 ```sh

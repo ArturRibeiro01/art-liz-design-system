@@ -14,7 +14,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Estilização:** Emotion (`@emotion/react` e `@emotion/styled`).
 - **Build:** Vite em modo de biblioteca para os pacotes e para aplicações.
 - **Testes:** Vitest, Testing Library e jsdom.
-- **Documentação visual:** Storybook com integração Vite.
+- **Documentação visual:** Storybook com integração Vite, docs, acessibilidade e testes de stories via Vitest em navegador.
 - **Ícones:** Phosphor Icons (`@phosphor-icons/react`) no catálogo e nas stories; componentes React recebem ícones via `ReactNode` e não acoplam consumidores à biblioteca.
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
 - **Task runner:** scripts npm e workspaces; Nx/Turborepo não são necessários para a escala atual.
@@ -98,7 +98,7 @@ Fontes: `packages/react/src/` e `packages/react/package.json`.
 
 ### Baseline de acessibilidade e validação
 
-Componentes interativos usam elementos HTML nativos, labels explícitos para campos, nomes acessíveis para ações sem texto e foco visível pelos tokens de `focus`. Estados `disabled`, `required` e `readOnly` preservam a semântica nativa. Testes usam Testing Library e `user-event` para nomes acessíveis, ordem de Tab e ativação de botões por Enter/Espaço. jsdom valida comportamento e semântica, mas não renderiza o indicador visual de pseudo-classe; confirme o anel de foco em navegador no Storybook. O projeto ainda não inclui axe ou execução de navegador headless; contraste e aparência de foco permanecem verificações manuais até haver ferramenta e CI de navegador configurados.
+Componentes interativos usam elementos HTML nativos, labels explícitos para campos, nomes acessíveis para ações sem texto e foco visível pelos tokens de `focus`. Estados `disabled`, `required` e `readOnly` preservam a semântica nativa. Testes usam Testing Library e `user-event` para nomes acessíveis, ordem de Tab e ativação de botões por Enter/Espaço. jsdom valida comportamento e semântica, e o Storybook complementa essa cobertura com `@storybook/addon-a11y` e testes de stories via `@storybook/addon-vitest` em Chromium headless. Contraste, aparência de foco e regressão visual continuam exigindo revisão humana até haver critérios formais e testes visuais dedicados.
 
 ### `@art-liz/storybook`
 
@@ -154,6 +154,7 @@ Componentes compartilhados devem evitar decisões específicas de um único sist
 
 ```sh
 npm test
+npm run test:storybook
 npm run lint
 npm run format
 npm run format:check
@@ -162,13 +163,14 @@ npm run ci
 ```
 
 - `npm test` compila tokens e executa os testes Vitest do pacote React.
+- `npm run test:storybook` executa as stories como testes de componente em browser mode com Vitest e Playwright.
 - `npm run lint` executa ESLint em cada workspace e valida sintaxe do script shell.
 - `npm run format` aplica Prettier; `npm run format:check` verifica o padrão sem modificar arquivos.
 - `npm run build` compila tokens, empacota o React e compila o playground.
 
 Os pacotes React e tokens são compilados antes do Storybook para que os workspaces consumam seus artefatos `dist`.
 
-`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
+`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes de pacote, testes do Storybook, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
 
 O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. Husky/lint-staged executa ESLint autofix e Prettier somente nos arquivos staged durante o pre-commit. Não há pre-push: a validação completa é feita pelo CI obrigatório em PRs.
 
@@ -207,6 +209,14 @@ Saídas:
 - Produção: `storybook-static/prod`
 
 Os comandos produzem o Storybook estático para publicação em destinos de hospedagem distintos. Ambos usam a mesma configuração e as mesmas stories; a separação é de artefato/destino, não de conteúdo.
+
+As stories são testadas localmente e no CI com:
+
+```sh
+npm run test:storybook
+```
+
+Esse comando usa `vitest.storybook.config.ts`, `@storybook/addon-vitest` e Playwright/Chromium. Em uma máquina nova, instale o navegador do Playwright uma vez com `npx playwright install chromium`; no GitHub Actions o workflow de CI faz essa instalação antes de executar os gates.
 
 O workflow `.github/workflows/deploy-storybook.yml` publica o Storybook no GitHub Pages quando há push em `develop` ou `main` com alterações em `packages/**`, `apps/storybook/**`, `package.json`, `package-lock.json` ou no próprio workflow. Ele também pode ser executado manualmente por `workflow_dispatch`. O site raiz esperado é:
 
