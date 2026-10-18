@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as TooltipStories from './Tooltip.stories'
+
+<Meta of={TooltipStories} name="Documentação" />
+
+Componentes React
+
+# Tooltip
+
+Tooltip mostra uma explicação breve ao passar o ponteiro ou focar um elemento. Use-o para complementar um controle cujo nome e função já estejam claros.
+
+## Importação
+
+```tsx
+import { Tooltip } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Tooltip, Button } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Tooltip content="As alterações ficam disponíveis apenas neste navegador.">
+      <Button variant="ghost">Sobre o rascunho</Button>
+    </Tooltip>
+  )
+}
+```
+
+## Orientações
+
+O filho deve ser um único elemento React que encaminhe aria-describedby ao elemento focável, como Button. Evite controles interativos dentro do conteúdo; para isso, use Popover.

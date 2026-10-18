@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as LinkStories from './Link.stories'
+
+<Meta of={LinkStories} name="Documentação" />
+
+Componentes React
+
+# Link
+
+Link permite navegar para uma URL ou uma âncora da página. Use-o quando a interação levar o usuário a outro destino, com um texto que explique esse destino.
+
+## Importação
+
+```tsx
+import { Link } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Link } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Link href="https://example.com/ajuda" target="_blank">
+      Abrir central de ajuda
+    </Link>
+  )
+}
+```
+
+## Orientações
+
+Renderiza uma âncora nativa. Com target="\_blank", acrescenta noopener e noreferrer a rel. Para executar uma ação na interface, use Button.

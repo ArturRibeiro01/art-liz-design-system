@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as SwitchStories from './Switch.stories'
+
+<Meta of={SwitchStories} name="Documentação" />
+
+Componentes React
+
+# Switch
+
+Switch ativa ou desativa uma configuração binária, como receber notificações. Use-o para preferências que possam ser apresentadas como ligadas ou desligadas.
+
+## Importação
+
+```tsx
+import { Switch } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Switch } from '@art-liz/react'
+
+export function Exemplo() {
+  const [enabled, setEnabled] = useState(true)
+
+  return (
+    <Switch
+      label="Receber notificações"
+      name="notifications"
+      checked={enabled}
+      onChange={(event) => setEnabled(event.target.checked)}
+    />
+  )
+}
+```
+
+## Orientações
+
+O controle usa um checkbox nativo com role="switch". defaultChecked permite uso não controlado; a aplicação decide quando persistir a preferência.

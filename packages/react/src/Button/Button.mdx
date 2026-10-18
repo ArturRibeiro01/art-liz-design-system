@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as ButtonStories from './Button.stories'
+
+<Meta of={ButtonStories} name="Documentação" />
+
+Componentes React
+
+# Button
+
+Button dispara uma ação, como salvar um formulário, abrir um diálogo ou confirmar uma escolha. Use variant, intent e size para adaptar a apresentação à importância da ação.
+
+## Importação
+
+```tsx
+import { Button } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Button } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Button type="button" variant="outline" onClick={() => window.alert('Alterações salvas.')}>
+      Salvar alterações
+    </Button>
+  )
+}
+```
+
+## Orientações
+
+Para submeter um formulário, use type="submit". O padrão é type="button". Ícones podem ser passados em startIcon/endIcon; botões sem texto precisam de aria-label ou aria-labelledby. Para navegar por URL, use Link.

@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as AuditStatusStories from './AuditStatus.stories'
+
+<Meta of={AuditStatusStories} name="Documentação" />
+
+Componentes React
+
+# AuditStatus
+
+AuditStatus apresenta um indicador compacto com o estado de uma revisão ou outro processo. Use texto para comunicar o resultado e intent para complementar o significado visual.
+
+## Importação
+
+```tsx
+import { AuditStatus } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { AuditStatus } from '@art-liz/react'
+
+export function Exemplo() {
+  return <AuditStatus intent="warning">Aguardando revisão</AuditStatus>
+}
+```
+
+## Orientações
+
+O componente não define regras de aprovação nem estados de negócio. children fornece o texto, icon aceita um ícone decorativo opcional, e alterações não são anunciadas automaticamente como uma live region.

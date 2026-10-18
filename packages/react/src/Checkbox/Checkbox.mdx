@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as CheckboxStories from './Checkbox.stories'
+
+<Meta of={CheckboxStories} name="Documentação" />
+
+Componentes React
+
+# Checkbox
+
+Checkbox permite ativar uma opção independente ou selecionar vários itens de um conjunto. Use checked/onChange para controlar a seleção, ou defaultChecked para deixar o estado com o navegador.
+
+## Importação
+
+```tsx
+import { Checkbox } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Checkbox } from '@art-liz/react'
+
+export function Exemplo() {
+  const [receiveNews, setReceiveNews] = useState(false)
+
+  return (
+    <Checkbox
+      label="Quero receber novidades"
+      name="news"
+      checked={receiveNews}
+      onChange={(event) => setReceiveNews(event.target.checked)}
+    />
+  )
+}
+```
+
+## Orientações
+
+indeterminate representa seleção parcial e deve ser recalculado pelo consumidor em grupos. Forneça label ou um nome acessível externo; o controle preserva os atributos nativos de checkbox.

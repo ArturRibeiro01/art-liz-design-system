@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as FormStories from './Form.stories'
+
+<Meta of={FormStories} name="Documentação" />
+
+Componentes React
+
+# Form
+
+Form organiza controles em um formulário HTML com espaçamento consistente. Use-o para agrupar campos e tratar submissão ou reset com os eventos nativos do formulário.
+
+## Importação
+
+```tsx
+import { Form } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Form, Input, Button } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Form
+      gap={4}
+      onSubmit={(event) => {
+        event.preventDefault()
+        const data = new FormData(event.currentTarget)
+        window.alert(`Nome: ${data.get('name')}`)
+      }}
+    >
+      <Input label="Nome" name="name" required />
+      <Button type="submit">Salvar</Button>
+    </Form>
+  )
+}
+```
+
+## Orientações
+
+gap aceita uma chave dos tokens de espaçamento. Form não adiciona gerenciador de estado nem validação própria; os controles mantêm a validação nativa.

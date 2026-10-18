@@ -1,0 +1,50 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as CascaderStories from './Cascader.stories'
+
+<Meta of={CascaderStories} name="Documentação" />
+
+Componentes React
+
+# Cascader
+
+Cascader permite escolher um valor em uma hierarquia, preenchendo um nível por vez. Use-o em escolhas como país, estado e cidade ou categoria e subcategoria.
+
+## Importação
+
+```tsx
+import { Cascader } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Cascader } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Cascader
+      label="Categoria"
+      name="category"
+      options={[
+        {
+          value: 'design',
+          label: 'Design',
+          children: [
+            { value: 'ui', label: 'Interface' },
+            { value: 'illustration', label: 'Ilustração' },
+          ],
+        },
+        {
+          value: 'development',
+          label: 'Desenvolvimento',
+          children: [{ value: 'web', label: 'Web' }],
+        },
+      ]}
+    />
+  )
+}
+```
+
+## Orientações
+
+A implementação inicial usa selects nativos encadeados. value/defaultValue são arrays do caminho; onValueChange também informa caminhos intermediários. name submete somente a folha válida. Use strings não vazias e valores únicos entre irmãos.

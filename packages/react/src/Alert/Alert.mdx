@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as AlertStories from './Alert.stories'
+
+<Meta of={AlertStories} name="Documentação" />
+
+Componentes React
+
+# Alert
+
+Alert destaca uma informação contextual que merece atenção, como um aviso, sucesso ou erro relacionado a uma seção. Pode conter título, conteúdo e uma ação opcional de fechar.
+
+## Importação
+
+```tsx
+import { Alert } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Alert } from '@art-liz/react'
+
+export function Exemplo() {
+  const [visible, setVisible] = useState(true)
+
+  return (
+    <>
+      {visible && (
+        <Alert title="Dados atualizados" intent="success" onDismiss={() => setVisible(false)}>
+          Suas preferências foram salvas.
+        </Alert>
+      )}
+    </>
+  )
+}
+```
+
+## Orientações
+
+O role padrão é status; role="alert" pode ser usado em avisos urgentes. onDismiss solicita fechamento, e o consumidor remove o componente da tela.

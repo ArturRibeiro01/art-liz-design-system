@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as StepsStories from './Steps.stories'
+
+<Meta of={StepsStories} name="Documentação" />
+
+Componentes React
+
+# Steps
+
+Steps apresenta o andamento de um processo dividido em etapas. Use-o para mostrar o que já foi concluído, qual é a etapa atual e o que ainda falta.
+
+## Importação
+
+```tsx
+import { Steps } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Steps } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Steps
+      current={1}
+      items={[
+        { title: 'Identificação', description: 'Dados básicos preenchidos' },
+        { title: 'Preferências', description: 'Escolha suas opções' },
+        { title: 'Revisão' },
+      ]}
+    />
+  )
+}
+```
+
+## Orientações
+
+current começa em 0; o exemplo destaca a segunda etapa. orientation aceita horizontal ou vertical. Os itens são informativos e não realizam navegação; status pode ser finished, error, current ou wait.

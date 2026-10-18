@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as TableStories from './Table.stories'
+
+<Meta of={TableStories} name="Documentação" />
+
+Componentes React
+
+# Table
+
+Table organiza dados tabulares em linhas e colunas e oferece uma área com rolagem quando necessário. Use-a para informações cuja relação entre cabeçalhos e células seja importante.
+
+## Importação
+
+```tsx
+import { Table } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Table } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Table caption="Pacotes do projeto">
+      <thead>
+        <tr>
+          <th scope="col">Pacote</th>
+          <th scope="col">Finalidade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">React</th>
+          <td>Componentes reutilizáveis</td>
+        </tr>
+        <tr>
+          <th scope="row">Tokens</th>
+          <td>Valores visuais compartilhados</td>
+        </tr>
+      </tbody>
+    </Table>
+  )
+}
+```
+
+## Orientações
+
+Informe caption e use elementos nativos como thead, tbody, tr, th e td. Ordenação, filtros e paginação devem ser implementados pelo consumidor.

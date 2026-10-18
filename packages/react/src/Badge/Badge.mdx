@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as BadgeStories from './Badge.stories'
+
+<Meta of={BadgeStories} name="Documentação" />
+
+Componentes React
+
+# Badge
+
+Badge apresenta um marcador compacto para destacar um estado, categoria ou quantidade junto a outro conteúdo. Use intent para escolher o tom semântico e texto para comunicar o significado.
+
+## Importação
+
+```tsx
+import { Badge } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Badge } from '@art-liz/react'
+
+export function Exemplo() {
+  return <Badge intent="success">Ativo</Badge>
+}
+```
+
+## Orientações
+
+Badge não anuncia alterações automaticamente. Para feedback dinâmico, considere Message ou Alert; o significado não deve depender apenas da cor.

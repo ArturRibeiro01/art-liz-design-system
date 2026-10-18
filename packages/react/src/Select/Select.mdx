@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as SelectStories from './Select.stories'
+
+<Meta of={SelectStories} name="Documentação" />
+
+Componentes React
+
+# Select
+
+Select apresenta uma lista de opções para selecionar um valor. Use-o em escolhas com alternativas conhecidas, como categoria, prioridade ou tipo de conta.
+
+## Importação
+
+```tsx
+import { Select } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Select } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Select label="Categoria" name="category" defaultValue="personal">
+      <option value="personal">Pessoal</option>
+      <option value="team">Equipe</option>
+    </Select>
+  )
+}
+```
+
+## Orientações
+
+O controle é um select nativo e aceita option, optgroup e multiple. Não oferece pesquisa personalizada; label, helpText, error e size seguem os padrões dos campos da biblioteca.

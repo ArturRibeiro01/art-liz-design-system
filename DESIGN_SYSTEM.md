@@ -143,6 +143,8 @@ Componentes interativos usam elementos HTML nativos, labels explícitos para cam
 
 Aplicação privada de desenvolvimento que reúne stories dos pacotes. As stories ficam junto dos componentes para facilitar a manutenção e o Storybook as descobre pela configuração em `apps/storybook/.storybook/main.ts`.
 
+Cada um dos 37 componentes públicos do React possui também uma página `Component.mdx` junto da implementação e das stories. A página se vincula ao módulo de stories com `Meta of` e aparece como **Documentação**, com o ícone de documento, dentro do grupo do componente. Ela explica finalidade, importação de `@art-liz/react`, exemplo completo de uso e orientações específicas. Os exemplos incluem os imports e o estado necessários para copiar e adaptar. A configuração descobre `packages/react/src/**/*.mdx`; mantenha essa documentação ao criar componentes ou alterar suas APIs.
+
 ### `@art-liz/playground`
 
 Aplicação Vite privada usada para testar o pacote React em um consumidor real, fora do ambiente do Storybook.

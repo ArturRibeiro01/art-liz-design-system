@@ -35,3 +35,9 @@ Chart recebe `title`, `description?`, `data: { id, label, value }[]`, `valueForm
 Consultar as páginas acima em uma sessão com acesso ao Figma usando `figma-design-to-code` e `get_design_context` com screenshot; preservar IDs, medidas, estados e assets em `docs/figma/`. Contextos marcados como sparse precisam de consulta dos nós filhos relevantes. Comparar as implementações aos retornos completos antes de declarar fidelidade ou estender as variantes. As capturas anteriores de Input e Checkbox permanecem imutáveis.
 
 A base agora possui 37 exports de componentes: correspondência funcional inicial para as 34 famílias catalogadas, mais Text, Box e Container. As 31 famílias além de Button/Input/Checkbox não representam variantes detalhadas verificadas; Button também mantém auditoria visual pendente.
+
+## Validação desta entrega
+
+Em 18/10/2026, o gate completo passou com `npx --yes --package npm@11.6.2 -- npm run ci`: 144 testes React, quatro testes do CLI, 95 stories em Chromium, lint, formatação, builds dos pacotes/playground, instalação limpa dos tarballs com verificação dos novos exports e builds estáticos do Storybook para homologação e produção.
+
+A revisão dirigida no playground confirmou seleção em níveis, remoção de descendentes, transferência nos dois sentidos, valores de formulário, reset, filtros por Space/Enter, cancelamento/confirmação e retorno de foco do Popconfirm por teclado, Escape e clique externo. O layout foi inspecionado a 320px sem rolagem horizontal. Axe não apontou violações nas duas seções novas nem no Popconfirm aberto em repouso e hover, após corrigir localmente o contraste da ação de confirmação e reforçar seu foco. Isso não substitui auditoria completa de navegadores, acessibilidade ou comparação visual com as variantes do Figma.

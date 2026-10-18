@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as ResultStories from './Result.stories'
+
+<Meta of={ResultStories} name="Documentação" />
+
+Componentes React
+
+# Result
+
+Result apresenta o desfecho de um fluxo ou um estado vazio com título, descrição e ações. Use-o após concluir uma tarefa ou quando o usuário precisar de orientação para continuar.
+
+## Importação
+
+```tsx
+import { Result } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Result, Button } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Result
+      title="Cadastro concluído"
+      description="Sua conta está pronta para usar."
+      intent="success"
+      actions={
+        <Button onClick={() => window.alert('Continuar para a aplicação')}>Continuar</Button>
+      }
+    />
+  )
+}
+```
+
+## Orientações
+
+icon aceita um elemento decorativo opcional. O significado deve aparecer no título e na descrição; as ações são componentes React fornecidos pelo consumidor.

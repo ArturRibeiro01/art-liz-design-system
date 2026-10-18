@@ -2,6 +2,8 @@
 
 Referência curta para consumir `@art-liz/react` e `@art-liz/tokens`.
 
+No Storybook, abra o grupo de um componente e selecione **Documentação** (ícone de documento) para ler sua finalidade, importação e um exemplo completo em React. Os 37 componentes públicos têm páginas MDX junto das stories, como [Button.mdx](packages/react/src/Button/Button.mdx).
+
 ## Button
 
 Importe `Button` de `@art-liz/react`. As props `variant`, `intent` e `size` escolhem a aparência, a intenção semântica e a escala; `startIcon` e `endIcon` aceitam qualquer elemento React.

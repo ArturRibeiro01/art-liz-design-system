@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as ButtonGroupStories from './ButtonGroup.stories'
+
+<Meta of={ButtonGroupStories} name="Documentação" />
+
+Componentes React
+
+# ButtonGroup
+
+ButtonGroup reúne ações relacionadas em um grupo com nome acessível. Use-o para apresentar, por exemplo, os botões de salvar e cancelar de um formulário.
+
+## Importação
+
+```tsx
+import { ButtonGroup } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { ButtonGroup, Button } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <ButtonGroup aria-label="Ações de edição">
+      <Button type="button" onClick={() => window.alert('Salvo.')}>
+        Salvar
+      </Button>
+      <Button type="button" variant="ghost" onClick={() => window.alert('Cancelado.')}>
+        Cancelar
+      </Button>
+    </ButtonGroup>
+  )
+}
+```
+
+## Orientações
+
+orientation pode ser horizontal ou vertical. O grupo mantém a navegação normal por Tab entre os botões.

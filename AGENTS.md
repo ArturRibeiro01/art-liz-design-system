@@ -91,7 +91,7 @@ npm run build:storybook:prod
 - Ao trabalhar como Codex, consulte os critérios da issue ativa, implemente na branch de trabalho baseada em `develop`, rode a verificação específica e o gate apropriado, e não faça commit/push/merge sem pedido explícito.
 - Separe implementação e estilos dos componentes React: `Component.tsx` contém API e comportamento; `Component.style.ts` contém os estilos Emotion e seus elementos estilizados.
 - Ao referenciar tipos do componente no arquivo de estilos, use `import type` para não criar uma dependência de runtime circular.
-- Para novos componentes, avalie export público, story, teste de comportamento e uso no playground.
+- Para novos componentes, avalie export público, story, teste de comportamento e uso no playground. Inclua também `Component.mdx` com a página Documentação vinculada às stories por `Meta of`: finalidade, importação, exemplo completo de uso e orientações relevantes.
 - Mantenha React e Emotion como dependências peer do pacote de componentes; confira os manifests antes de mudar essa estratégia.
 - Não publique pacotes, altere credenciais, faça deploy ou execute ações externas sem solicitação explícita.
 - Não crie commits ou inicialize Git sem pedido. Este workspace já tem Git e remoto configurados; confirme branch atual, mudanças locais e permissões antes de operar no histórico ou no remoto.
