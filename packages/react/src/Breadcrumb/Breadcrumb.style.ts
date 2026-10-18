@@ -12,7 +12,10 @@ export const BreadcrumbList = styled.ol`
   gap: ${spacing[2]};
   & > li {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
+    & > svg {
+      flex-shrink: 0;
+    }
     gap: ${spacing[2]};
     min-width: 0;
     overflow-wrap: anywhere;

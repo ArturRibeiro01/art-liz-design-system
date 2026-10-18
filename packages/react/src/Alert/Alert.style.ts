@@ -22,6 +22,9 @@ export const StyledAlert = styled('div', { shouldForwardProp: (prop) => prop !==
   }
 `
 export const AlertClose = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   ${keyboardFocus};
   flex-shrink: 0;
   min-width: 24px;

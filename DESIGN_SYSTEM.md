@@ -15,7 +15,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Build:** Vite em modo de biblioteca para os pacotes e para aplicações.
 - **Testes:** Vitest, Testing Library e jsdom.
 - **Documentação visual:** Storybook com integração Vite, docs, acessibilidade e testes de stories via Vitest em navegador.
-- **Ícones:** Phosphor Icons (`@phosphor-icons/react`) no catálogo e nas stories; componentes React recebem ícones via `ReactNode` e não acoplam consumidores à biblioteca.
+- **Ícones:** catálogo público `Icons` do DS, usado por componentes, stories e aplicações. A integração Phosphor fica restrita a `packages/react/src/Icons`; slots públicos continuam aceitando `ReactNode`.
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
 - **Task runner:** scripts npm e workspaces; Nx/Turborepo não são necessários para a escala atual.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
@@ -24,6 +24,14 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Qualidade:** ESLint flat compartilhado com comando por workspace, Prettier, format-on-save no VS Code e Husky/lint-staged no pre-commit.
 
 Essas decisões descrevem a base atual. Novas dependências devem ser adicionadas quando houver uma necessidade concreta de produto ou desenvolvimento.
+
+## Tela inicial do create-app
+
+O template consome todos os exports da biblioteca pelo pacote `@art-liz/react`; não precisa de registro nem cópia por componente. A tela inicial usa Container, Box, Text, Badge, AuditStatus, Steps, Tabs, Form, Input, Select, Switch, Message, Tag, Popover, Tooltip, Dialog, ButtonGroup, Button e Link. O diálogo cria um projeto demonstrativo em estado local, o formulário aplica preferências à demonstração e o contador usa Zustand com incremento/reset. A navegação continua com React Router, e o provider do TanStack Query permanece configurado.
+
+A apresentação está separada em `src/pages/HomePage.style.ts`, com tokens, layout responsivo e exemplos locais sem envio de dados. Os estilos próprios do template não alteram as APIs nem o tema global dos componentes. O template mantém dependências por tag (latest para CLI estável, beta para pré-release, com --tag como override). A nova tela deve ser distribuída junto da versão do pacote React que contém os novos exports; release:verify gera um projeto pelo tarball do CLI, instala os tarballs locais de React/tokens e executa typecheck, testes, lint e build. Nenhum pacote é publicado por essa verificação.
+
+Validação em 18/10/2026: gate completo com npm 11.6.2, incluindo 144 testes React, quatro testes do CLI, 95 stories e três testes do app gerado por tarball, lint, formatação, builds e renderização SSR dos ícones em consumidor limpo. A revisão no navegador verificou criação/validação/foco no diálogo, navegação e estado compartilhado, reset, preferências, marcadores, popover/tooltip e layout a 320/390px sem rolagem horizontal. Axe não apontou violações WCAG A/AA nas três abas da nova tela. Isso não substitui auditoria integral de navegadores ou acessibilidade.
 
 ## Referência Figma e evolução dos componentes
 
@@ -42,7 +50,7 @@ Foram acrescentados Radio, Switch (correspondência de Toggle), Textarea, Select
 - Dialog e Drawer usam `dialog.showModal()` para modalidade e restauração do acionador, complementado por contenção de Tab/Shift+Tab nas extremidades do diálogo. São controlados por `open`/`onClose`, fecham por Escape e opcionalmente pelo backdrop, e preservam o overflow anterior do body com contagem para sobreposições simultâneas.
 - Popover e Dropdown usam a Popover API nativa (`showPopover`/`hidePopover`) para camada superior, Escape e clique externo. O estado é interno e `onOpenChange` informa transições. Dropdown implementa setas, Home/End, busca por texto e saída por Tab; Tooltip aceita um acionador React que encaminhe `aria-describedby`, mostra em hover/foco e dispensa por Escape.
 - Essas sobreposições exigem navegadores com suporte às APIs nativas utilizadas; não foi adicionado polyfill ou promessa de suporte a navegadores legados. As novas cores de texto e foco usam tons com maior contraste dentro das escalas existentes; warning usa texto neutro escuro.
-- Implementação e estilos continuam separados, com helpers privados em `packages/react/src/internal`. React e Emotion permanecem peers; não há novas dependências runtime ou acoplamento com Phosphor.
+- Implementação e estilos continuam separados, com helpers privados em `packages/react/src/internal`. React e Emotion permanecem peers. Na revisão posterior dos ícones, Phosphor passou a ser dependência de runtime, conforme a decisão registrada na seção Ícones.
 
 Todas as famílias têm stories com acessibilidade como erro de teste. Os controles e componentes de navegação/feedback têm testes de comportamento; os fluxos das sobreposições são verificados em Chromium real. A galeria de consumo fica em `apps/playground/src/ComponentGallery.tsx`. As capturas Figma originais continuam imutáveis.
 
@@ -121,7 +129,7 @@ O componente `Input` usa um input HTML nativo com ref, atributos de formulário 
 
 O componente `Checkbox` usa input `type="checkbox"`, ref nativa, `checked`/`defaultChecked`, `name`, `value`, `required`, `disabled` e label associado. `indeterminate` aplica a propriedade DOM: o indicador é um quadrado de 8px dentro da caixa de 16px, conforme o Figma. A ativação nativa resolve a seleção parcial; grupos controlados devem recalcular `indeterminate` a partir dos itens selecionados. Sem label visível, o consumidor precisa fornecer nome acessível externo. Textos longos quebram com a caixa alinhada à primeira linha; cores forçadas usam a aparência nativa do navegador.
 
-Os SVGs originais de check e limpar ficam no pacote React, são usados como máscaras nas dimensões dos respectivos slots e são incorporados pelo build, sem URLs temporárias ou dependência de ícones em runtime. Cores vêm dos tokens atuais. O foco por teclado acrescenta o anel existente de `focus`, inclusive em estados sem desenho de foco na referência. Os snapshots em `docs/figma/` e os SVGs originais ficam fora do Prettier para preservar bytes, hashes e proveniência.
+Os SVGs originais de check e limpar ficam no pacote React, são usados como máscaras nas dimensões dos respectivos slots e são incorporados pelo build, sem URLs temporárias. Esses dois controles preservam os assets da referência; os outros símbolos internos usam Phosphor. Cores vêm dos tokens atuais. O foco por teclado acrescenta o anel existente de `focus`, inclusive em estados sem desenho de foco na referência. Os snapshots em `docs/figma/` e os SVGs originais ficam fora do Prettier para preservar bytes, hashes e proveniência.
 
 A mensagem de erro de Input usa `danger.800` para corrigir o contraste insuficiente de `danger.600` no texto de 12/14px da referência; a borda de erro mantém `danger.600`. A paleta de bordas e placeholders e o anel global de foco continuam seguindo os tokens existentes e precisam de revisão de contraste não textual antes de declarar conformidade integral de acessibilidade.
 
@@ -151,11 +159,13 @@ Aplicação Vite privada usada para testar o pacote React em um consumidor real,
 
 ## Ícones
 
-Phosphor Icons (`@phosphor-icons/react`, licença MIT) é a biblioteca adotada para o catálogo visual e os exemplos do design system. É dependência de runtime de `apps/storybook` e dependência de desenvolvimento de `packages/react` para as stories co-localizadas; o pacote público `@art-liz/react` permanece agnóstico em runtime e recebe ícones como `ReactNode` por `startIcon`/`endIcon`.
+Phosphor Icons (`@phosphor-icons/react`, licença MIT) é a biblioteca adotada para o catálogo visual, exemplos e símbolos internos do design system. Em 18/10/2026, a pessoa usuária pediu substituir caracteres usados como ícones pela biblioteca. Por isso Phosphor passou a ser dependência de runtime de `packages/react`, também utilizada pelo Storybook e pelo template. A revisão seguinte centralizou a integração em `packages/react/src/Icons`. Somente essa pasta importa o fornecedor por subpaths, externos no build da biblioteca. Componentes internos usam `import * as Icons from '../Icons'`; consumidores usam `import { Icons } from '@art-liz/react'`. ESLint impede imports diretos de Phosphor fora da camada central. Os slots `startIcon`/`endIcon` e demais slots públicos continuam aceitando qualquer `ReactNode`.
 
-O catálogo `Foundations/Icons` importa ícones por subpath para reduzir o trabalho do Vite e mostra um ícone por vez. Seus controles selecionam o nome do ícone, o tamanho pela escala `typography.fontSizes` (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`), peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`) e origem da cor: paleta semântica do DS ou HEX customizado para casos especiais. O line-height do preview acompanha o tamanho selecionado. Phosphor usa `currentColor` por padrão, então ícones nos botões acompanham a cor do texto; `size="1em"` mantém alinhamento com a tipografia do botão.
+Alert, Message, Tag e Dialog (também usado por Drawer) usam Icons.XIcon nas ações de fechar/remover, com os nomes acessíveis preservados e SVGs decorativos. Steps usa Icons.CheckIcon/Icons.WarningIcon; Breadcrumb usa Icons.CaretRightIcon, e Pagination usa Icons.DotsThreeIcon. Números de etapas e páginas continuam sendo dados textuais. Input e Checkbox preservam os SVGs da referência Figma, acessados internamente por Icons/assets sem modificar bytes, máscaras ou dimensões.
 
-Ícones decorativos nos slots do Button recebem `aria-hidden`. Um Button sem conteúdo textual precisa de nome acessível por `aria-label` ou `aria-labelledby`. Evite controles Storybook para elementos React: crie o JSX da story no `render`, pois Controls serializam args.
+O catálogo `Foundations/Icons` usa o namespace público Icons do DS e mostra um ícone por vez. Sua página Documentação demonstra a importação e os slots de Button. O catálogo público preserva os nomes existentes e também inclui os ícones usados no template. Seus controles selecionam o nome do ícone, o tamanho pela escala `typography.fontSizes` (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`), peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`) e origem da cor: paleta semântica do DS ou HEX customizado para casos especiais. O line-height do preview acompanha o tamanho selecionado. Phosphor usa `currentColor` por padrão, então ícones nos botões acompanham a cor do texto; `size="1em"` mantém alinhamento com a tipografia do botão.
+
+Button não importa uma biblioteca de ícones: recebe ReactNode em startIcon/endIcon. Os exemplos usam `<Icons.PlusIcon />` nesses slots. Ícones decorativos nos slots do Button recebem `aria-hidden`. Um Button sem conteúdo textual precisa de nome acessível por `aria-label` ou `aria-labelledby`. Evite controles Storybook para elementos React: crie o JSX da story no `render`, pois Controls serializam args.
 
 ## Instalação e desenvolvimento
 
@@ -217,7 +227,7 @@ O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json
 
 ## Ícones
 
-O Storybook mantém um catálogo de ícones Phosphor em `Foundations/Icons`, com controles para cor, tamanho e peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`). As stories importam ícones por subpath para não carregar o barrel completo. `@art-liz/react` declara Phosphor como dependência de desenvolvimento para compilar suas stories; consumidores passam seus próprios componentes de ícone pelos slots genéricos `startIcon` e `endIcon`, sem dependência de Phosphor em runtime.
+O Storybook mantém um catálogo de ícones Phosphor em `Foundations/Icons`, com controles para cor, tamanho e peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`). As stories usam o catálogo Icons de @art-liz/react; somente a camada central importa os ícones por subpath. `@art-liz/react` declara Phosphor como dependência de runtime para seus símbolos internos; consumidores também podem passar componentes de ícone pelos slots genéricos `startIcon` e `endIcon`.
 
 ## Trabalho com Codex
 

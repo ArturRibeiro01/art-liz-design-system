@@ -1,15 +1,17 @@
+import {
+  clearLarge,
+  clearMedium,
+  clearSmall,
+  clearLargeHover,
+  clearMediumHover,
+  clearSmallHover,
+  clearLargeActive,
+  clearMediumActive,
+  clearSmallActive,
+} from '../Icons/assets'
 import { colors, focus, radii, spacing, typography } from '@art-liz/tokens'
 import styled from '@emotion/styled'
 import type { InputSize } from './Input'
-import clearLarge from './assets/bddf6.svg'
-import clearMedium from './assets/ad5e2.svg'
-import clearSmall from './assets/81bbb.svg'
-import clearLargeHover from './assets/b35dc.svg'
-import clearMediumHover from './assets/5788f.svg'
-import clearSmallHover from './assets/29164.svg'
-import clearLargeActive from './assets/083cc.svg'
-import clearMediumActive from './assets/14063.svg'
-import clearSmallActive from './assets/ce11c.svg'
 
 const sizes = {
   small: {

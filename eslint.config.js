@@ -31,5 +31,27 @@ export default defineConfig([
     files: ['src/**/*.{ts,tsx}'],
     extends: [reactRefresh.configs.vite],
   },
+  {
+    files: [
+      'packages/react/src/**/*.{ts,tsx}',
+      'apps/*/src/**/*.{ts,tsx}',
+      'packages/create-app/template/src/**/*.{ts,tsx}',
+    ],
+    ignores: ['packages/react/src/Icons/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@phosphor-icons/react', '@phosphor-icons/react/*'],
+              message:
+                'Use o catálogo Icons do DS. A integração com Phosphor fica em packages/react/src/Icons.',
+            },
+          ],
+        },
+      ],
+    },
+  },
   eslintConfigPrettier,
 ])

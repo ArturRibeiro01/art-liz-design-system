@@ -28,9 +28,9 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Vite para desenvolvimento e build.
 - Vitest, Testing Library e jsdom para testes.
 - Storybook com Vite para catálogo, documentação visual, addon de acessibilidade e testes de stories via Vitest em navegador.
-- Phosphor Icons (`@phosphor-icons/react`) para o catálogo e exemplos de ícones no Storybook; `packages/react` pode usá-la como dependência de desenvolvimento para suas stories, mas mantém slots genéricos `ReactNode` e não depende da biblioteca em runtime.
+- Ícones são consumidos pelo catálogo `Icons` do DS: componentes internos usam `import * as Icons from '../Icons'`; aplicações e o catálogo do Storybook usam `import { Icons } from '@art-liz/react'`. Button conserva slots ReactNode (`startIcon`/`endIcon`), preenchidos com elementos como `<Icons.PlusIcon />`. Phosphor é dependência de runtime apenas como implementação centralizada em `packages/react/src/Icons`; não importar o fornecedor fora dessa pasta. ESLint verifica essa fronteira. Assets Figma de Input/Checkbox permanecem intactos e são acessados por Icons/assets. Não usar caracteres como substitutos de ícones.
 - Changesets para controle de versões.
-- `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores.
+- `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores. A tela inicial demonstra os componentes atuais, com estilos próprios em HomePage.style.ts, criação local em Dialog, abas, preferências e estado Zustand. Os componentes são importados do pacote completo; não são copiados individualmente para o app.
 - Pacotes publicáveis planejados: `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
 - O workflow `publish-beta.yml` tem uma recuperação manual por `workflow_dispatch` com `publish-current=true` para publicar snapshots pré-release das versões atuais ainda ausentes do npm quando os changesets já foram consumidos.

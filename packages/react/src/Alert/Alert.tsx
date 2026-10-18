@@ -1,3 +1,4 @@
+import * as Icons from '../Icons'
 import type { HTMLAttributes, ReactNode } from 'react'
 import type { SemanticIntent } from '../internal/intent'
 import { Text } from '../Text'
@@ -29,7 +30,7 @@ export function Alert({
       </div>
       {onDismiss && (
         <AlertClose aria-label={dismissLabel} onClick={onDismiss} type="button">
-          ×
+          <Icons.XIcon aria-hidden="true" focusable="false" size={16} />
         </AlertClose>
       )}
     </StyledAlert>

@@ -1,3 +1,4 @@
+import * as Icons from '../Icons'
 import type { DialogHTMLAttributes, ReactNode } from 'react'
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef } from 'react'
 import { Text } from '../Text'
@@ -112,7 +113,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(function Dialog
           )}
         </div>
         <DialogClose aria-label={closeLabel} onClick={onClose} type="button">
-          ×
+          <Icons.XIcon aria-hidden="true" focusable="false" size={20} />
         </DialogClose>
       </DialogHeader>
       <DialogBody>{children}</DialogBody>

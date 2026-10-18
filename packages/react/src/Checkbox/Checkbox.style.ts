@@ -1,7 +1,6 @@
+import { check, checkDisabled } from '../Icons/assets'
 import { colors, focus, spacing } from '@art-liz/tokens'
 import styled from '@emotion/styled'
-import check from './assets/a394b.svg'
-import checkDisabled from './assets/a5276.svg'
 
 export const CheckboxLabel = styled('span', {
   shouldForwardProp: (prop) => prop !== 'disabled',

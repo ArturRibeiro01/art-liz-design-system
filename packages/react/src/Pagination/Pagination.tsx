@@ -1,3 +1,4 @@
+import * as Icons from '../Icons'
 import type { HTMLAttributes } from 'react'
 import { PageButton, PageList } from './Pagination.style'
 export interface PaginationProps extends HTMLAttributes<HTMLElement> {
@@ -43,7 +44,9 @@ export function Pagination({
         </li>
         {visible.map((n, index) => (
           <li key={n}>
-            {index > 0 && n - visible[index - 1] > 1 && <span aria-hidden="true">…</span>}
+            {index > 0 && n - visible[index - 1] > 1 && (
+              <Icons.DotsThreeIcon aria-hidden="true" focusable="false" size={16} />
+            )}
             <PageButton
               aria-current={n === current ? 'page' : undefined}
               aria-label={`Página ${n}`}

@@ -31,6 +31,9 @@ export const DialogHeader = styled.header`
   }
 `
 export const DialogClose = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   ${keyboardFocus};
   min-width: 32px;
   min-height: 32px;

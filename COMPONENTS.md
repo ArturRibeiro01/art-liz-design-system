@@ -9,13 +9,12 @@ No Storybook, abra o grupo de um componente e selecione **Documentação** (íco
 Importe `Button` de `@art-liz/react`. As props `variant`, `intent` e `size` escolhem a aparência, a intenção semântica e a escala; `startIcon` e `endIcon` aceitam qualquer elemento React.
 
 ```tsx
-import { ArrowRightIcon } from '@phosphor-icons/react/dist/csr/ArrowRight'
-import { Button } from '@art-liz/react'
+import { Button, Icons } from '@art-liz/react'
 
 export function ContinueButton() {
   return (
     <Button
-      endIcon={<ArrowRightIcon size="1em" weight="regular" />}
+      endIcon={<Icons.ArrowRightIcon size="1em" weight="regular" />}
       intent="success"
       size="medium"
       variant="outline"
@@ -128,16 +127,15 @@ export function AccountPage() {
 
 ## Ícones
 
-O pacote público `@art-liz/react` não depende de Phosphor em runtime. Os slots de ícone recebem qualquer `ReactNode`.
+O catálogo público `Icons` de `@art-liz/react` centraliza os ícones do DS. Componentes, stories e aplicações usam essa entrada. Phosphor permanece como implementação de runtime somente dentro de `packages/react/src/Icons`; os slots públicos continuam recebendo qualquer `ReactNode`.
 
-Consumidores que adotarem Phosphor podem importar somente os ícones usados:
+Consumidores importam o catálogo do DS e escolhem o ícone pelo nome:
 
 ```tsx
-import { PlusIcon } from '@phosphor-icons/react/dist/csr/Plus'
-import { Button } from '@art-liz/react'
+import { Button, Icons } from '@art-liz/react'
 
 function AddButton() {
-  return <Button startIcon={<PlusIcon size="1em" weight="regular" />}>Adicionar</Button>
+  return <Button startIcon={<Icons.PlusIcon size="1em" weight="regular" />}>Adicionar</Button>
 }
 ```
 

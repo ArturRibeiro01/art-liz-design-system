@@ -1,3 +1,4 @@
+import * as Icons from '../Icons'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { Text } from '../Text'
 import { StepIndicator, StepsList } from './Steps.style'
@@ -35,7 +36,13 @@ export function Steps({
           <li aria-current={status === 'current' ? 'step' : undefined} key={item.id ?? index}>
             <StepIndicator aria-label={statusLabels[status]} data-status={status} role="img">
               <span aria-hidden="true">
-                {status === 'finished' ? '✓' : status === 'error' ? '!' : index + 1}
+                {status === 'finished' ? (
+                  <Icons.CheckIcon aria-hidden="true" focusable="false" size={16} />
+                ) : status === 'error' ? (
+                  <Icons.WarningIcon aria-hidden="true" focusable="false" size={16} />
+                ) : (
+                  index + 1
+                )}
               </span>
             </StepIndicator>
             <div>

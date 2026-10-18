@@ -72,6 +72,10 @@ try {
   for (const peer of ['react', 'react-dom', '@emotion/react', '@emotion/styled']) {
     assert.ok(reactManifest.peerDependencies[peer], `peer dependency ausente: ${peer}`)
   }
+  assert.ok(
+    reactManifest.dependencies['@phosphor-icons/react'],
+    'Phosphor deve ser dependência de runtime dos ícones internos',
+  )
   assert.ok(packedPackages['create-app'].manifest.bin['create-app'])
 
   const consumerManifest = {
@@ -114,6 +118,24 @@ try {
       '--input-type=module',
       '--eval',
       "import { Box, Button, Checkbox, Container, Input, Text } from '@art-liz/react'; import { createElement } from 'react'; import { renderToStaticMarkup } from 'react-dom/server'; import { colors, typography } from '@art-liz/tokens'; if (![Box, Button, Container, Text].every((component) => typeof component === 'function') || !colors.primary[600] || !typography.textStyles.h1) process.exit(1); const html = renderToStaticMarkup(createElement('form', null, createElement(Input, { label: 'Name', clearable: true, defaultValue: 'Liz' }), createElement(Checkbox, { label: 'Accept', defaultChecked: true }))); if (!html.includes('type=\"checkbox\"') || !html.includes('Limpar campo')) process.exit(1)",
+    ],
+    consumerDirectory,
+  )
+
+  run(
+    process.execPath,
+    [
+      '--input-type=module',
+      '--eval',
+      `import { Alert, Icons, Steps } from '@art-liz/react'
+       import { createElement } from 'react'
+       import { renderToStaticMarkup } from 'react-dom/server'
+       const icon = renderToStaticMarkup(createElement(Icons.PlusIcon, {'aria-hidden': true, size: 16}))
+       if (!icon.includes('<svg')) throw new Error('Invalid public DS icon catalog')
+       const alert = renderToStaticMarkup(createElement(Alert, {onDismiss: () => {}}, 'Notice'))
+       const steps = renderToStaticMarkup(createElement(Steps, {items: [{title: 'Done', status: 'finished'}, {title: 'Failed', status: 'error'}]}))
+       if (!alert.includes('<svg') || alert.includes('×') || !alert.includes('Fechar aviso')) throw new Error('Invalid packaged close icon')
+       if ((steps.match(/<svg/g) || []).length !== 2) throw new Error('Invalid packaged step icons')`,
     ],
     consumerDirectory,
   )

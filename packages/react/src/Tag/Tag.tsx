@@ -1,3 +1,4 @@
+import * as Icons from '../Icons'
 import type { HTMLAttributes } from 'react'
 import type { SemanticIntent } from '../internal/intent'
 import { RemoveTag, StyledTag } from './Tag.style'
@@ -27,7 +28,7 @@ export function Tag({
           onClick={onRemove}
           type="button"
         >
-          ×
+          <Icons.XIcon aria-hidden="true" focusable="false" size={16} />
         </RemoveTag>
       )}
     </StyledTag>

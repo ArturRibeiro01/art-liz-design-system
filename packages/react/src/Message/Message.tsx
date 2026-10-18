@@ -1,3 +1,4 @@
+import * as Icons from '../Icons'
 import type { HTMLAttributes, ReactNode } from 'react'
 import type { SemanticIntent } from '../internal/intent'
 import { MessageRoot, MessageContent, MessageClose } from './Message.style'
@@ -22,7 +23,7 @@ export function Message({
       <MessageContent>{children}</MessageContent>
       {onDismiss && (
         <MessageClose type="button" aria-label={dismissLabel} onClick={onDismiss}>
-          ×
+          <Icons.XIcon aria-hidden="true" focusable="false" size={16} />
         </MessageClose>
       )}
     </MessageRoot>

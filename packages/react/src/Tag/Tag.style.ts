@@ -23,6 +23,9 @@ export const StyledTag = styled('span', { shouldForwardProp: (prop) => prop !== 
   }
 `
 export const RemoveTag = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   ${keyboardFocus};
   color: inherit;
   background: transparent;

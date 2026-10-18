@@ -13,6 +13,7 @@ export default defineConfig({
         '@emotion/react',
         '@emotion/styled',
         '@art-liz/tokens',
+        /^@phosphor-icons\/react(?:\/|$)/,
       ],
     },
   },

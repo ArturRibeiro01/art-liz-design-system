@@ -24,6 +24,11 @@ export const StepsList = styled.ol`
 `
 export const StepIndicator = styled.span`
   ${componentText};
+  & > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
   flex: 0 0 ${spacing[8]};
   height: ${spacing[8]};
   display: inline-flex;
