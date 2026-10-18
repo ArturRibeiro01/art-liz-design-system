@@ -245,3 +245,31 @@ O navegador cuida da modalidade, do ciclo de foco e do retorno ao acionador. Esc
 `trigger` de Dropdown/Popover é o conteúdo do botão criado pelo componente; evite passar outro botão ou link interativo. Use Popover para conteúdo interativo e Tooltip para uma descrição curta não interativa. Popover/Dropdown têm estado interno e são dispensados por clique externo/Escape. Dropdown permite setas, Home/End, busca por texto, Enter/Espaço e saída por Tab.
 
 Dialog/Drawer exigem suporte a `HTMLDialogElement.showModal`; Popover/Dropdown exigem a Popover API. Esta entrega usa essas APIs em navegadores modernos sem polyfills. Nenhum componente publica dados ou envia arquivos por conta própria.
+
+## Famílias restantes do inventário
+
+A rodada seguinte acrescenta nove componentes, completando uma base funcional para as 34 famílias catalogadas e elevando o pacote a 37 componentes. O visual segue os tokens atuais; as variantes detalhadas destas páginas do Figma ainda precisam ser consultadas. Consulte os [contratos e limites completos](docs/remaining-component-scope.md).
+
+| Componente     | API e uso inicial                                                                                                                                                        |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Cascader       | `label`, `options`, `value`/`defaultValue` como caminho, `onValueChange`, `name`, `disabled`, `helpText`, `error` e `size`; seletores encadeados com submissão da folha. |
+| DateTimePicker | Props de Input com `mode="date"                                                                                                                                          | "time" | "datetime-local"`, ref nativa e min/max/step; sem limpeza textual. |
+| Transfer       | `label`, `items`, `targetKeys`/`defaultTargetKeys`, `onTargetKeysChange`, `name`, busca e seleção em lote.                                                               |
+| Chart          | Barras horizontais; `title`, `data` com id/label/value, `description`, `valueFormatter` e `emptyLabel`.                                                                  |
+| FilterItem     | Botão de filtro; `selected`/`defaultSelected`, `onSelectedChange`, `disabled` e atributos nativos; estado por `aria-pressed`.                                            |
+| AuditStatus    | Texto em `children`, `intent` e `icon` opcional; sem regras de negócio ou live region automática.                                                                        |
+| Message        | `intent`, `icon`, `role`, `onDismiss` e `dismissLabel`; feedback compacto sem descarte automático.                                                                       |
+| Popconfirm     | `trigger`, `title`, `description`, `onConfirm`/`onCancel`, `onOpenChange`, rótulos das ações e intent primary/danger.                                                    |
+| Result         | `title`, `description`, `icon`, `actions`, `children` e `intent`; região nomeada de resultado/vazio/erro.                                                                |
+
+```tsx
+import { Cascader, DateTimePicker, Transfer } from '@art-liz/react'
+
+<Cascader label="Categoria" name="category" options={[
+  { value: 'design', label: 'Design', children: [{ value: 'ui', label: 'Interface' }] },
+]} />
+<DateTimePicker label="Prazo" mode="date" name="deadline" />
+<Transfer label="Componentes" name="components" items={[
+  { id: 'button', label: 'Button' }, { id: 'input', label: 'Input' },
+]} defaultTargetKeys={['input']} />
+```

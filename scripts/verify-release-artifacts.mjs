@@ -119,6 +119,15 @@ try {
   )
 
   const publicComponents = [
+    'AuditStatus',
+    'Cascader',
+    'Chart',
+    'DateTimePicker',
+    'FilterItem',
+    'Message',
+    'Popconfirm',
+    'Result',
+    'Transfer',
     'Alert',
     'Badge',
     'Breadcrumb',

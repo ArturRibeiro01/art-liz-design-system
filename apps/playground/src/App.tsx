@@ -1,3 +1,4 @@
+import { RemainingComponentsGallery } from './RemainingComponentsGallery'
 import { Button, Checkbox, Input, Text } from '@art-liz/react'
 import { useState } from 'react'
 import { ComponentGallery } from './ComponentGallery'
@@ -61,6 +62,7 @@ function App() {
         </div>
       </section>
       <ComponentGallery />
+      <RemainingComponentsGallery />
     </main>
   )
 }
