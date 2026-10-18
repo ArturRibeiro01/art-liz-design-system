@@ -53,6 +53,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - `apps/storybook`: configuração e execução local do Storybook.
 - `apps/playground`: app Vite usado como consumidor de teste.
 - `DESIGN_SYSTEM.md`: documentação completa para pessoas desenvolvedoras.
+- `FIGMA_INVENTORY.md`: referência Figma, inventário com níveis de evidência, mapeamento e primeira etapa proposta; `docs/figma-inventory.json` preserva o snapshot e IDs para evitar consultas repetidas.
 - `templates/gitflow/README.md`: instruções para adotar o fluxo em outros repositórios.
 - `README.md`: início rápido e comandos mais usados.
 
@@ -111,7 +112,7 @@ Não trate o reinício como correção de código se um build limpo também falh
 
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
 - O pacote React contém o componente `Button`, com aparências `primary`, `outline`, `ghost` e `link`, e intents semânticos `primary`, `danger`, `success`, `info` e `warning`.
-- O pacote React também contém `Box`, `Container` e `Text`; `Text` aplica as variantes tipográficas definidas em `typography.textStyles`.
+- O pacote React contém 28 componentes após a expansão em lote, incluindo `Box`, `Container`, `Text`, `Input` e `Checkbox`; a lista atual está em `packages/react/src/index.ts` e `COMPONENTS.md`. Input segue as alturas Figma 24/36/40px e usa `onClear` para limpeza controlada; Checkbox tem `indeterminate` nativo. `Text` aplica as variantes tipográficas de `typography.textStyles`.
 - O Storybook tem stories de Button, addon de acessibilidade, testes de stories via Vitest/Playwright e scripts de build estático para homologação e produção.
 - Os testes, lint, build integrado e builds estáticos do Storybook passaram na validação inicial.
 - A resolução de `@art-liz/react` no playground exigiu reiniciar o servidor Vite depois da instalação dos workspaces; o comando com `--force` passou a transformar o import para o artefato local.
@@ -121,5 +122,7 @@ Não trate o reinício como correção de código se um build limpo também falh
 ## Pendências conhecidas
 
 Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa e critérios de acessibilidade/cobertura.
+
+A consulta Figma de 18/10/2026 está em [FIGMA_INVENTORY.md](FIGMA_INVENTORY.md). Foram listadas 50 páginas e inspecionados Button, Input, Checkbox, Radio e Toggle em seis chamadas de leitura, além da evidência anterior de Steps. Input Basic e Checkbox foram implementados a partir dos contextos completos e imagens em `docs/figma/`, além de Button, Text, Box e Container. Há stories, testes e formulário no playground. Radio, Switch e outras 20 famílias já possuem implementações base. A pessoa usuária autorizou em 18/10/2026 priorizar os tokens e padrões atuais para esse lote, com ajuste visual ao Figma posterior; não exigir nova captura para continuar essa implementação base. A branch foi renomeada para `feat/component-library-expansion`. Consulte os snapshots e IDs antes de gastar novas chamadas. As capturas são imutáveis; não alterar seus bytes/hashes ao formatar. Fonte configurável, largura fluida, anel de foco e texto de erro em danger.800 são adaptações do projeto; não afirmar paridade completa ou conformidade de contraste sem validação específica.
 
 Ao concluir um trabalho que altere essas decisões ou pendências, atualize este resumo e `DESIGN_SYSTEM.md` para que a próxima sessão possa continuar sem depender desta conversa.

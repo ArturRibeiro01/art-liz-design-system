@@ -25,6 +25,27 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 
 Essas decisões descrevem a base atual. Novas dependências devem ser adicionadas quando houver uma necessidade concreta de produto ou desenvolvimento.
 
+## Referência Figma e evolução dos componentes
+
+A referência visual consultada é o [arquivo Figma fornecido, aberto na página Steps](https://www.figma.com/design/ah40tGdCZ8OKiGMkTSB8JO/?node-id=4-1856), identificado visualmente como TapTap Design System. O [inventário e mapeamento](FIGMA_INVENTORY.md), registrado em 18/10/2026, lista as 50 páginas e distingue páginas catalogadas de componentes efetivamente inspecionados. O [snapshot estrutural](docs/figma-inventory.json) preserva IDs e propriedades para economizar futuras chamadas à integração.
+
+O pacote já contém 28 componentes, incluindo Button, Text, Box, Container, Input e Checkbox e a expansão em lote descrita abaixo. A primeira etapa de formulários usa os [contextos e capturas locais](docs/figma/README.md) de Input Basic (`11:7949`) e Checkbox (`10:2274`), extraídos por `get_design_context`. Radio, Switch e outras 20 famílias foram adicionados em uma expansão baseada nos tokens atuais, autorizada pela pessoa usuária; o ajuste visual dirigido dessas famílias ao Figma fica para depois. Os snapshots preservam a referência original; os componentes acrescentam comportamento nativo, composição de labels/mensagens e foco visível. A fonte continua configurável, sem impor PingFang SC aos consumidores.
+
+## Expansão da biblioteca em lote
+
+Em 18/10/2026, a pessoa usuária priorizou construir a maioria dos componentes com os tokens e padrões existentes, deixando o ajuste fino ao Figma para depois. A branch de trabalho passou a ser `feat/component-library-expansion`. Essa decisão substitui o requisito de extrair capturas completas antes de implementar cada nova família nesta expansão. Input e Checkbox conservam suas referências completas; os demais componentes não declaram paridade com as variantes Figma.
+
+Foram acrescentados Radio, Switch (correspondência de Toggle), Textarea, Select, Slider, Upload, Form, ButtonGroup, Link (correspondência de Anchor), Badge, Tag, Alert, Breadcrumb, Pagination, Tabs, Steps, Table, Dialog, Drawer, Popover, Dropdown e Tooltip. A biblioteca passa a cobrir uma base funcional para 25 das 34 famílias de componentes catalogadas, além das primitivas Text, Box e Container. As APIs e exemplos ficam em [COMPONENTS.md](COMPONENTS.md).
+
+- Campos usam HTML nativo, refs, labels, descrições e validação/participação em formulário do navegador. Select não é um combobox pesquisável; Upload seleciona arquivos locais e não envia dados. Form oferece composição visual sobre `form`, sem gerenciador de estado ou validação próprio.
+- Tabs tem seleção controlada/não controlada, IDs associados e foco móvel por setas/Home/End, ignorando abas desabilitadas. Pagination recebe `page`, `pageCount` e `onPageChange`, com faixa compacta de números. Breadcrumb, Steps e Table preservam semântica de listas, etapa atual, caption e cabeçalhos.
+- Dialog e Drawer usam `dialog.showModal()` para modalidade e restauração do acionador, complementado por contenção de Tab/Shift+Tab nas extremidades do diálogo. São controlados por `open`/`onClose`, fecham por Escape e opcionalmente pelo backdrop, e preservam o overflow anterior do body com contagem para sobreposições simultâneas.
+- Popover e Dropdown usam a Popover API nativa (`showPopover`/`hidePopover`) para camada superior, Escape e clique externo. O estado é interno e `onOpenChange` informa transições. Dropdown implementa setas, Home/End, busca por texto e saída por Tab; Tooltip aceita um acionador React que encaminhe `aria-describedby`, mostra em hover/foco e dispensa por Escape.
+- Essas sobreposições exigem navegadores com suporte às APIs nativas utilizadas; não foi adicionado polyfill ou promessa de suporte a navegadores legados. As novas cores de texto e foco usam tons com maior contraste dentro das escalas existentes; warning usa texto neutro escuro.
+- Implementação e estilos continuam separados, com helpers privados em `packages/react/src/internal`. React e Emotion permanecem peers; não há novas dependências runtime ou acoplamento com Phosphor.
+
+Todas as famílias têm stories com acessibilidade como erro de teste. Os controles e componentes de navegação/feedback têm testes de comportamento; os fluxos das sobreposições são verificados em Chromium real. A galeria de consumo fica em `apps/playground/src/ComponentGallery.tsx`. As capturas Figma originais continuam imutáveis.
+
 ## Estrutura do repositório
 
 ```text
@@ -85,6 +106,16 @@ Para documentação visual, o Storybook inclui páginas em `Tokens/*` para cores
 Contém componentes acessíveis e reutilizáveis para React. O pacote importa tokens e mantém React e Emotion como `peerDependencies`, evitando incorporá-los como cópias privadas da biblioteca no projeto consumidor.
 
 Os componentes React ficam organizados em `packages/react/src/<Component>/`, com implementação, estilos, story e testes juntos. Cada pasta tem um `index.ts` e o `packages/react/src/index.ts` agrega a API pública do pacote.
+
+O componente `Input` usa um input HTML nativo com ref, atributos de formulário e modos controlado/não controlado. `label`, `helpText` e `error` são associados por IDs e `aria-describedby`, preservando descrições externas; `error` também ativa `aria-invalid`. `size` aceita `small` (24px, Caption), `medium` (36px, Body, padrão) e `large` (40px, Subtitle). Essas alturas seguem o Figma e diferem intencionalmente do Button existente. A largura acompanha o contêiner, e mensagens longas participam do fluxo normal.
+
+`clearable` habilita a ação de limpar em campos textuais editáveis, visível quando preenchidos e com foco no controle. O botão participa do teclado, possui nome acessível por `clearLabel` e devolve foco ao input. Em modo não controlado, limpa o valor nativo; no controlado, o consumidor atualiza `value` em `onClear`. A limpeza chama `onClear` e não sintetiza eventos `onChange`; estes continuam correspondendo à edição nativa. Reset de formulário permanece nativo. Tipos não textuais, `readOnly` e `disabled` não expõem essa ação.
+
+O componente `Checkbox` usa input `type="checkbox"`, ref nativa, `checked`/`defaultChecked`, `name`, `value`, `required`, `disabled` e label associado. `indeterminate` aplica a propriedade DOM: o indicador é um quadrado de 8px dentro da caixa de 16px, conforme o Figma. A ativação nativa resolve a seleção parcial; grupos controlados devem recalcular `indeterminate` a partir dos itens selecionados. Sem label visível, o consumidor precisa fornecer nome acessível externo. Textos longos quebram com a caixa alinhada à primeira linha; cores forçadas usam a aparência nativa do navegador.
+
+Os SVGs originais de check e limpar ficam no pacote React, são usados como máscaras nas dimensões dos respectivos slots e são incorporados pelo build, sem URLs temporárias ou dependência de ícones em runtime. Cores vêm dos tokens atuais. O foco por teclado acrescenta o anel existente de `focus`, inclusive em estados sem desenho de foco na referência. Os snapshots em `docs/figma/` e os SVGs originais ficam fora do Prettier para preservar bytes, hashes e proveniência.
+
+A mensagem de erro de Input usa `danger.800` para corrigir o contraste insuficiente de `danger.600` no texto de 12/14px da referência; a borda de erro mantém `danger.600`. A paleta de bordas e placeholders e o anel global de foco continuam seguindo os tokens existentes e precisam de revisão de contraste não textual antes de declarar conformidade integral de acessibilidade.
 
 O componente `Box` é um contêiner `div` com padding por tokens de espaçamento e opções de fundo, raio e sombra. Cada opção visual é independente e opcional; atributos nativos de `div` e `children` são encaminhados ao elemento.
 
@@ -386,6 +417,7 @@ Agentes especializados não são necessários para a fase atual. Codex e outros 
 
 ## Itens ainda em aberto
 
+- Ajustar visualmente ao Figma as 22 famílias da expansão em lote; as APIs básicas já existem. Descobrir requisitos próprios de Cascader, Date & Time Picker, Transfer, Chart, Filter item, Audit Status, Message, Popconfirm e Result antes de ampliar a cobertura.
 - Definir escalas completas de tipografia, cores, espaçamento e elevação.
 - Definir temas e estratégia para modo claro/escuro, se os produtos precisarem.
 - Estabelecer critérios de acessibilidade e compatibilidade de navegadores para os componentes.

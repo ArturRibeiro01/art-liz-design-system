@@ -1,0 +1,151 @@
+const assetPathPrefix = "./assets";
+const imgCheck = `${assetPathPrefix}/a394b.svg`;
+const imgCheck1 = `${assetPathPrefix}/a5276.svg`;
+
+type CheckboxProps = {
+  className?: string;
+  checked?: boolean;
+  status?: "Disable" | "Indeterminate" | "Normal" | "Hover";
+  withLabel?: boolean;
+};
+
+export default function Checkbox({ className, checked = false, status = "Normal", withLabel = false }: CheckboxProps) {
+  if (!withLabel && checked && status === "Normal") {
+    return (
+      <button className={className || "content-stretch cursor-pointer flex items-center justify-center relative rounded-[2px]"} data-node-id="10:2277" data-name="With label=false, Checked=true, Status=Normal">
+        <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="10:2278" data-name="size-keeper">
+          <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#15c5ce] left-1/2 rounded-[2px] size-[16px] top-1/2" data-node-id="10:2279" data-name="bg" />
+          <div className="absolute left-[3px] size-[10px] top-[3px]" data-node-id="10:2280" data-name="Check">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCheck} />
+          </div>
+        </div>
+      </button>
+    );
+  }
+  if (withLabel && !checked && status === "Normal") {
+    return (
+      <div className={className || "content-stretch flex gap-[8px] items-center relative"} data-node-id="10:2281" data-name="With label=true, Checked=false, Status=Normal">
+        <div className="bg-white content-stretch flex flex-col items-center justify-center overflow-clip relative rounded-[2px] shrink-0" data-node-id="10:2282" data-name="input">
+          <div className="bg-white border border-[#e1e1e1] border-solid relative rounded-[2px] shrink-0 size-[16px]" data-node-id="I10:2282;7126:29" />
+        </div>
+        <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#4b4b4b] text-[14px] whitespace-nowrap" data-node-id="10:2283">
+          Label
+        </p>
+      </div>
+    );
+  }
+  if (withLabel && checked && status === "Normal") {
+    return (
+      <button className={className || "content-stretch cursor-pointer flex gap-[8px] items-center relative"} data-node-id="10:2284" data-name="With label=true, Checked=true, Status=Normal">
+        <div className="bg-white content-stretch flex items-center justify-center relative rounded-[2px] shrink-0" data-node-id="10:2285" data-name="input">
+          <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I10:2285;7126:35" data-name="size-keeper">
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#15c5ce] left-1/2 rounded-[2px] size-[16px] top-1/2" data-node-id="I10:2285;7126:36" data-name="bg" />
+            <div className="absolute left-[3px] size-[10px] top-[3px]" data-node-id="I10:2285;7126:80" data-name="提示建议性/Fill/确认_FConfirm">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCheck} />
+            </div>
+          </div>
+        </div>
+        <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#4b4b4b] text-[14px] text-left whitespace-nowrap" data-node-id="10:2286">
+          Label
+        </p>
+      </button>
+    );
+  }
+  if (!withLabel && !checked && status === "Hover") {
+    return (
+      <button className={className || "bg-white content-stretch cursor-pointer flex flex-col items-center justify-center overflow-clip relative rounded-[2px]"} data-node-id="10:2287" data-name="With label=false, Checked=false, Status=Hover">
+        <div className="bg-white border border-[#47cfd6] border-solid relative rounded-[2px] shrink-0 size-[16px]" data-node-id="10:2288" />
+      </button>
+    );
+  }
+  if (!withLabel && checked && status === "Indeterminate") {
+    return (
+      <div className={className || "bg-white content-stretch flex items-center justify-center relative rounded-[2px]"} data-node-id="10:2289" data-name="With label=false, Checked=true, Status=Indeterminate">
+        <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="10:2290" data-name="size-keeper">
+          <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-white border border-[#e1e1e1] border-solid left-1/2 rounded-[2px] size-[16px] top-1/2" data-node-id="10:2291" data-name="bg" />
+          <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#15c5ce] left-1/2 rounded-[1px] size-[8px] top-1/2" data-node-id="10:2292" />
+        </div>
+      </div>
+    );
+  }
+  if (withLabel && !checked && status === "Hover") {
+    return (
+      <button className={className || "content-stretch cursor-pointer flex gap-[8px] items-center relative"} data-node-id="10:2293" data-name="With label=true, Checked=false, Status=Hover">
+        <div className="bg-white content-stretch flex flex-col items-center justify-center overflow-clip relative rounded-[2px] shrink-0" data-node-id="10:2294" data-name="input">
+          <div className="bg-white border border-[#47cfd6] border-solid relative rounded-[2px] shrink-0 size-[16px]" data-node-id="I10:2294;7127:18383" />
+        </div>
+        <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#4b4b4b] text-[14px] text-left whitespace-nowrap" data-node-id="10:2295">
+          Label
+        </p>
+      </button>
+    );
+  }
+  if (withLabel && checked && status === "Indeterminate") {
+    return (
+      <div className={className || "content-stretch flex gap-[8px] items-center relative"} data-node-id="10:2296" data-name="With label=true, Checked=true, Status=Indeterminate">
+        <div className="bg-white content-stretch flex items-center justify-center relative rounded-[2px] shrink-0" data-node-id="10:2297" data-name="input">
+          <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I10:2297;7126:23" data-name="size-keeper">
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-white border border-[#e1e1e1] border-solid left-1/2 rounded-[2px] size-[16px] top-1/2" data-node-id="I10:2297;7126:24" data-name="bg" />
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#15c5ce] left-1/2 rounded-[1px] size-[8px] top-1/2" data-node-id="I10:2297;7126:25" />
+          </div>
+        </div>
+        <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#4b4b4b] text-[14px] whitespace-nowrap" data-node-id="10:2298">
+          Label
+        </p>
+      </div>
+    );
+  }
+  if (!withLabel && !checked && status === "Disable") {
+    return (
+      <div className={className || "bg-white content-stretch flex flex-col items-center justify-center relative rounded-[2px]"} data-node-id="10:2299" data-name="With label=false, Checked=false, Status=Disable">
+        <div className="bg-[#f5f5f5] border border-[#e1e1e1] border-solid relative rounded-[2px] shrink-0 size-[16px]" data-node-id="10:2300" />
+      </div>
+    );
+  }
+  if (!withLabel && checked && status === "Disable") {
+    return (
+      <div className={className || "bg-white content-stretch flex items-center justify-center relative rounded-[2px]"} data-node-id="10:2301" data-name="With label=false, Checked=true, Status=Disable">
+        <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="10:2302" data-name="size-keeper">
+          <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#f5f5f5] border border-[#e1e1e1] border-solid left-1/2 rounded-[2px] size-[16px] top-1/2" data-node-id="10:2303" />
+          <div className="absolute left-[3px] size-[10px] top-[3px]" data-node-id="10:2304" data-name="Check">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCheck1} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (withLabel && !checked && status === "Disable") {
+    return (
+      <div className={className || "content-stretch flex gap-[8px] items-center relative"} data-node-id="10:2305" data-name="With label=true, Checked=false, Status=Disable">
+        <div className="bg-white content-stretch flex flex-col items-center justify-center relative rounded-[2px] shrink-0" data-node-id="10:2306" data-name="input">
+          <div className="bg-[#f5f5f5] border border-[#e1e1e1] border-solid relative rounded-[2px] shrink-0 size-[16px]" data-node-id="I10:2306;7126:27" />
+        </div>
+        <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#cacaca] text-[14px] whitespace-nowrap" data-node-id="10:2307">
+          Label
+        </p>
+      </div>
+    );
+  }
+  if (withLabel && checked && status === "Disable") {
+    return (
+      <div className={className || "content-stretch flex gap-[8px] items-center relative"} data-node-id="10:2308" data-name="With label=true, Checked=true, Status=Disable">
+        <div className="bg-white content-stretch flex items-center justify-center relative rounded-[2px] shrink-0" data-node-id="10:2309" data-name="checkbox-input/disabled">
+          <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I10:2309;7126:31" data-name="size-keeper">
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#f5f5f5] border border-[#e1e1e1] border-solid left-1/2 rounded-[2px] size-[16px] top-1/2" data-node-id="I10:2309;7126:32" />
+            <div className="absolute left-[3px] size-[10px] top-[3px]" data-node-id="I10:2309;7126:97" data-name="提示建议性/Fill/确认_FConfirm">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCheck1} />
+            </div>
+          </div>
+        </div>
+        <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#cacaca] text-[14px] whitespace-nowrap" data-node-id="10:2310">
+          Label
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className={className || "bg-white content-stretch flex flex-col items-center justify-center overflow-clip relative rounded-[2px]"} data-node-id="10:2275" data-name="With label=false, Checked=false, Status=Normal">
+      <div className="bg-white border border-[#e1e1e1] border-solid relative rounded-[2px] shrink-0 size-[16px]" data-node-id="10:2276" />
+    </div>
+  );
+}

@@ -7,6 +7,7 @@ Design system pessoal em React e TypeScript, organizado como monorepo npm. Os pa
 - [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md): arquitetura, decisões técnicas e contexto completo.
 - [DEVELOPMENT.md](DEVELOPMENT.md): comandos locais, qualidade de código e fluxo de desenvolvimento.
 - [COMPONENTS.md](COMPONENTS.md): uso básico dos componentes, tokens e ícones.
+- [FIGMA_INVENTORY.md](FIGMA_INVENTORY.md): referência Figma, inventário, mapeamento para o código e primeira etapa proposta.
 - [STORYBOOK.md](STORYBOOK.md): Storybook local, builds estáticos e GitHub Pages.
 - [RELEASES.md](RELEASES.md): Changesets, beta/latest e publicação npm.
 - [templates/gitflow/README.md](templates/gitflow/README.md): bootstrap do GitFlow em outros repositórios.

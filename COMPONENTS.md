@@ -26,6 +26,61 @@ export function ContinueButton() {
 
 O texto do botão fornece seu nome acessível. Para ações somente com ícone, informe `aria-label` ou `aria-labelledby`.
 
+## Input
+
+`Input` é um campo nativo com `label`, `helpText`, `error` e ref para o elemento HTML. Os tamanhos `small`, `medium` (padrão) e `large` têm alturas de 24, 36 e 40px, seguindo a referência Figma. A largura acompanha o contêiner.
+
+```tsx
+import { Input } from '@art-liz/react'
+
+;<Input
+  autoComplete="email"
+  helpText="Usaremos este endereço para contato."
+  label="E-mail"
+  name="email"
+  required
+  type="email"
+/>
+```
+
+`error="Informe um e-mail válido."` mostra a mensagem e ativa `aria-invalid`. Ajuda, erro e descrições externas são associados automaticamente. Sem `label`, forneça um label externo ou `aria-label`/`aria-labelledby`; placeholder não substitui o nome acessível.
+
+Para limpeza controlada:
+
+```tsx
+import { useState } from 'react'
+import { Input } from '@art-liz/react'
+
+export function NameField() {
+  const [name, setName] = useState('')
+  return (
+    <Input
+      clearable
+      clearLabel="Limpar nome"
+      label="Nome"
+      onChange={(event) => setName(event.target.value)}
+      onClear={() => setName('')}
+      value={name}
+    />
+  )
+}
+```
+
+Sem `value`, use `defaultValue`: a limpeza e o reset preservam o comportamento não controlado. A ação de limpar aparece em campos textuais preenchidos e com foco; chama `onClear`, sem criar um evento `onChange` artificial. `readOnly` e `disabled` seguem a semântica nativa e não oferecem limpeza.
+
+## Checkbox
+
+`Checkbox` mantém a seleção, teclado, validação e participação em formulário do input nativo. A caixa mede 16px, com label associado e estado indeterminado pela propriedade DOM.
+
+```tsx
+import { Checkbox } from '@art-liz/react'
+
+<Checkbox defaultChecked label="Receber novidades" name="news" value="yes" />
+<Checkbox indeterminate label="Selecionar todos" />
+```
+
+Para controle externo, use `checked` e `onChange={(event) => setChecked(event.target.checked)}`. Em grupos, derive `indeterminate` da seleção parcial e atualize-o junto com os itens. O marcador parcial é um quadrado; não representa um terceiro valor enviado pelo formulário. Sem label visível, forneça nome acessível por `aria-label`, `aria-labelledby` ou label externo. Ambos os componentes encaminham refs para `HTMLInputElement` e expõem seus tipos pelo pacote.
+
 ## Text
 
 `Text` aplica os estilos tipográficos do design system. Use `variant` para escolher a escala e `as` para preservar a semântica HTML.
@@ -101,3 +156,92 @@ const pageStyle = {
 ```
 
 As cores e a fonte de componentes usam CSS custom properties sobrescrevíveis. Veja os exemplos completos em [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
+
+## Biblioteca ampliada
+
+Os 22 componentes abaixo foram construídos com os tokens e padrões atuais, conforme a prioridade definida em 18/10/2026. O ajuste visual às variantes do Figma fica para depois; Input e Checkbox mantêm as capturas detalhadas já registradas.
+
+| Componente  | Uso e contrato principal                                                                                                                           |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Radio       | Input radio nativo; agrupe por `name`, com `checked`/`defaultChecked`, `value`, `required` e `label`.                                              |
+| Switch      | Input checkbox com `role="switch"`; mesma semântica de seleção e formulário, com `label`.                                                          |
+| Textarea    | Texto multilinha com `rows`, `label`, `helpText`, `error`, `size` e ref nativa.                                                                    |
+| Select      | Select nativo com `option`/`optgroup`, `multiple`, `value`/`defaultValue`, labels e mensagens.                                                     |
+| Slider      | Range nativo com `min`, `max`, `step`, `value`/`defaultValue`, `aria-valuetext` e label.                                                           |
+| Upload      | Seletor local de arquivos com `accept`, `multiple`, `onChange` e ref. Não executa upload nem valida tamanho/tipo por conta própria.                |
+| Form        | Formulário nativo em grid; `gap` aceita uma chave dos tokens de espaçamento.                                                                       |
+| ButtonGroup | Grupo nomeado de ações com orientação horizontal/vertical; não é toolbar com setas.                                                                |
+| Link        | Âncora com `href`, ref e atributos nativos; `_blank` acrescenta `noopener noreferrer` preservando `rel`.                                           |
+| Badge       | Marcador textual com `intent`; não anuncia mudanças automaticamente.                                                                               |
+| Tag         | Marcador com `intent` e remoção opcional via `onRemove`, `removeLabel` e `disabled`. O consumidor controla a remoção do DOM.                       |
+| Alert       | Mensagem com `title`, `intent` e `onDismiss`; `role="status"` por padrão, `role="alert"` quando explicitamente necessário.                         |
+| Breadcrumb  | `items: { label, href? }[]`; o último item recebe `aria-current="page"`.                                                                           |
+| Pagination  | `page`, `pageCount` positivo e inteiro e `onPageChange`; renderiza uma faixa compacta para listas grandes.                                         |
+| Tabs        | `items: { id, label, content, disabled? }[]`, IDs únicos, `value`/`defaultValue`, `onValueChange`, `label` e `orientation`.                        |
+| Steps       | Lista não interativa de `items: { id?, title, description?, status? }[]`; `current` é índice começando em zero.                                    |
+| Table       | Table nativa com `caption`, `thead`/`tbody`, `th`/`td`, ref e região com rolagem acessível por teclado. Sorting e seleção pertencem ao consumidor. |
+| Dialog      | Modal controlado por `open`/`onClose`, com `title`, `description`, `footer`, ref, `closeLabel` e `dismissOnBackdrop`.                              |
+| Drawer      | Mesmo contrato de Dialog, com `side="left"                                                                                                         | "right"` e apresentação lateral. |
+| Popover     | Conteúdo não modal com `trigger`, `title`, `children`, `disabled` e `onOpenChange`.                                                                |
+| Dropdown    | Menu de ações com `trigger`, `label`, `items: { id, label, disabled?, onSelect? }[]` e `onOpenChange`.                                             |
+| Tooltip     | `content` e um único elemento React acionável como filho; o filho deve encaminhar `aria-describedby` ao DOM.                                       |
+
+`Badge`, `Tag` e `Alert` aceitam `intent="neutral"|"primary"|"success"|"danger"|"info"|"warning"`. O tipo público compartilhado é `SemanticIntent`.
+
+### Abas controladas
+
+```tsx
+const [tab, setTab] = useState('account')
+
+<Tabs
+  label="Configurações"
+  value={tab}
+  onValueChange={setTab}
+  items={[
+    { id: 'account', label: 'Conta', content: <AccountSettings /> },
+    { id: 'notifications', label: 'Notificações', content: <NotificationSettings /> },
+  ]}
+/>
+```
+
+Setas seguem a orientação, Home/End selecionam os extremos e abas desabilitadas são ignoradas. Painéis continuam montados quando ocultos; mantenha os IDs de itens estáveis.
+
+### Diálogo controlado
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<>
+  <Button onClick={() => setOpen(true)}>Editar</Button>
+  <Dialog open={open} onClose={() => setOpen(false)} title="Editar perfil">
+    <Input label="Nome" name="name" />
+  </Dialog>
+</>
+```
+
+O navegador cuida da modalidade, do ciclo de foco e do retorno ao acionador. Escape e clique no backdrop solicitam fechamento; `dismissOnBackdrop={false}` desativa o clique externo. Para impedir Escape, use `onCancel={(event) => event.preventDefault()}`. `Drawer` reutiliza esse comportamento.
+
+### Menu e conteúdo contextual
+
+```tsx
+<Dropdown
+  trigger="Ações"
+  label="Ações do projeto"
+  items={[
+    { id: 'edit', label: 'Editar', onSelect: editProject },
+    { id: 'archive', label: 'Arquivar', disabled: true },
+  ]}
+/>
+
+<Popover trigger="Detalhes" title="Sobre o projeto">
+  <Text>Informações adicionais.</Text>
+</Popover>
+
+<Tooltip content="Salva as alterações">
+  <Button variant="ghost">Salvar</Button>
+</Tooltip>
+```
+
+`trigger` de Dropdown/Popover é o conteúdo do botão criado pelo componente; evite passar outro botão ou link interativo. Use Popover para conteúdo interativo e Tooltip para uma descrição curta não interativa. Popover/Dropdown têm estado interno e são dispensados por clique externo/Escape. Dropdown permite setas, Home/End, busca por texto, Enter/Espaço e saída por Tab.
+
+Dialog/Drawer exigem suporte a `HTMLDialogElement.showModal`; Popover/Dropdown exigem a Popover API. Esta entrega usa essas APIs em navegadores modernos sem polyfills. Nenhum componente publica dados ou envia arquivos por conta própria.

@@ -3,3 +3,6 @@ node_modules/
 storybook-static/
 coverage/
 package-lock.json
+docs/figma/
+packages/react/src/Input/assets/
+packages/react/src/Checkbox/assets/
