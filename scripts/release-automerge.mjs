@@ -38,6 +38,60 @@ export function validateReleasePullRequest(pr, files, repository) {
   if (!files.some(isManifest)) throw new Error('A release PR must update a package manifest.')
 }
 
+function assertAllowedJsonChanges(base, head, filename) {
+  const manifest = /^packages\/[^/]+\/package\.json$/.test(filename)
+  const workspacePath = (path) =>
+    path[0] === 'packages' &&
+    (path[1] === '' || /^packages\/[^/]+$/.test(path[1])) &&
+    path.length >= 3
+  const dependencySection = new Set([
+    'dependencies',
+    'devDependencies',
+    'optionalDependencies',
+    'peerDependencies',
+  ])
+  const allowed = (path) => {
+    if (manifest) {
+      return (
+        (path.length === 1 && path[0] === 'version') ||
+        (path.length === 2 && dependencySection.has(path[0]) && /^@art-liz\//.test(path[1]))
+      )
+    }
+    return (
+      (path.length === 3 && workspacePath(path) && path[2] === 'version') ||
+      (path.length === 4 &&
+        workspacePath(path) &&
+        dependencySection.has(path[2]) &&
+        /^@art-liz\//.test(path[3]))
+    )
+  }
+  const compare = (before, after, path = []) => {
+    if (Object.is(before, after)) return
+    if (allowed(path)) return
+    if (
+      before &&
+      after &&
+      typeof before === 'object' &&
+      typeof after === 'object' &&
+      !Array.isArray(before) &&
+      !Array.isArray(after)
+    ) {
+      for (const key of new Set([...Object.keys(before), ...Object.keys(after)]))
+        compare(before[key], after[key], [...path, key])
+      return
+    }
+    throw new Error(`Unexpected content change in release file: ${filename}`)
+  }
+  compare(JSON.parse(base), JSON.parse(head))
+}
+
+function readFileAtRef(run, endpoint, filename, ref) {
+  const response = JSON.parse(
+    run(['api', `${endpoint}/contents/${filename}?ref=${encodeURIComponent(ref)}`]),
+  )
+  return Buffer.from(response.content, 'base64').toString('utf8')
+}
+
 export function enableReleaseAutomerge({ repository, number, dryRun = false, run = runGh }) {
   if (!/^[\w.-]+\/[\w.-]+$/.test(repository ?? '') || !/^[1-9]\d*$/.test(String(number))) {
     throw new Error('A repository and positive release PR number are required.')
@@ -48,6 +102,18 @@ export function enableReleaseAutomerge({ repository, number, dryRun = false, run
     run(['api', `${endpoint}/pulls/${number}/files`, '--paginate', '--slurp']),
   ).flat()
   validateReleasePullRequest(pr, files, repository)
+  for (const file of files) {
+    if (
+      /^packages\/[^/]+\/package\.json$/.test(file.filename) ||
+      file.filename === 'package-lock.json'
+    ) {
+      assertAllowedJsonChanges(
+        readFileAtRef(run, endpoint, file.filename, pr.base.sha),
+        readFileAtRef(run, endpoint, file.filename, pr.head.sha),
+        file.filename,
+      )
+    }
+  }
 
   const checks = JSON.parse(
     run(['api', `${endpoint}/commits/${pr.head.sha}/check-runs`, '--paginate', '--slurp']),

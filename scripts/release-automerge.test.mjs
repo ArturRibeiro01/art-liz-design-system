@@ -8,6 +8,7 @@ const files = [
   { filename: '.changeset/example-release.md', status: 'removed' },
   { filename: 'packages/create-app/package.json', status: 'modified' },
   { filename: 'packages/create-app/CHANGELOG.md', status: 'modified' },
+  { filename: 'package-lock.json', status: 'modified' },
 ]
 function pullRequest() {
   return {
@@ -15,10 +16,40 @@ function pullRequest() {
     draft: false,
     changed_files: files.length,
     user: { login: 'github-actions[bot]', type: 'Bot' },
-    base: { ref: 'develop', repo: { full_name: repository } },
+    base: { ref: 'develop', sha: 'b'.repeat(40), repo: { full_name: repository } },
     head: { ref: 'changeset-release/develop', sha, repo: { full_name: repository } },
   }
 }
+const packageJson = JSON.stringify({
+  name: '@art-liz/create-app',
+  version: '0.3.0',
+  scripts: { test: 'node --test' },
+  dependencies: { '@art-liz/react': '1.0.0', lodash: '^4.0.0' },
+})
+const updatedPackageJson = JSON.stringify({
+  name: '@art-liz/create-app',
+  version: '0.3.1',
+  scripts: { test: 'node --test' },
+  dependencies: { '@art-liz/react': '1.1.0', lodash: '^4.0.0' },
+})
+const lockfile = JSON.stringify({
+  packages: {
+    '': { version: '0.1.0' },
+    'packages/create-app': {
+      version: '0.3.0',
+      dependencies: { '@art-liz/react': '1.0.0', lodash: '^4.0.0' },
+    },
+  },
+})
+const updatedLockfile = JSON.stringify({
+  packages: {
+    '': { version: '0.1.0' },
+    'packages/create-app': {
+      version: '0.3.1',
+      dependencies: { '@art-liz/react': '1.1.0', lodash: '^4.0.0' },
+    },
+  },
+})
 function fakeGh(checks = [], pr = pullRequest()) {
   const mutations = []
   return {
@@ -30,6 +61,16 @@ function fakeGh(checks = [], pr = pullRequest()) {
       }
       if (args[1].endsWith('/files')) return JSON.stringify([files])
       if (args[1].endsWith('/check-runs')) return JSON.stringify([{ check_runs: checks }])
+      if (args[1].includes('/contents/')) {
+        const content = args[1].includes('package-lock.json')
+          ? args[1].includes(pr.head.sha)
+            ? updatedLockfile
+            : lockfile
+          : args[1].includes(pr.head.sha)
+            ? updatedPackageJson
+            : packageJson
+        return JSON.stringify({ content: Buffer.from(content).toString('base64') })
+      }
       return JSON.stringify(pr)
     },
   }
@@ -85,6 +126,31 @@ test('accepts only the bot release PR with a complete version-only diff', () => 
     )
   }
   assert.throws(() => validateReleasePullRequest(pullRequest(), [], repository))
+})
+
+test('rejects functional, external dependency, and unrelated lockfile changes', () => {
+  for (const [filename, mutate] of [
+    ['packages/create-app/package.json', (json) => (json.scripts.test = 'node --test changed')],
+    ['packages/create-app/package.json', (json) => (json.dependencies.lodash = '^5.0.0')],
+    [
+      'package-lock.json',
+      (json) => (json.packages['packages/create-app'].dependencies.lodash = '^5.0.0'),
+    ],
+  ]) {
+    const gh = fakeGh()
+    const original = gh.run
+    gh.run = (args) => {
+      if (args[1]?.includes(`/contents/${filename}?`)) {
+        const result = JSON.parse(original(args))
+        const content = JSON.parse(Buffer.from(result.content, 'base64'))
+        if (args[1].includes(pr.head.sha)) mutate(content)
+        result.content = Buffer.from(JSON.stringify(content)).toString('base64')
+        return JSON.stringify(result)
+      }
+      return original(args)
+    }
+    assert.throws(() => enableReleaseAutomerge({ repository, number: 47, run: gh.run }))
+  }
 })
 
 test('dispatches both checks before enabling native auto-merge bound to the inspected SHA', () => {
