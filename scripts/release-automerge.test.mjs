@@ -50,7 +50,7 @@ const updatedLockfile = JSON.stringify({
     },
   },
 })
-function fakeGh(checks = [], pr = pullRequest()) {
+function fakeGh(checks = [], pr = pullRequest(), checksAfterDispatch = checks) {
   const mutations = []
   return {
     mutations,
@@ -60,7 +60,11 @@ function fakeGh(checks = [], pr = pullRequest()) {
         return ''
       }
       if (args[1].endsWith('/files')) return JSON.stringify([files])
-      if (args[1].endsWith('/check-runs')) return JSON.stringify([{ check_runs: checks }])
+      if (args[1].endsWith('/check-runs')) {
+        return JSON.stringify([
+          { check_runs: mutations.length >= 2 ? checksAfterDispatch : checks },
+        ])
+      }
       if (args[1].includes('/contents/')) {
         const content = args[1].includes('package-lock.json')
           ? args[1].includes(pr.head.sha)
@@ -143,7 +147,7 @@ test('rejects functional, external dependency, and unrelated lockfile changes', 
       if (args[1]?.includes(`/contents/${filename}?`)) {
         const result = JSON.parse(original(args))
         const content = JSON.parse(Buffer.from(result.content, 'base64'))
-        if (args[1].includes(pr.head.sha)) mutate(content)
+        if (args[1].includes(sha)) mutate(content)
         result.content = Buffer.from(JSON.stringify(content)).toString('base64')
         return JSON.stringify(result)
       }
@@ -153,9 +157,9 @@ test('rejects functional, external dependency, and unrelated lockfile changes', 
   }
 })
 
-test('dispatches both checks before enabling native auto-merge bound to the inspected SHA', () => {
-  const gh = fakeGh()
-  enableReleaseAutomerge({ repository, number: 47, run: gh.run })
+test('dispatches both checks before merging the inspected SHA', () => {
+  const gh = fakeGh([], pullRequest(), successfulChecks)
+  enableReleaseAutomerge({ repository, number: 47, run: gh.run, sleep: () => {} })
   assert.deepEqual(
     gh.mutations.slice(0, 2).map((args) => args[2]),
     ['ci.yml', 'pr-branch-policy.yml'],
@@ -168,7 +172,6 @@ test('dispatches both checks before enabling native auto-merge bound to the insp
     '47',
     '--repo',
     repository,
-    '--auto',
     '--squash',
     '--match-head-commit',
     sha,
@@ -177,7 +180,7 @@ test('dispatches both checks before enabling native auto-merge bound to the insp
 
 test('reuses passing checks and never uses an administrator bypass', () => {
   const gh = fakeGh(successfulChecks)
-  enableReleaseAutomerge({ repository, number: 47, run: gh.run })
+  enableReleaseAutomerge({ repository, number: 47, run: gh.run, maxAttempts: 0 })
   assert.equal(gh.mutations.length, 1)
   assert.equal(gh.mutations[0].includes('--admin'), false)
 })
@@ -189,8 +192,16 @@ test('does not treat pending, failed or third-party checks as passing', () => {
     { ...successfulChecks[0], app: { id: 999 } },
   ]) {
     const gh = fakeGh([check, successfulChecks[1]])
-    enableReleaseAutomerge({ repository, number: 47, run: gh.run })
-    assert.equal(gh.mutations.length, 3)
+    assert.throws(() =>
+      enableReleaseAutomerge({
+        repository,
+        number: 47,
+        run: gh.run,
+        sleep: () => {},
+        maxAttempts: 0,
+      }),
+    )
+    assert.equal(gh.mutations.length, 2)
   }
 })
 
@@ -230,8 +241,8 @@ test('a failed dispatch prevents enabling auto-merge', () => {
 test('uses the latest run of each required check, including paginated retries', () => {
   const gh = fakeGh([
     { ...successfulChecks[0], id: 10, conclusion: 'failure' },
-    { ...successfulChecks[0], id: 20 },
-    { ...successfulChecks[1], id: 21 },
+    { ...successfulChecks[0], id: 20, conclusion: 'success' },
+    { ...successfulChecks[1], id: 21, conclusion: 'success' },
   ])
   enableReleaseAutomerge({ repository, number: 47, run: gh.run })
   assert.equal(gh.mutations.length, 1)
@@ -240,6 +251,8 @@ test('uses the latest run of each required check, including paginated retries', 
     { ...successfulChecks[0], id: 20, conclusion: null },
     { ...successfulChecks[1], id: 21 },
   ])
-  enableReleaseAutomerge({ repository, number: 47, run: pending.run })
-  assert.equal(pending.mutations.length, 3)
+  assert.throws(() =>
+    enableReleaseAutomerge({ repository, number: 47, run: pending.run, maxAttempts: 0 }),
+  )
+  assert.equal(pending.mutations.length, 2)
 })

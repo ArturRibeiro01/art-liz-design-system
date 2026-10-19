@@ -92,7 +92,14 @@ function readFileAtRef(run, endpoint, filename, ref) {
   return Buffer.from(response.content, 'base64').toString('utf8')
 }
 
-export function enableReleaseAutomerge({ repository, number, dryRun = false, run = runGh }) {
+export function enableReleaseAutomerge({
+  repository,
+  number,
+  dryRun = false,
+  run = runGh,
+  sleep,
+  maxAttempts,
+}) {
   if (!/^[\w.-]+\/[\w.-]+$/.test(repository ?? '') || !/^[1-9]\d*$/.test(String(number))) {
     throw new Error('A repository and positive release PR number are required.')
   }
@@ -115,20 +122,32 @@ export function enableReleaseAutomerge({ repository, number, dryRun = false, run
     }
   }
 
-  const checks = JSON.parse(
-    run(['api', `${endpoint}/commits/${pr.head.sha}/check-runs`, '--paginate', '--slurp']),
-  ).flatMap((page) => page.check_runs)
-  const passed = requiredChecks.every((name) => {
-    const latest = checks
-      .filter((check) => check.name === name && check.app?.id === 15368)
-      .sort((a, b) => b.id - a.id)[0]
-    return latest?.conclusion === 'success'
-  })
+  const checks = readChecks(run, endpoint, pr.head.sha)
+  const passed = checksPassed(checks)
   const commands = []
   // Explicit dispatch works even when the PR was created using GITHUB_TOKEN.
   if (!passed) {
     for (const workflow of ['ci.yml', 'pr-branch-policy.yml']) {
       commands.push(['workflow', 'run', workflow, '--repo', repository, '--ref', pr.head.ref])
+    }
+  }
+  if (!dryRun) {
+    for (const command of commands) run(command)
+    waitForChecks({
+      run,
+      endpoint,
+      sha: pr.head.sha,
+      initialChecks: checks,
+      sleep,
+      maxAttempts,
+    })
+    const currentPr = JSON.parse(run(['api', `${endpoint}/pulls/${number}`]))
+    const currentFiles = JSON.parse(
+      run(['api', `${endpoint}/pulls/${number}/files`, '--paginate', '--slurp']),
+    ).flat()
+    validateReleasePullRequest(currentPr, currentFiles, repository)
+    if (currentPr.head.sha !== pr.head.sha) {
+      throw new Error('The release PR head changed while waiting for required checks.')
     }
   }
   commands.push([
@@ -137,13 +156,46 @@ export function enableReleaseAutomerge({ repository, number, dryRun = false, run
     String(number),
     '--repo',
     repository,
-    '--auto',
     '--squash',
     '--match-head-commit',
     pr.head.sha,
   ])
-  if (!dryRun) for (const command of commands) run(command)
+  if (!dryRun) run(commands.at(-1))
   return { number: Number(number), sha: pr.head.sha, dryRun, commands }
+}
+
+function readChecks(run, endpoint, sha) {
+  return JSON.parse(
+    run(['api', `${endpoint}/commits/${sha}/check-runs`, '--paginate', '--slurp']),
+  ).flatMap((page) => page.check_runs)
+}
+
+function checksPassed(checks) {
+  return requiredChecks.every((name) => {
+    const latest = checks
+      .filter((check) => check.name === name && check.app?.id === 15368)
+      .sort((a, b) => b.id - a.id)[0]
+    return latest?.conclusion === 'success'
+  })
+}
+
+function waitForChecks({
+  run,
+  endpoint,
+  sha,
+  initialChecks,
+  sleep = (milliseconds) => execFileSync('sleep', [String(milliseconds / 1000)]),
+  maxAttempts = 60,
+}) {
+  let checks = initialChecks
+  for (let attempt = 0; ; attempt += 1) {
+    if (checksPassed(checks)) return
+    if (attempt >= maxAttempts) {
+      throw new Error('Required checks did not pass for the inspected release PR head.')
+    }
+    sleep(10_000)
+    checks = readChecks(run, endpoint, sha)
+  }
 }
 
 function runGh(args) {
