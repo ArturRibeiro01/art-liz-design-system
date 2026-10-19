@@ -1,3 +1,4 @@
+import { interactiveMotion } from '../internal/motion.style'
 import styled from '@emotion/styled'
 import { colors, radii, spacing } from '@art-liz/tokens'
 import { componentText, keyboardFocus } from '../internal/Field.style'
@@ -28,4 +29,5 @@ export const FilterButton = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
+  ${interactiveMotion};
 `

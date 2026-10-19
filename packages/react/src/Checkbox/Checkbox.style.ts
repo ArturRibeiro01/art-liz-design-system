@@ -1,3 +1,5 @@
+import { interactiveMotion } from '../internal/motion.style'
+import { motion } from '@art-liz/tokens'
 import { check, checkDisabled } from '../Icons/assets'
 import { colors, focus, spacing } from '@art-liz/tokens'
 import styled from '@emotion/styled'
@@ -41,13 +43,25 @@ export const CheckboxMark = styled.span`
 
   &::after {
     content: '';
-    display: none;
+    display: block;
+    opacity: 0;
+    background: ${colors.white};
+    mask: url(${JSON.stringify(check)}) center / contain no-repeat;
+    transition:
+      opacity ${motion.durations.fast} ${motion.easings.standard},
+      transform ${motion.durations.fast} ${motion.easings.standard};
     height: 10px;
     left: 50%;
     position: absolute;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.7);
     width: 10px;
+  }
+  ${interactiveMotion};
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      transition: none;
+    }
   }
 `
 
@@ -66,6 +80,8 @@ export const StyledCheckbox = styled.input`
     &::after {
       background: ${colors.white};
       display: block;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
       mask: url(${JSON.stringify(check)}) center / contain no-repeat;
     }
   }
@@ -77,6 +93,8 @@ export const StyledCheckbox = styled.input`
       background: ${colors.primary[600]};
       border-radius: 1px;
       display: block;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
       height: ${spacing[2]};
       mask: none;
       width: ${spacing[2]};

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Drawer } from './Drawer'
 import { useState } from 'react'
 import { Button } from '../Button'
@@ -38,7 +38,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.click(canvas.getByRole('button', { name: 'Abrir painel' }))
-    await expect(canvas.getByRole('dialog', { name: 'Detalhes' })).toBeVisible()
+    await waitFor(() => expect(canvas.getByRole('dialog', { name: 'Detalhes' })).toBeVisible())
     await userEvent.click(canvas.getByRole('button', { name: 'Fechar diálogo' }))
     await expect(canvas.queryByRole('dialog')).toBeNull()
   },

@@ -1,12 +1,16 @@
+import { motion } from '@art-liz/tokens'
+import type { SemanticIntent } from '../internal/intent'
+import { useInert } from '../internal/useInert'
 import type { ReactElement, ReactNode } from 'react'
 import { cloneElement, useEffect, useId, useRef, useState } from 'react'
 import { positionFloating } from '../internal/floating'
 import { TooltipRoot, TooltipSurface } from './Tooltip.style'
 export interface TooltipProps {
   children: ReactElement<{ 'aria-describedby'?: string }>
+  intent?: SemanticIntent
   content: ReactNode
 }
-export function Tooltip({ children, content }: TooltipProps) {
+export function Tooltip({ children, content, intent = 'neutral' }: TooltipProps) {
   const id = useId()
   const anchor = useRef<HTMLSpanElement>(null)
   const surface = useRef<HTMLSpanElement>(null)
@@ -15,6 +19,7 @@ export function Tooltip({ children, content }: TooltipProps) {
   const [focused, setFocused] = useState(false)
   const [dismissed, setDismissed] = useState(false)
   const open = (hover || focused) && !dismissed
+  useInert(surface, !open)
   useEffect(() => () => clearTimeout(timer.current), [])
   useEffect(() => {
     if (!open) return
@@ -38,7 +43,7 @@ export function Tooltip({ children, content }: TooltipProps) {
         setDismissed(false)
       }}
       onMouseLeave={() => {
-        timer.current = setTimeout(() => setHover(false), 120)
+        timer.current = setTimeout(() => setHover(false), Number.parseFloat(motion.durations.fast))
       }}
       onFocus={() => {
         setFocused(true)
@@ -58,7 +63,14 @@ export function Tooltip({ children, content }: TooltipProps) {
       {cloneElement(children, {
         'aria-describedby': [children.props['aria-describedby'], id].filter(Boolean).join(' '),
       })}
-      <TooltipSurface hidden={!open} id={id} ref={surface} role="tooltip">
+      <TooltipSurface
+        intent={intent}
+        aria-hidden={!open}
+        hidden={!open}
+        id={id}
+        ref={surface}
+        role="tooltip"
+      >
         {content}
       </TooltipSurface>
     </TooltipRoot>

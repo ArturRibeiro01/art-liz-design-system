@@ -13,7 +13,7 @@ export const StyledSwitch = styled.input`
   height: ${spacing[6]};
   margin: 0;
   position: relative;
-  transition: background ${motion.durations.fast};
+  transition: background-color ${motion.durations.normal} ${motion.easings.standard};
   &::before {
     content: '';
     background: ${colors.white};
@@ -23,7 +23,7 @@ export const StyledSwitch = styled.input`
     left: 1px;
     width: 20px;
     height: 20px;
-    transition: transform ${motion.durations.fast};
+    transition: transform ${motion.durations.normal} ${motion.easings.standard};
   }
   &:checked {
     background: ${colors.primary[800]};

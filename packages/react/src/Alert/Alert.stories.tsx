@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Alert } from './Alert'
+import { useRef, useState } from 'react'
+import { Button } from '../Button'
 import { fn } from 'storybook/test'
 
 const meta = {
@@ -40,4 +42,48 @@ export const Intents: Story = {
       ))}
     </div>
   ),
+}
+
+export const OpenAndClose: Story = {
+  name: 'Abrir e fechar',
+  render: function AlertDemo() {
+    const [open, setOpen] = useState(false)
+    const trigger = useRef<HTMLButtonElement | null>(null)
+    return (
+      <div style={{ display: 'grid', gap: 16, maxWidth: 480 }}>
+        <Button
+          variant="ghost"
+          onClick={(event) => {
+            trigger.current = event.currentTarget
+            setOpen(true)
+          }}
+        >
+          Mostrar aviso
+        </Button>
+        <Alert
+          open={open}
+          title="Preferências atualizadas"
+          intent="success"
+          onDismiss={() => {
+            setOpen(false)
+            trigger.current?.focus()
+          }}
+        >
+          Suas preferências foram salvas. Feche e abra novamente para observar a transição.
+        </Alert>
+      </div>
+    )
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const trigger = canvas.getByRole('button', { name: 'Mostrar aviso' })
+    await expect(canvas.queryByRole('status')).toBeNull()
+    await userEvent.click(trigger)
+    await waitFor(() => expect(canvas.getByRole('status')).toBeVisible())
+    await userEvent.click(canvas.getByRole('button', { name: 'Fechar aviso' }))
+    await expect(canvas.queryByRole('status')).toBeNull()
+    await expect(trigger).toHaveFocus()
+    await userEvent.click(trigger)
+    await waitFor(() => expect(canvas.getByRole('status')).toBeVisible())
+  },
 }

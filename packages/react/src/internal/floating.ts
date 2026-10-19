@@ -22,8 +22,21 @@ export function useNativePopover(onOpenChange?: (open: boolean) => void) {
       setOpen(next)
       onOpenChange?.(next)
     }
+    const handleBeforeToggle = (event: Event) => {
+      const next = (event as ToggleEvent).newState === 'open'
+      element.toggleAttribute('inert', !next)
+      element.setAttribute('aria-hidden', String(!next))
+    }
+    if (!element.matches(':popover-open')) {
+      element.toggleAttribute('inert', true)
+      element.setAttribute('aria-hidden', 'true')
+    }
+    element.addEventListener('beforetoggle', handleBeforeToggle)
     element.addEventListener('toggle', handleToggle)
-    return () => element.removeEventListener('toggle', handleToggle)
+    return () => {
+      element.removeEventListener('toggle', handleToggle)
+      element.removeEventListener('beforetoggle', handleBeforeToggle)
+    }
   }, [onOpenChange])
   useEffect(() => {
     if (!open) return

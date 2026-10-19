@@ -1,3 +1,4 @@
+import { interactiveMotion } from '../internal/motion.style'
 import styled from '@emotion/styled'
 import { colors, radii, spacing } from '@art-liz/tokens'
 import { componentText, keyboardFocus } from '../internal/Field.style'
@@ -21,6 +22,7 @@ export const StyledTag = styled('span', { shouldForwardProp: (prop) => prop !== 
   & > span {
     min-width: 0;
   }
+  ${interactiveMotion};
 `
 export const RemoveTag = styled.button`
   display: inline-flex;

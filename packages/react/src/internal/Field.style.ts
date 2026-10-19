@@ -1,3 +1,4 @@
+import { interactiveMotion } from './motion.style'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { colors, focus, radii, spacing, typography } from '@art-liz/tokens'
@@ -49,6 +50,7 @@ export const formControl = (size: InputSize) => css`
     cursor: not-allowed;
   }
   ${keyboardFocus};
+  ${interactiveMotion};
 `
 export const FieldRoot = styled.div`
   display: grid;

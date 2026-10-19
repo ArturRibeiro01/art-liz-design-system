@@ -172,9 +172,9 @@ Os 22 componentes abaixo foram construídos com os tokens e padrões atuais, con
 | Form        | Formulário nativo em grid; `gap` aceita uma chave dos tokens de espaçamento.                                                                       |
 | ButtonGroup | Grupo nomeado de ações com orientação horizontal/vertical; não é toolbar com setas.                                                                |
 | Link        | Âncora com `href`, ref e atributos nativos; `_blank` acrescenta `noopener noreferrer` preservando `rel`.                                           |
-| Badge       | Marcador textual com `intent`; não anuncia mudanças automaticamente.                                                                               |
+| Badge       | Marcador textual com `intent` e `size` small/medium/large (small padrão); não anuncia mudanças automaticamente.                                    |
 | Tag         | Marcador com `intent` e remoção opcional via `onRemove`, `removeLabel` e `disabled`. O consumidor controla a remoção do DOM.                       |
-| Alert       | Mensagem com `title`, `intent` e `onDismiss`; `role="status"` por padrão, `role="alert"` quando explicitamente necessário.                         |
+| Alert       | Mensagem com `title`, `intent`, `open` (true padrão) e `onDismiss`; `role="status"` por padrão, `role="alert"` quando explicitamente necessário.   |
 | Breadcrumb  | `items: { label, href? }[]`; o último item recebe `aria-current="page"`.                                                                           |
 | Pagination  | `page`, `pageCount` positivo e inteiro e `onPageChange`; renderiza uma faixa compacta para listas grandes.                                         |
 | Tabs        | `items: { id, label, content, disabled? }[]`, IDs únicos, `value`/`defaultValue`, `onValueChange`, `label` e `orientation`.                        |
@@ -184,9 +184,9 @@ Os 22 componentes abaixo foram construídos com os tokens e padrões atuais, con
 | Drawer      | Mesmo contrato de Dialog, com `side="left"                                                                                                         | "right"` e apresentação lateral. |
 | Popover     | Conteúdo não modal com `trigger`, `title`, `children`, `disabled` e `onOpenChange`.                                                                |
 | Dropdown    | Menu de ações com `trigger`, `label`, `items: { id, label, disabled?, onSelect? }[]` e `onOpenChange`.                                             |
-| Tooltip     | `content` e um único elemento React acionável como filho; o filho deve encaminhar `aria-describedby` ao DOM.                                       |
+| Tooltip     | `content`, `intent` (neutral padrão) e um único elemento React acionável como filho; o filho deve encaminhar `aria-describedby` ao DOM.            |
 
-`Badge`, `Tag` e `Alert` aceitam `intent="neutral"|"primary"|"success"|"danger"|"info"|"warning"`. O tipo público compartilhado é `SemanticIntent`.
+`Badge`, `Tag`, `Alert` e `Tooltip` aceitam `intent="neutral"|"primary"|"success"|"danger"|"info"|"warning"`. O tipo público compartilhado é `SemanticIntent`.
 
 ### Abas controladas
 
@@ -273,3 +273,7 @@ import { Cascader, DateTimePicker, Transfer } from '@art-liz/react'
   { id: 'button', label: 'Button' }, { id: 'input', label: 'Input' },
 ]} defaultTargetKeys={['input']} />
 ```
+
+## Movimento
+
+Superfícies de Alert, Dialog, Drawer, Popover, Popconfirm e Tooltip têm entrada/saída pelos tokens de motion. Os estados de Checkbox, Pagination, Tabs e demais controles também têm transições curtas. Todas respeitam prefers-reduced-motion. Mantenha componentes montados para permitir a saída animada; em Alert, altere open em vez de desmontá-lo condicionalmente. Dialog/Drawer continuam controlados por open; Popover/Popconfirm/Dropdown mantêm o estado interno e as APIs nativas. A saída animada usa transições CSS discretas e pode ser imediata em navegadores sem esse suporte. Veja as respectivas stories para testar as interações.

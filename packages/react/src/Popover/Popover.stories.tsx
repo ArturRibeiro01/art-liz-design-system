@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Popover } from './Popover'
 
 const meta = {
@@ -28,7 +28,7 @@ export const Default: Story = {
     const canvas = within(canvasElement)
     const trigger = canvas.getByRole('button', { name: 'Ver detalhes' })
     await userEvent.click(trigger)
-    await expect(canvas.getByRole('dialog')).toBeVisible()
+    await waitFor(() => expect(canvas.getByRole('dialog')).toBeVisible())
     await userEvent.keyboard('{Escape}')
     await expect(trigger).toHaveFocus()
     await expect(trigger).toHaveAttribute('aria-expanded', 'false')

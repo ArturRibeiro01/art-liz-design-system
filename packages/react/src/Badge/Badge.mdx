@@ -21,10 +21,16 @@ import { Badge } from '@art-liz/react'
 import { Badge } from '@art-liz/react'
 
 export function Exemplo() {
-  return <Badge intent="success">Ativo</Badge>
+  return (
+    <Badge intent="success" size="medium">
+      Ativo
+    </Badge>
+  )
 }
 ```
 
 ## Orientações
 
 Badge não anuncia alterações automaticamente. Para feedback dinâmico, considere Message ou Alert; o significado não deve depender apenas da cor.
+
+Use size="small", "medium" ou "large". O padrão small mantém as dimensões anteriores; medium e large ampliam o espaçamento e a tipografia. Badge continua sendo informativo, sem interação própria.

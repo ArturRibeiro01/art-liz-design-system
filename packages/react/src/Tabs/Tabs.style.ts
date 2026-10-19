@@ -1,3 +1,4 @@
+import { contentMotion, interactiveMotion } from '../internal/motion.style'
 import styled from '@emotion/styled'
 import { colors, spacing } from '@art-liz/tokens'
 import { componentText, keyboardFocus } from '../internal/Field.style'
@@ -35,6 +36,7 @@ export const TabButton = styled.button`
     color: ${colors.neutral[500]};
     cursor: not-allowed;
   }
+  ${interactiveMotion};
 `
 export const TabPanel = styled.div`
   ${componentText};
@@ -45,4 +47,5 @@ export const TabPanel = styled.div`
   &[hidden] {
     display: none;
   }
+  ${contentMotion};
 `

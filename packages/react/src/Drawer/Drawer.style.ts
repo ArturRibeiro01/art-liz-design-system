@@ -15,4 +15,22 @@ export const StyledDrawer = styled(Dialog)`
     left: 0;
     right: auto;
   }
+  transform: translateX(100%);
+  &[open] {
+    transform: none;
+  }
+  &[data-side='left'] {
+    transform: translateX(-100%);
+  }
+  &[data-side='left'][open] {
+    transform: none;
+  }
+  @starting-style {
+    &[open] {
+      transform: translateX(100%);
+    }
+    &[data-side='left'][open] {
+      transform: translateX(-100%);
+    }
+  }
 `

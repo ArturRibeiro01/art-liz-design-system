@@ -21,6 +21,11 @@ import { FilterItem } from '@art-liz/react'
 import { useState } from 'react'
 import { FilterItem } from '@art-liz/react'
 
+const itens = [
+  { id: 'a', nome: 'Portal', ativo: true },
+  { id: 'b', nome: 'Site anterior', ativo: false },
+]
+
 export function Exemplo() {
   const [onlyActive, setOnlyActive] = useState(false)
 
@@ -29,7 +34,13 @@ export function Exemplo() {
       <FilterItem selected={onlyActive} onSelectedChange={setOnlyActive}>
         Somente ativos
       </FilterItem>
-      <p>{onlyActive ? 'Filtro de ativos aplicado.' : 'Todos os itens estão visíveis.'}</p>
+      <ul>
+        {itens
+          .filter((item) => !onlyActive || item.ativo)
+          .map((item) => (
+            <li key={item.id}>{item.nome}</li>
+          ))}
+      </ul>
     </>
   )
 }

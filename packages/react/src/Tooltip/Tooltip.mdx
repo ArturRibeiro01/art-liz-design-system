@@ -22,7 +22,7 @@ import { Tooltip, Button } from '@art-liz/react'
 
 export function Exemplo() {
   return (
-    <Tooltip content="As alterações ficam disponíveis apenas neste navegador.">
+    <Tooltip intent="info" content="As alterações ficam disponíveis apenas neste navegador.">
       <Button variant="ghost">Sobre o rascunho</Button>
     </Tooltip>
   )
@@ -32,3 +32,5 @@ export function Exemplo() {
 ## Orientações
 
 O filho deve ser um único elemento React que encaminhe aria-describedby ao elemento focável, como Button. Evite controles interativos dentro do conteúdo; para isso, use Popover.
+
+Intents disponíveis: neutral (padrão escuro original), primary, success, danger, info e warning. O conteúdo deve transmitir o significado sem depender da cor. Entrada e saída são suaves pelos tokens de motion; prefers-reduced-motion remove a animação. Escape dispensa a dica sem mover o foco.

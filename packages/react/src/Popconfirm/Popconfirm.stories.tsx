@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, userEvent, within, fn } from 'storybook/test'
+import { expect, userEvent, waitFor, within, fn } from 'storybook/test'
 import { Popconfirm } from './Popconfirm'
 const meta = {
   title: 'Feedback/Popconfirm',
@@ -30,7 +30,7 @@ export const Default: Story = {
     const canvas = within(canvasElement)
     const trigger = canvas.getByRole('button', { name: 'Excluir item' })
     await userEvent.click(trigger)
-    await expect(canvas.getByRole('alertdialog')).toBeVisible()
+    await waitFor(() => expect(canvas.getByRole('alertdialog')).toBeVisible())
     await expect(canvas.getByRole('button', { name: 'Cancelar' })).toHaveFocus()
     await userEvent.keyboard('{Escape}')
     await expect(trigger).toHaveFocus()
@@ -57,6 +57,6 @@ export const Open: Story = {
     const canvas = within(canvasElement)
     await userEvent.click(canvas.getByRole('button', { name: 'Excluir item' }))
     await userEvent.hover(canvas.getByRole('button', { name: 'Confirmar' }))
-    await expect(canvas.getByRole('alertdialog')).toBeVisible()
+    await waitFor(() => expect(canvas.getByRole('alertdialog')).toBeVisible())
   },
 }

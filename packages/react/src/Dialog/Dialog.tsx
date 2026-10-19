@@ -43,6 +43,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(function Dialog
   useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
+    dialog.toggleAttribute('inert', !open)
     if (open && !dialog.open) dialog.showModal()
     if (!open && dialog.open) dialog.close()
     return () => {
@@ -52,6 +53,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(function Dialog
   return (
     <StyledDialog
       {...props}
+      aria-hidden={!open ? true : props['aria-hidden']}
       aria-describedby={
         [describedBy, description ? `${id}-description` : ''].filter(Boolean).join(' ') || undefined
       }

@@ -22,3 +22,43 @@ it('supports urgent alerts when explicitly requested', () => {
   )
   expect(screen.getByRole('alert').textContent).toBe('Falha ao salvar')
 })
+
+it('keeps closed content out of keyboard navigation and supports reopening without remounting', async () => {
+  const dismiss = vi.fn()
+  const { rerender } = render(
+    <Alert open={false} onDismiss={dismiss}>
+      Preferências salvas
+    </Alert>,
+  )
+  const content = screen.getByText('Preferências salvas')
+  const container = content.closest('[role="status"]')!
+  expect(screen.queryByRole('status')).toBeNull()
+  expect(container.hasAttribute('inert')).toBe(true)
+  rerender(
+    <Alert open onDismiss={dismiss}>
+      Preferências salvas
+    </Alert>,
+  )
+  expect(screen.getByRole('status')).toBe(container)
+  expect(container.hasAttribute('inert')).toBe(false)
+  await userEvent.setup().click(screen.getByRole('button', { name: 'Fechar aviso' }))
+  expect(dismiss).toHaveBeenCalledOnce()
+  // Controlled dismissal: the consumer decides when the surface closes.
+  expect(screen.getByRole('status')).toBe(container)
+  rerender(
+    <Alert open={false} onDismiss={dismiss}>
+      Preferências salvas
+    </Alert>,
+  )
+  expect(screen.queryByRole('status')).toBeNull()
+  expect(screen.getByText('Preferências salvas')).toBe(content)
+  expect(container.hasAttribute('inert')).toBe(true)
+})
+
+it('preserves the native hidden attribute when open is omitted', () => {
+  render(<Alert hidden>Somente quando solicitado</Alert>)
+  expect(screen.queryByRole('status')).toBeNull()
+  expect(
+    screen.getByText('Somente quando solicitado').closest('[role="status"]')?.hasAttribute('inert'),
+  ).toBe(true)
+})

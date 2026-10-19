@@ -1,3 +1,5 @@
+import { surfaceMotion, interactiveMotion } from './motion.style'
+import { motion } from '@art-liz/tokens'
 import styled from '@emotion/styled'
 import { colors, radii, shadows, spacing } from '@art-liz/tokens'
 import { componentText, keyboardFocus } from './Field.style'
@@ -14,6 +16,7 @@ export const FloatingTrigger = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
+  ${interactiveMotion};
 `
 export const FloatingSurface = styled.div`
   ${componentText};
@@ -33,4 +36,21 @@ export const FloatingSurface = styled.div`
   max-height: calc(100dvh - 16px);
   overflow: auto;
   overflow-wrap: anywhere;
+  ${surfaceMotion};
+  opacity: 0;
+  transform: translateY(calc(-1 * ${spacing[1]}));
+  pointer-events: none;
+  transition-timing-function: ${motion.easings.exit};
+  &:popover-open {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition-timing-function: ${motion.easings.entrance};
+  }
+  @starting-style {
+    &:popover-open {
+      opacity: 0;
+      transform: translateY(calc(-1 * ${spacing[1]}));
+    }
+  }
 `

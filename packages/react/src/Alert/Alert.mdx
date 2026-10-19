@@ -19,18 +19,24 @@ import { Alert } from '@art-liz/react'
 
 ```tsx
 import { useState } from 'react'
-import { Alert } from '@art-liz/react'
+import { Alert, Button } from '@art-liz/react'
 
 export function Exemplo() {
-  const [visible, setVisible] = useState(true)
+  const [open, setOpen] = useState(false)
 
   return (
     <>
-      {visible && (
-        <Alert title="Dados atualizados" intent="success" onDismiss={() => setVisible(false)}>
-          Suas preferências foram salvas.
-        </Alert>
-      )}
+      <Button variant="ghost" onClick={() => setOpen(true)}>
+        Mostrar aviso
+      </Button>
+      <Alert
+        open={open}
+        title="Dados atualizados"
+        intent="success"
+        onDismiss={() => setOpen(false)}
+      >
+        Suas preferências foram salvas.
+      </Alert>
     </>
   )
 }
@@ -38,4 +44,6 @@ export function Exemplo() {
 
 ## Orientações
 
-O role padrão é status; role="alert" pode ser usado em avisos urgentes. onDismiss solicita fechamento, e o consumidor remove o componente da tela.
+O role padrão é status; role="alert" pode ser usado em avisos urgentes. onDismiss solicita fechamento, e o consumidor atualiza open. Mantenha o componente montado e use open para animar a entrada e a saída; omitir open preserva o comportamento sempre visível. Se a ação de fechar estava focada, devolva o foco a um controle apropriado. A story Abrir e fechar demonstra esse fluxo.
+
+As transições usam tokens de motion e respeitam prefers-reduced-motion. Navegadores sem suporte a transições discretas de display podem fechar imediatamente.

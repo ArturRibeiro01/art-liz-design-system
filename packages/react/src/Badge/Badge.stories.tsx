@@ -4,6 +4,7 @@ import { Badge } from './Badge'
 const meta = {
   title: 'Data Display/Badge',
   component: Badge,
+  argTypes: { size: { control: 'inline-radio', options: ['small', 'medium', 'large'] } },
   parameters: {
     a11y: { test: 'error' },
     docs: {
@@ -24,6 +25,19 @@ export const Intents: Story = {
       {(['neutral', 'primary', 'success', 'danger', 'info', 'warning'] as const).map((intent) => (
         <Badge intent={intent} key={intent}>
           {intent}
+        </Badge>
+      ))}
+    </div>
+  ),
+}
+
+export const Sizes: Story = {
+  name: 'Tamanhos',
+  render: () => (
+    <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+      {(['small', 'medium', 'large'] as const).map((size) => (
+        <Badge key={size} size={size} intent="info">
+          {size}
         </Badge>
       ))}
     </div>

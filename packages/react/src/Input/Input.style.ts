@@ -1,3 +1,4 @@
+import { interactiveMotion } from '../internal/motion.style'
 import {
   clearLarge,
   clearMedium,
@@ -118,6 +119,7 @@ export const StyledInput = styled('input', {
   &::-webkit-search-cancel-button {
     appearance: none;
   }
+  ${interactiveMotion};
 `
 
 export const ClearButton = styled('button', {

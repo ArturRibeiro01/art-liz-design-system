@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Dialog } from './Dialog'
 import { useState, StrictMode } from 'react'
 import { Button } from '../Button'
@@ -46,7 +46,7 @@ export const Default: Story = {
     const canvas = within(canvasElement)
     const trigger = canvas.getByRole('button', { name: 'Abrir diálogo' })
     await userEvent.click(trigger)
-    await expect(canvas.getByRole('dialog', { name: 'Editar perfil' })).toBeVisible()
+    await waitFor(() => expect(canvas.getByRole('dialog', { name: 'Editar perfil' })).toBeVisible())
     await userEvent.tab()
     await expect(canvas.getByRole('textbox', { name: 'Nome' })).toHaveFocus()
     await userEvent.tab()
@@ -70,9 +70,9 @@ export const InitiallyOpen: Story = {
     )
   },
   play: async ({ canvasElement }) => {
-    await expect(
-      within(canvasElement).getByRole('dialog', { name: 'Diálogo inicial' }),
-    ).toBeVisible()
+    await waitFor(() =>
+      expect(within(canvasElement).getByRole('dialog', { name: 'Diálogo inicial' })).toBeVisible(),
+    )
   },
 }
 

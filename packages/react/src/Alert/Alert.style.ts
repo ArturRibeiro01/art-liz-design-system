@@ -1,3 +1,4 @@
+import { hiddenMotion, interactiveMotion } from '../internal/motion.style'
 import styled from '@emotion/styled'
 import { radii, spacing } from '@art-liz/tokens'
 import { componentText, keyboardFocus } from '../internal/Field.style'
@@ -20,6 +21,7 @@ export const StyledAlert = styled('div', { shouldForwardProp: (prop) => prop !==
   & > div {
     min-width: 0;
   }
+  ${hiddenMotion};
 `
 export const AlertClose = styled.button`
   display: inline-flex;
@@ -35,4 +37,5 @@ export const AlertClose = styled.button`
   font: inherit;
   cursor: pointer;
   padding: 0;
+  ${interactiveMotion};
 `

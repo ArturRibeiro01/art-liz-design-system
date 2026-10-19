@@ -1,3 +1,4 @@
+import { contentMotion, interactiveMotion } from '../internal/motion.style'
 import styled from '@emotion/styled'
 import { colors, radii, spacing } from '@art-liz/tokens'
 import { componentText, keyboardFocus } from '../internal/Field.style'
@@ -13,6 +14,7 @@ export const PageList = styled.ul`
     display: inline-flex;
     align-items: center;
     gap: ${spacing[1]};
+    ${contentMotion};
   }
 `
 export const PageButton = styled.button`
@@ -38,4 +40,5 @@ export const PageButton = styled.button`
     color: ${colors.neutral[500]};
     cursor: not-allowed;
   }
+  ${interactiveMotion};
 `

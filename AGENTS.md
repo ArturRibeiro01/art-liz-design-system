@@ -120,6 +120,12 @@ Não trate o reinício como correção de código se um build limpo também falh
 - O repositório fixa npm `11.6.2` em `package.json` e nos workflows para manter instalações limpas reproduzíveis entre macOS e Linux. O workflow stable atualiza para `npm@11.21.0` apenas antes de `npm dist-tag`, porque essa operação via OIDC exige npm 11.21.0+.
 - Esses resultados são registros históricos, não garantias de que o estado atual continua igual. Reexecute as verificações relevantes antes de afirmar que ainda passam.
 
+## Movimento e documentação futura
+
+- Transições compartilhadas ficam em packages/react/src/internal/motion.style.ts e usam os tokens existentes. Preservar prefers-reduced-motion, inert/aria-hidden na saída e as APIs nativas de dialog/popover. As animações de saída dependem de manter os componentes montados; CSS discreto é um aprimoramento progressivo.
+- Alert aceita open (padrão true); Badge tem size small/medium/large (padrão small); Tooltip tem os seis intents semânticos (neutral padrão). As respectivas páginas MDX documentam os contratos.
+- O plano GitBook está na issue #37 e nas tarefas #38 a #43, incluindo diagramas Mermaid. O portal ainda não foi configurado/publicado; a execução fica para trabalho futuro.
+
 ## Pendências conhecidas
 
 Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa e critérios de acessibilidade/cobertura.

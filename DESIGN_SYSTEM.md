@@ -62,6 +62,20 @@ Cascader compõe Selects nativos e submete somente folhas válidas. Transfer com
 
 Os exemplos desta rodada ficam em `apps/playground/src/RemainingComponentsGallery.tsx`. As capturas detalhadas do Figma ainda se limitam a Input e Checkbox; o restante exige consultas dirigidas antes dos ajustes visuais.
 
+## Movimento e novos controles de apresentação
+
+As superfícies de Alert, Dialog, Drawer, Popover, Popconfirm, Dropdown e Tooltip usam os tokens existentes de motion para entrada e saída. Dialog/Drawer usam slow (240ms); superfícies menores e conteúdo de Tabs usam normal (160ms); estados de campos, paginação, filtros, marcadores e Checkbox usam fast (120ms). Abertura usa entrance, fechamento usa exit e mudanças de estado usam standard. O painel do Drawer vem da direita por padrão; side="left" espelha o movimento. O backdrop continua cobrindo toda a viewport.
+
+Os helpers privados em packages/react/src/internal/motion.style.ts compartilham esses estilos. Nenhuma biblioteca de animação foi adicionada. As superfícies permanecem visualmente durante a saída usando @starting-style e transições discretas de display/overlay. Isso é um aprimoramento progressivo: sem suporte CSS, abrir/fechar continua funcional, mas a saída pode ser imediata. prefers-reduced-motion: reduce remove as transições e animações. Controles fechados ficam fora da árvore acessível e recebem inert durante a saída; Dialog e Popover mantêm suas APIs nativas e o contrato de foco. Para animar a saída, o consumidor deve manter o componente montado enquanto altera o estado.
+
+Alert agora aceita open (padrão true), com uma story de abrir/fechar via Button. Badge aceita size="small" | "medium" | "large", preservando a dimensão anterior em small. Tooltip aceita os seis intents semânticos, com neutral preservando o visual escuro anterior. FilterItem tem uma demonstração com filtros combinados que de fato alteram uma lista de projetos. As páginas Documentação desses componentes mostram as novas APIs.
+
+Validação em 18/10/2026: gate completo com npm 11.6.2 (147 testes React, quatro testes do CLI, 99 stories, três testes do app gerado, lint, formatação, builds, consumo dos tarballs e ambos os builds do Storybook). A revisão adicional em Chromium verificou entrada/saída real, overlay do Drawer, reabertura rápida, Escape, clique externo, foco, movimento reduzido, tamanhos do Badge e os exemplos a 320px. Axe não apontou violações nos seis intents do Tooltip. Essa revisão não representa uma matriz completa de navegadores ou leitores de tela.
+
+## Documentação futura no GitBook
+
+O trabalho foi planejado na [issue principal #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37), com seis tarefas vinculadas: estrutura/sincronização GitHub, instalação/create-app, fundamentos/acessibilidade, guias de componentes/receitas, diagramas Mermaid de arquitetura/fluxos e contribuição/versões/manutenção. O Storybook permanece o catálogo interativo; a proposta do GitBook é organizar a documentação conceitual e de adoção, evitando duplicar a manutenção dos exemplos. Nenhum portal ou sincronização foi publicado/configurado nesta etapa. As issues contêm escopo e critérios de aceite para execução futura.
+
 ## Estrutura do repositório
 
 ```text
@@ -436,6 +450,8 @@ O `@art-liz/create-app` não deve incluir UI Kits específicos por padrão. Aval
 Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI, rulesets GitFlow, deploy do Storybook no GitHub Pages e publicação npm automatizada já estão configurados; os environments e Trusted Publishers precisam ser mantidos quando houver mudanças nos workflows ou nos pacotes.
 
 ## Itens ainda em aberto
+
+- Executar a documentação GitBook planejada na [issue #37 e suas seis tarefas](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37).
 
 - Ajustar visualmente ao Figma as 31 famílias acrescentadas nas duas expansões e auditar Button; as APIs básicas das 34 famílias catalogadas já existem. Consultar variantes detalhadas antes de ampliar os escopos iniciais, especialmente Cascader, DateTimePicker, Transfer e Chart (limites em docs/remaining-component-scope.md).
 - Definir escalas completas de tipografia, cores, espaçamento e elevação.

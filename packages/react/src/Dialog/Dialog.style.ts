@@ -1,5 +1,6 @@
+import { surfaceMotion, interactiveMotion } from '../internal/motion.style'
 import styled from '@emotion/styled'
-import { colors, radii, shadows, spacing } from '@art-liz/tokens'
+import { colors, motion, radii, shadows, spacing } from '@art-liz/tokens'
 import { componentText, keyboardFocus } from '../internal/Field.style'
 export const StyledDialog = styled.dialog`
   ${componentText};
@@ -17,6 +18,43 @@ export const StyledDialog = styled.dialog`
   overflow-wrap: anywhere;
   &::backdrop {
     background: rgb(0 0 0 / 0.45);
+  }
+  ${surfaceMotion};
+  transition-duration: ${motion.durations.slow};
+  opacity: 0;
+  transform: translateY(${spacing[3]}) scale(0.98);
+  &[open] {
+    opacity: 1;
+    transform: none;
+  }
+  &:not([open]) {
+    pointer-events: none;
+    transition-timing-function: ${motion.easings.exit};
+  }
+  &::backdrop {
+    opacity: 0;
+    transition:
+      opacity ${motion.durations.slow} ${motion.easings.standard},
+      display ${motion.durations.slow} allow-discrete,
+      overlay ${motion.durations.slow} allow-discrete;
+  }
+  &[open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    &[open] {
+      opacity: 0;
+      transform: translateY(${spacing[3]}) scale(0.98);
+    }
+    &[open]::backdrop {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    &::backdrop {
+      transition: none;
+    }
   }
 `
 export const DialogHeader = styled.header`
@@ -45,6 +83,7 @@ export const DialogClose = styled.button`
   background: transparent;
   color: ${colors.neutral[600]};
   cursor: pointer;
+  ${interactiveMotion};
 `
 export const DialogBody = styled.div`
   padding: ${spacing[6]};
