@@ -53,6 +53,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - `apps/storybook`: configuração e execução local do Storybook.
 - `apps/playground`: app Vite usado como consumidor de teste.
 - `DESIGN_SYSTEM.md`: documentação completa para pessoas desenvolvedoras.
+- `GITBOOK.md`: configuração, canais e estado da integração GitBook; os guias versionados ficam em `docs/gitbook/`, com sumário e configuração de espaço locais.
 - `FIGMA_INVENTORY.md`: referência Figma, inventário com níveis de evidência, mapeamento e primeira etapa proposta; `docs/figma-inventory.json` preserva o snapshot e IDs para evitar consultas repetidas.
 - `templates/gitflow/README.md`: instruções para adotar o fluxo em outros repositórios.
 - `README.md`: início rápido e comandos mais usados.
@@ -125,7 +126,7 @@ Não trate o reinício como correção de código se um build limpo também falh
 
 - Transições compartilhadas ficam em packages/react/src/internal/motion.style.ts e usam os tokens existentes. Preservar prefers-reduced-motion, inert/aria-hidden na saída e as APIs nativas de dialog/popover. As animações de saída dependem de manter os componentes montados; CSS discreto é um aprimoramento progressivo.
 - Alert aceita open (padrão true); Badge tem size small/medium/large (padrão small); Tooltip tem os seis intents semânticos (neutral padrão). As respectivas páginas MDX documentam os contratos.
-- O plano GitBook está na issue #37 e nas tarefas #38 a #43, incluindo diagramas Mermaid. O portal ainda não foi configurado/publicado; a execução fica para trabalho futuro.
+- O plano GitBook está na issue #37 e nas tarefas #38 a #43, incluindo diagramas Mermaid. A estrutura inicial da issue #38 fica em docs/gitbook/, com SUMMARY.md, .gitbook.yaml e gitbook-docs.yaml para Site Git Sync. Na interface, Project directory deve ser docs/gitbook/; o espaço usa content.directory ./ e a chave estável art-liz-docs. Atualize os guias afetados na mesma PR de uma mudança de API. Git Sync é a estratégia proposta para sincronizar espaços associados a develop/main; integração, validação no GitBook e publicação ainda estão pendentes. Consulte GITBOOK.md antes de configurar a conta ou afirmar que a sincronização está ativa.
 
 ## Pendências conhecidas
 

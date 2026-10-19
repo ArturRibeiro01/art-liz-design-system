@@ -72,9 +72,11 @@ Alert agora aceita open (padrão true), com uma story de abrir/fechar via Button
 
 Validação em 18/10/2026: gate completo com npm 11.6.2 (147 testes React, quatro testes do CLI, 99 stories, três testes do app gerado, lint, formatação, builds, consumo dos tarballs e ambos os builds do Storybook). A revisão adicional em Chromium verificou entrada/saída real, overlay do Drawer, reabertura rápida, Escape, clique externo, foco, movimento reduzido, tamanhos do Badge e os exemplos a 320px. Axe não apontou violações nos seis intents do Tooltip. Essa revisão não representa uma matriz completa de navegadores ou leitores de tela.
 
-## Documentação futura no GitBook
+## Documentação no GitBook
 
 O trabalho foi planejado na [issue principal #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37), com seis tarefas vinculadas: estrutura/sincronização GitHub, instalação/create-app, fundamentos/acessibilidade, guias de componentes/receitas, diagramas Mermaid de arquitetura/fluxos e contribuição/versões/manutenção. O Storybook permanece o catálogo interativo; a proposta do GitBook é organizar a documentação conceitual e de adoção, evitando duplicar a manutenção dos exemplos. Nenhum portal ou sincronização foi publicado/configurado nesta etapa. As issues contêm escopo e critérios de aceite para execução futura.
+
+A implementação da estrutura da issue #38 começou em 19/10/2026: os guias ficam em `docs/gitbook/`, com `SUMMARY.md` e `.gitbook.yaml` locais. O arquivo `gitbook-docs.yaml` na mesma pasta prepara Site Git Sync; na interface, o diretório de projeto é `docs/gitbook/` e o conteúdo do espaço é `./`, com chave estável `art-liz-docs`. A política proposta associa espaços independentes a `develop` (homologação) e `main` (estável), preservando PRs e checks. O Git Sync poderá sincronizar o conteúdo após o merge, mas a atualização dos guias permanece parte da mudança de código. Configuração externa, prévia e publicação continuam pendentes. Consulte [GITBOOK.md](GITBOOK.md) para o procedimento e o estado atual.
 
 ## Estrutura do repositório
 
