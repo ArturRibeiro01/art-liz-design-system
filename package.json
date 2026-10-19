@@ -21,7 +21,7 @@
     "ci": "npm test && npm run test:storybook && npm run lint && npm run format:check && npm run build && npm run release:verify && npm run build:storybook:homolog && npm run build:storybook:prod",
     "prepare": "husky",
     "storybook": "npm run build -w @art-liz/tokens && npm run build -w @art-liz/react && npm run storybook -w @art-liz/storybook",
-    "test:storybook": "vitest --config vitest.storybook.config.ts --project=storybook --run",
+    "test:storybook": "npm run build -w @art-liz/tokens && npm run build -w @art-liz/react && vitest --config vitest.storybook.config.ts --project=storybook --run",
     "build:storybook:homolog": "npm run build -w @art-liz/tokens && npm run build -w @art-liz/react && npm run build:homolog -w @art-liz/storybook",
     "build:storybook:prod": "npm run build -w @art-liz/tokens && npm run build -w @art-liz/react && npm run build:prod -w @art-liz/storybook",
     "changeset": "changeset",

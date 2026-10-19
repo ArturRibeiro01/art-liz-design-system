@@ -228,12 +228,12 @@ npm run ci
 ```
 
 - `npm test` compila tokens e executa os testes Vitest do pacote React.
-- `npm run test:storybook` executa as stories como testes de componente em browser mode com Vitest e Playwright.
+- `npm run test:storybook` compila tokens e React antes de executar as stories como testes de componente em browser mode com Vitest e Playwright.
 - `npm run lint` executa ESLint em cada workspace e valida sintaxe do script shell.
 - `npm run format` aplica Prettier; `npm run format:check` verifica o padrão sem modificar arquivos.
 - `npm run build` compila tokens, empacota o React e compila o playground.
 
-Os pacotes React e tokens são compilados antes do Storybook para que os workspaces consumam seus artefatos `dist`.
+Os pacotes React e tokens são compilados antes do servidor e dos testes do Storybook para que os workspaces consumam seus artefatos `dist`. O script test:storybook faz essa preparação explicitamente, inclusive quando chamado sozinho. O catálogo de ícones usa o export público de @art-liz/react e a configuração de testes pré-otimiza esse pacote para evitar recargas durante a execução. O CI não pode depender de builds ou caches locais anteriores. A falha do Quality gates na PR #44 revelou essa preparação ausente; os erros de importação e acessibilidade no overlay do Vite eram consequências de dist ainda não existir. A falha foi reproduzida em uma cópia limpa e a correção passou no npm run ci completo, com Node 24.12.0 e npm 11.6.2, sem dist ou cache Vite anteriores: 147 testes React, 99 stories, quatro testes do CLI, três testes do app gerado, lint, formatação, builds e validação dos tarballs.
 
 `npm run ci` reúne os gates locais que o workflow do GitHub executa: testes de pacote, testes do Storybook, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
 

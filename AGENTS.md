@@ -76,7 +76,7 @@ npm run build:storybook:homolog
 npm run build:storybook:prod
 ```
 
-`npm run storybook` compila tokens e React antes de iniciar o servidor Storybook. `npm run test:storybook` executa as stories em modo browser com Vitest e Playwright/Chromium. Os builds estáticos ficam em `storybook-static/homolog` e `storybook-static/prod`. Confira `package.json` antes de citar comandos, pois scripts podem ser alterados.
+`npm run storybook` compila tokens e React antes de iniciar o servidor Storybook. `npm run test:storybook` também compila tokens e React antes de executar as stories em modo browser com Vitest e Playwright/Chromium. Preserve essa preparação: o catálogo Icons consome o export público de @art-liz/react em dist e o CI parte de checkout limpo. Os builds estáticos ficam em `storybook-static/homolog` e `storybook-static/prod`. Confira `package.json` antes de citar comandos, pois scripts podem ser alterados.
 
 ## Regras ao implementar
 

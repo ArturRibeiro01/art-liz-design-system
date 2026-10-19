@@ -18,7 +18,7 @@ O Storybook usa `@storybook/addon-docs`, `@storybook/addon-a11y` e `@storybook/a
 npm run test:storybook
 ```
 
-Esse comando executa as stories como testes de componente em Chromium headless via Vitest e Playwright. As stories também ficam marcadas para teste no painel do Storybook, permitindo rodar testes pela interface. Em uma máquina nova, baixe o navegador do Playwright uma vez:
+Esse comando compila `@art-liz/tokens` e `@art-liz/react` antes de executar as stories como testes de componente em Chromium headless via Vitest e Playwright. Isso permite rodá-lo em checkout limpo: o catálogo de ícones importa a API pública `@art-liz/react`, cujo export aponta para `dist`. As stories também ficam marcadas para teste no painel do Storybook, permitindo rodar testes pela interface. Em uma máquina nova, baixe o navegador do Playwright uma vez:
 
 ```sh
 npx playwright install chromium
@@ -62,6 +62,4 @@ Como cada deploy do GitHub Pages substitui o artefato publicado, o workflow semp
 
 ## Ícones No Catálogo
 
-O catálogo `Foundations/Icons` usa Phosphor Icons para demonstração. A biblioteca é dependência de runtime apenas do Storybook e dependência de desenvolvimento de `packages/react` para compilar as stories.
-
-O pacote público `@art-liz/react` permanece independente da biblioteca de ícones em runtime.
+O catálogo `Foundations/Icons` consome `Icons` de `@art-liz/react`. A integração Phosphor fica centralizada em `packages/react/src/Icons`, como dependência de runtime do pacote React. Componentes e consumidores usam essa camada do DS; Button continua aceitando `ReactNode` nos slots de ícones. A pré-otimização de `@art-liz/react` nos testes do Storybook exige seu build prévio e evita descobrir os subpaths de Phosphor durante os testes, o que poderia recarregar o navegador.
