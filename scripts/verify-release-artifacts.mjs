@@ -196,6 +196,7 @@ try {
   )
   assert.ok(await readFile(resolve(generatedDirectory, 'src/main.tsx'), 'utf8'))
   assert.ok(await readFile(resolve(generatedDirectory, '.gitignore'), 'utf8'))
+  assert.ok(await readFile(resolve(generatedDirectory, '.husky/pre-commit'), 'utf8'))
 
   const generatedManifestPath = resolve(generatedDirectory, 'package.json')
   const generatedManifest = JSON.parse(await readFile(generatedManifestPath, 'utf8'))
@@ -205,9 +206,7 @@ try {
 
   run('npm', ['install', '--no-audit', '--no-fund'], generatedDirectory)
   run('npm', ['run', 'typecheck'], generatedDirectory)
-  run('npm', ['test'], generatedDirectory)
-  run('npm', ['run', 'lint'], generatedDirectory)
-  run('npm', ['run', 'build'], generatedDirectory)
+  run('npm', ['run', 'check:commit'], generatedDirectory)
 
   await writeFile(
     join(consumerDirectory, 'consumer.tsx'),
