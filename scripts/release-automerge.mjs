@@ -24,7 +24,7 @@ export function validateReleasePullRequest(pr, files, repository) {
   const isManifest = (file) => /^packages\/[^/]+\/package\.json$/.test(file.filename)
   for (const file of files) {
     const manifest =
-      (isManifest(file) || ['package.json', 'package-lock.json'].includes(file.filename)) &&
+      (isManifest(file) || file.filename === 'package-lock.json') &&
       file.status === 'modified'
     const changelog =
       /^packages\/[^/]+\/CHANGELOG\.md$/.test(file.filename) &&
