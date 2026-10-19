@@ -32,11 +32,11 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Changesets para controle de versões.
 - `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores. A tela inicial demonstra os componentes atuais, com estilos próprios em HomePage.style.ts, criação local em Dialog, abas, preferências e estado Zustand. Os componentes são importados do pacote completo; não são copiados individualmente para o app.
 - Pacotes publicáveis planejados: `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`.
-- Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
+- Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`. Os dois workflows instalam Chromium/Playwright antes do gate completo. Testes do create-app devem passar também após changeset version --snapshot beta: casos de stable/pré-release usam cópias com versões explícitas e não presumem que o manifest corrente seja estável.
 - O workflow `publish-beta.yml` tem uma recuperação manual por `workflow_dispatch` com `publish-current=true` para publicar snapshots pré-release das versões atuais ainda ausentes do npm quando os changesets já foram consumidos.
 - Versões pré-release de `@art-liz/create-app` usam dependências `@art-liz/react` e `@art-liz/tokens` na tag `beta` por padrão; versões estáveis usam `latest`. O usuário ainda pode sobrescrever com `--tag latest|beta`.
 - O Storybook tem builds estáticos separados para homologação e produção e deploy automático no GitHub Pages via `.github/workflows/deploy-storybook.yml`.
-- ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged no pre-commit.
+- ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged seguido de check:commit no pre-commit (testes, stories, lint, formatação e build).
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
 - O fluxo GitFlow usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
 - `main` e `develop` estão protegidas contra push direto, force-push, exclusão e bypass administrativo; ambas exigem os checks `Quality gates` e `Allowed source branch`.
@@ -70,6 +70,7 @@ npm run test:storybook
 npm run lint
 npm run format
 npm run format:check
+npm run check:commit
 npm run ci
 npm run build
 npm run build:storybook:homolog
@@ -85,7 +86,7 @@ npm run build:storybook:prod
 - Prefira tokens compartilhados a valores visuais duplicados. Os tokens atuais são iniciais, não uma especificação final.
 - Componentes do pacote React devem ser genéricos e úteis a mais de um produto. Regras específicas de um sistema pertencem ao UI Kit correspondente.
 - Alterações nos workflows e proteções do GitHub devem respeitar o fluxo GitFlow registrado e preservar os gates obrigatórios de CI.
-- ESLint é compartilhado na raiz, mas cada workspace mantém um script `lint` de escopo local; Prettier é o formatador e Husky/lint-staged executa correções rápidas de arquivos staged no pre-commit.
+- ESLint é compartilhado na raiz, mas cada workspace mantém um script `lint` de escopo local; Prettier é o formatador e o pre-commit executa lint-staged nos arquivos staged, seguido de npm run check:commit: testes dos pacotes, stories do Storybook, lint, format:check e build. Falhas interrompem o commit. O template do create-app segue a mesma regra, sem Storybook. Essa validação local foi solicitada pela pessoa usuária; não reduzi-la a lint-staged isolado.
 - Não adicionar pre-push com a suíte completa: CI nos PRs e branches protegidas é a validação definitiva.
 - Para formatar manualmente, use `npm run format`; para verificar sem modificar, use `npm run format:check`.
 - Ao trabalhar como Codex, consulte os critérios da issue ativa, implemente na branch de trabalho baseada em `develop`, rode a verificação específica e o gate apropriado, e não faça commit/push/merge sem pedido explícito.

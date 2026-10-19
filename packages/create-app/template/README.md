@@ -12,8 +12,15 @@ npm run lint
 npm run format:check
 npm run typecheck
 npm run build
+npm run check:commit
 npm run preview
 ```
+
+## Antes do commit
+
+O Husky executa lint-staged para corrigir arquivos staged e depois npm run check:commit: testes, lint, verificação de formatação e build. O commit é interrompido na primeira falha. Você também pode executar esse comando manualmente antes de preparar o commit.
+
+O script prepare configura o Husky durante npm install quando já existe um repositório Git. As verificações usam o diretório de trabalho atual e tornam o commit mais demorado.
 
 ## Estrutura
 

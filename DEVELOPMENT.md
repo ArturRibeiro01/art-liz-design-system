@@ -43,6 +43,7 @@ npm run lint
 npm run format
 npm run format:check
 npm run build
+npm run check:commit
 npm run ci
 ```
 
@@ -52,6 +53,7 @@ npm run ci
 - `npm run format`: aplica Prettier.
 - `npm run format:check`: verifica Prettier sem modificar arquivos.
 - `npm run build`: compila tokens, React e playground.
+- `npm run check:commit`: executa testes dos pacotes, stories, lint, formatação e build, parando na primeira falha.
 - `npm run ci`: executa o gate completo usado no GitHub Actions.
 
 Em uma máquina nova, rode `npx playwright install chromium` uma vez antes de `npm run test:storybook`. No CI, essa instalação é feita pelo workflow.
@@ -60,7 +62,9 @@ Em uma máquina nova, rode `npx playwright install chromium` uma vez antes de `n
 
 Cada workspace mantém um script `lint` local. O ESLint flat compartilhado fica na raiz e o Prettier é o formatador padrão.
 
-O workspace VS Code habilita format-on-save e recomenda as extensões Prettier e ESLint. O hook Husky/lint-staged executa autofix apenas nos arquivos staged antes do commit; os gates completos continuam no CI.
+O workspace VS Code habilita format-on-save e recomenda as extensões Prettier e ESLint. O pre-commit executa lint-staged para corrigir os arquivos staged e depois npm run check:commit. O commit é bloqueado se testes, stories, lint, formatação ou build falharem. O hook é instalado por npm install através do script prepare. Para reinstalá-lo em um clone existente, execute npm run prepare.
+
+Essas verificações usam o diretório de trabalho atual, incluindo mudanças ainda não staged, e tornam o commit mais demorado. Instale o Chromium conforme indicado acima antes do primeiro commit. O CI continua validando os tarballs e os builds estáticos do Storybook. Não há pre-push.
 
 ## Estrutura
 

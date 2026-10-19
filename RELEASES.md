@@ -20,12 +20,16 @@ O workflow `Changesets version PR` abre ou atualiza uma PR de versionamento em `
 
 ## Beta
 
-Quando a PR de versionamento é mesclada em `develop`, o workflow `Publish beta packages`:
+Quando uma PR com alterações nos caminhos monitorados é mesclada em `develop`, o workflow `Publish beta packages`:
 
 1. Confirma changesets pendentes para os pacotes públicos.
 2. Gera snapshots com `changeset version --snapshot beta`.
-3. Roda o gate completo com `npm run ci`.
+3. Instala o Chromium/Playwright e roda o gate completo com `npm run ci` após aplicar o snapshot.
 4. Publica snapshots na dist-tag `beta`.
+
+Os testes do CLI usam cópias com versões estáveis, pré-release e snapshots explícitos para verificar o padrão latest/beta e o override --tag sem depender da versão corrente no manifest. O teste de cópia do template solicita latest explicitamente.
+
+A PR automática de versionamento atualiza versões e changelogs para a futura publicação estável; ela não precisa ser mesclada antes do beta. Sem changesets pendentes, a publicação automática de snapshots é pulada.
 
 O workflow também tem uma recuperação manual por `workflow_dispatch` com `publish-current=true`, usada quando os changesets já foram consumidos mas uma versão atual ainda precisa ser publicada em beta. Nesse caso, ele publica snapshots pré-release, como `0.2.1-beta-recovery.<timestamp>`.
 
@@ -35,7 +39,7 @@ A promoção de `develop` para `main` aciona `Publish stable packages`.
 
 O workflow:
 
-1. Roda `npm run ci`.
+1. Instala o Chromium/Playwright e roda `npm run ci`.
 2. Publica versões estáveis ainda ausentes no npm.
 3. Atualiza npm para uma versão compatível com `dist-tag` via OIDC.
 4. Promove as versões atuais para `latest`.

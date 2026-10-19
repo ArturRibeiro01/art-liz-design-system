@@ -21,7 +21,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
 - **GitFlow:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
-- **Qualidade:** ESLint flat compartilhado com comando por workspace, Prettier, format-on-save no VS Code e Husky/lint-staged no pre-commit.
+- **Qualidade:** ESLint flat compartilhado com comando por workspace, Prettier, format-on-save no VS Code e Husky/lint-staged seguido de testes, lint, formatação e build no pre-commit.
 
 Essas decisões descrevem a base atual. Novas dependências devem ser adicionadas quando houver uma necessidade concreta de produto ou desenvolvimento.
 
@@ -224,6 +224,7 @@ npm run lint
 npm run format
 npm run format:check
 npm run build
+npm run check:commit
 npm run ci
 ```
 
@@ -232,12 +233,15 @@ npm run ci
 - `npm run lint` executa ESLint em cada workspace e valida sintaxe do script shell.
 - `npm run format` aplica Prettier; `npm run format:check` verifica o padrão sem modificar arquivos.
 - `npm run build` compila tokens, empacota o React e compila o playground.
+- `npm run check:commit` executa testes dos pacotes, stories do Storybook, lint, format:check e build, interrompendo na primeira falha.
 
 Os pacotes React e tokens são compilados antes do servidor e dos testes do Storybook para que os workspaces consumam seus artefatos `dist`. O script test:storybook faz essa preparação explicitamente, inclusive quando chamado sozinho. O catálogo de ícones usa o export público de @art-liz/react e a configuração de testes pré-otimiza esse pacote para evitar recargas durante a execução. O CI não pode depender de builds ou caches locais anteriores. A falha do Quality gates na PR #44 revelou essa preparação ausente; os erros de importação e acessibilidade no overlay do Vite eram consequências de dist ainda não existir. A falha foi reproduzida em uma cópia limpa e a correção passou no npm run ci completo, com Node 24.12.0 e npm 11.6.2, sem dist ou cache Vite anteriores: 147 testes React, 99 stories, quatro testes do CLI, três testes do app gerado, lint, formatação, builds e validação dos tarballs.
 
 `npm run ci` reúne os gates locais que o workflow do GitHub executa: testes de pacote, testes do Storybook, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
 
-O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. Husky/lint-staged executa ESLint autofix e Prettier somente nos arquivos staged durante o pre-commit. Não há pre-push: a validação completa é feita pelo CI obrigatório em PRs.
+O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. O pre-commit executa lint-staged para corrigir os arquivos staged e, se passar, npm run check:commit para validar testes dos pacotes, stories do Storybook, lint, formatação e build. Qualquer falha bloqueia o commit. O template do create-app também executa lint-staged seguido de check:commit, com testes, lint, formatação e build do app. A validação dos tarballs executa esse mesmo comando no projeto gerado.
+
+Os checks verificam o diretório de trabalho atual; alterações parcialmente staged podem produzir conteúdo diferente no commit. Os commits passam a levar o tempo necessário para rodar essas verificações. Chromium deve estar instalado para as stories, conforme as instruções acima. Não há pre-push: o CI obrigatório em PRs continua executando também a validação dos tarballs e os builds estáticos do Storybook.
 
 ## Ícones
 
@@ -321,6 +325,8 @@ Cada mudança publicável recebe um Changeset. O workflow `changesets-version.ym
 Configure no GitHub o environment `npm-beta` e o environment `npm-production` com required reviewers. Mantenha `NPM_RELEASES_ENABLED` ausente/falso até concluir a publicação inicial e cadastrar os Trusted Publishers. Para a action de versionamento criar PRs, habilite em Settings → Actions → General a opção que permite ao GitHub Actions criar PRs. PRs criadas com `GITHUB_TOKEN` podem não iniciar outros workflows automaticamente; nesse caso, rode `Quality gates` pelo `workflow_dispatch` ou configure um GitHub App token.
 
 Não configure `NPM_TOKEN`: os jobs de publicação usam OIDC e limitam `id-token: write` ao job que publica. O workflow beta publica `tokens`/`react`/`create-app`; o workflow estável usa os manifests versionados pela PR de Changesets e publica na ordem declarada pelas dependências. O stable mantém `npm@11.6.2` para instalação e CI, mas atualiza para `npm@11.21.0` antes de executar `npm dist-tag add`, porque dist-tags via OIDC exigem npm 11.21.0+ e permissão `Allow npm dist-tag` no Trusted Publisher de produção.
+
+Os workflows beta e stable instalam Chromium/Playwright antes de executar o gate completo. No beta, os testes rodam após aplicar changeset version --snapshot beta; por isso a suíte do create-app verifica stable, pré-release, snapshot e recuperação em cópias isoladas com versões explícitas, incluindo o padrão de tag e sua sobrescrita. O teste de cópia completa do template solicita --tag latest explicitamente. Isso preserva o comportamento do CLI: versões estáveis geram dependências latest; pré-releases geram beta por padrão. Em 19/10/2026, a falha beta foi reproduzida em cópia isolada após changeset version --snapshot beta. Com a correção, o npm run ci completo passou nesse cenário com Node 24.12.0 e npm 11.6.2: 147 testes React, sete testes CLI, 99 stories, três testes do app gerado, lint, formatação, consumo dos tarballs e builds do Storybook. As versões dos manifests de trabalho permanecem estáveis; o snapshot foi aplicado somente à cópia de validação.
 
 O beta usa snapshots efêmeros (`0.0.0-beta-*`) e dist-tag `beta`; stable publica versões sem snapshot como `latest`. Para interromper releases automáticos, remova ou desative a variável `NPM_RELEASES_ENABLED`. Um snapshot beta problemático é substituído por outro; uma versão stable é corrigida com novo Changeset patch e promoção aprovada para `main`.
 
