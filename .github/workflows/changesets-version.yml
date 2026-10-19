@@ -18,6 +18,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
+      checks: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,6 +41,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Create or update version PR
+        id: changesets
         uses: changesets/action@v1
         with:
           version: npm run version-packages
@@ -46,3 +49,10 @@ jobs:
           title: 'chore: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge for the generated release PR
+        if: steps.changesets.outputs.pullRequestNumber != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_PR_NUMBER: ${{ steps.changesets.outputs.pullRequestNumber }}
+        run: node scripts/release-automerge.mjs

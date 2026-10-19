@@ -16,7 +16,11 @@ Mudanças publicáveis devem receber um changeset:
 npm run changeset
 ```
 
-O workflow `Changesets version PR` abre ou atualiza uma PR de versionamento em `develop`.
+O workflow `Changesets version PR` abre ou atualiza uma PR de versionamento em `develop`. Essas PRs do github-actions[bot], originadas em changeset-release/develop no mesmo repositório, recebem merge automático por squash quando Quality gates e Allowed source branch passam. Não precisam de aprovação humana; os rulesets mantêm seus gates e não têm bypass.
+
+O script scripts/release-automerge.mjs valida autoria, branches e arquivos de versionamento, verifica os checks do SHA atual e habilita o auto-merge vinculado a esse SHA. Quando necessário, dispara CI e política de origem explicitamente via workflow_dispatch para evitar intervenção manual nas execuções criadas pelo token do bot. O repositório precisa ter Allow auto-merge habilitado. Alterações fora do versionamento interrompem essa automação. Outras PRs, inclusive a promoção para main, seguem o fluxo normal.
+
+Como GITHUB_TOKEN pode não disparar eventos push após o merge, o fluxo não depende de uma segunda publicação beta disparada pela PR de versionamento. O beta é produzido a partir da alteração funcional, e latest continua dependendo da promoção para main.
 
 ## Beta
 
