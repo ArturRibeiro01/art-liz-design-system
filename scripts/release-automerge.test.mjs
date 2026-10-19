@@ -126,7 +126,7 @@ test('accepts only the bot release PR with a complete version-only diff', () => 
     { filename: 'packages/react/package.json', status: 'renamed' },
   ]) {
     assert.throws(() =>
-      validateReleasePullRequest(pullRequest(), [files[0], files[1], file], repository),
+      validateReleasePullRequest(pullRequest(), [files[0], files[1], files[2], file], repository),
     )
   }
   assert.throws(() => validateReleasePullRequest(pullRequest(), [], repository))
