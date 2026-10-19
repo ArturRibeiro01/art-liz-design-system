@@ -1,5 +1,11 @@
 # @art-liz/create-app
 
+## 0.3.1
+
+### Patch Changes
+
+- 26531af: Adiciona validação de testes, lint, formatação e build ao pré-commit dos projetos gerados. O hook preserva o lint-staged e executa check:commit, interrompendo o commit quando uma etapa falha.
+
 ## 0.3.0
 
 ### Minor Changes
