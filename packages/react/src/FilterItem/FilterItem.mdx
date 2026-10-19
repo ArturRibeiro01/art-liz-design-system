@@ -1,0 +1,51 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as FilterItemStories from './FilterItem.stories'
+
+<Meta of={FilterItemStories} name="Documentação" />
+
+Componentes React
+
+# FilterItem
+
+FilterItem é um botão que ativa ou desativa um filtro de uma lista ou visualização. Use-o para escolhas rápidas que possam ser apresentadas como selecionadas ou não selecionadas.
+
+## Importação
+
+```tsx
+import { FilterItem } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { FilterItem } from '@art-liz/react'
+
+const itens = [
+  { id: 'a', nome: 'Portal', ativo: true },
+  { id: 'b', nome: 'Site anterior', ativo: false },
+]
+
+export function Exemplo() {
+  const [onlyActive, setOnlyActive] = useState(false)
+
+  return (
+    <>
+      <FilterItem selected={onlyActive} onSelectedChange={setOnlyActive}>
+        Somente ativos
+      </FilterItem>
+      <ul>
+        {itens
+          .filter((item) => !onlyActive || item.ativo)
+          .map((item) => (
+            <li key={item.id}>{item.nome}</li>
+          ))}
+      </ul>
+    </>
+  )
+}
+```
+
+## Orientações
+
+A seleção é exposta por aria-pressed. A aplicação filtra os dados a partir de onSelectedChange; defaultSelected permite uso não controlado. O botão não submete formulário automaticamente.

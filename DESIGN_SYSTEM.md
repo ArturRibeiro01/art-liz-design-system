@@ -15,7 +15,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Build:** Vite em modo de biblioteca para os pacotes e para aplicações.
 - **Testes:** Vitest, Testing Library e jsdom.
 - **Documentação visual:** Storybook com integração Vite, docs, acessibilidade e testes de stories via Vitest em navegador.
-- **Ícones:** Phosphor Icons (`@phosphor-icons/react`) no catálogo e nas stories; componentes React recebem ícones via `ReactNode` e não acoplam consumidores à biblioteca.
+- **Ícones:** catálogo público `Icons` do DS, usado por componentes, stories e aplicações. A integração Phosphor fica restrita a `packages/react/src/Icons`; slots públicos continuam aceitando `ReactNode`.
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
 - **Task runner:** scripts npm e workspaces; Nx/Turborepo não são necessários para a escala atual.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
@@ -24,6 +24,57 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Qualidade:** ESLint flat compartilhado com comando por workspace, Prettier, format-on-save no VS Code e Husky/lint-staged no pre-commit.
 
 Essas decisões descrevem a base atual. Novas dependências devem ser adicionadas quando houver uma necessidade concreta de produto ou desenvolvimento.
+
+## Tela inicial do create-app
+
+O template consome todos os exports da biblioteca pelo pacote `@art-liz/react`; não precisa de registro nem cópia por componente. A tela inicial usa Container, Box, Text, Badge, AuditStatus, Steps, Tabs, Form, Input, Select, Switch, Message, Tag, Popover, Tooltip, Dialog, ButtonGroup, Button e Link. O diálogo cria um projeto demonstrativo em estado local, o formulário aplica preferências à demonstração e o contador usa Zustand com incremento/reset. A navegação continua com React Router, e o provider do TanStack Query permanece configurado.
+
+A apresentação está separada em `src/pages/HomePage.style.ts`, com tokens, layout responsivo e exemplos locais sem envio de dados. Os estilos próprios do template não alteram as APIs nem o tema global dos componentes. O template mantém dependências por tag (latest para CLI estável, beta para pré-release, com --tag como override). A nova tela deve ser distribuída junto da versão do pacote React que contém os novos exports; release:verify gera um projeto pelo tarball do CLI, instala os tarballs locais de React/tokens e executa typecheck, testes, lint e build. Nenhum pacote é publicado por essa verificação.
+
+Validação em 18/10/2026: gate completo com npm 11.6.2, incluindo 144 testes React, quatro testes do CLI, 95 stories e três testes do app gerado por tarball, lint, formatação, builds e renderização SSR dos ícones em consumidor limpo. A revisão no navegador verificou criação/validação/foco no diálogo, navegação e estado compartilhado, reset, preferências, marcadores, popover/tooltip e layout a 320/390px sem rolagem horizontal. Axe não apontou violações WCAG A/AA nas três abas da nova tela. Isso não substitui auditoria integral de navegadores ou acessibilidade.
+
+## Referência Figma e evolução dos componentes
+
+A referência visual consultada é o [arquivo Figma fornecido, aberto na página Steps](https://www.figma.com/design/ah40tGdCZ8OKiGMkTSB8JO/?node-id=4-1856), identificado visualmente como TapTap Design System. O [inventário e mapeamento](FIGMA_INVENTORY.md), registrado em 18/10/2026, lista as 50 páginas e distingue páginas catalogadas de componentes efetivamente inspecionados. O [snapshot estrutural](docs/figma-inventory.json) preserva IDs e propriedades para economizar futuras chamadas à integração.
+
+O pacote já contém 37 componentes, incluindo Button, Text, Box, Container, Input e Checkbox e a expansão em lote descrita abaixo. A primeira etapa de formulários usa os [contextos e capturas locais](docs/figma/README.md) de Input Basic (`11:7949`) e Checkbox (`10:2274`), extraídos por `get_design_context`. Radio, Switch e outras 20 famílias foram adicionados em uma expansão baseada nos tokens atuais, autorizada pela pessoa usuária; o ajuste visual dirigido dessas famílias ao Figma fica para depois. Os snapshots preservam a referência original; os componentes acrescentam comportamento nativo, composição de labels/mensagens e foco visível. A fonte continua configurável, sem impor PingFang SC aos consumidores.
+
+## Expansão da biblioteca em lote
+
+Em 18/10/2026, a pessoa usuária priorizou construir a maioria dos componentes com os tokens e padrões existentes, deixando o ajuste fino ao Figma para depois. A branch de trabalho passou a ser `feat/component-library-expansion`. Essa decisão substitui o requisito de extrair capturas completas antes de implementar cada nova família nesta expansão. Input e Checkbox conservam suas referências completas; os demais componentes não declaram paridade com as variantes Figma.
+
+Foram acrescentados Radio, Switch (correspondência de Toggle), Textarea, Select, Slider, Upload, Form, ButtonGroup, Link (correspondência de Anchor), Badge, Tag, Alert, Breadcrumb, Pagination, Tabs, Steps, Table, Dialog, Drawer, Popover, Dropdown e Tooltip. Essa primeira expansão cobriu uma base funcional para 25 das 34 famílias de componentes catalogadas, além das primitivas Text, Box e Container. As APIs e exemplos ficam em [COMPONENTS.md](COMPONENTS.md).
+
+- Campos usam HTML nativo, refs, labels, descrições e validação/participação em formulário do navegador. Select não é um combobox pesquisável; Upload seleciona arquivos locais e não envia dados. Form oferece composição visual sobre `form`, sem gerenciador de estado ou validação próprio.
+- Tabs tem seleção controlada/não controlada, IDs associados e foco móvel por setas/Home/End, ignorando abas desabilitadas. Pagination recebe `page`, `pageCount` e `onPageChange`, com faixa compacta de números. Breadcrumb, Steps e Table preservam semântica de listas, etapa atual, caption e cabeçalhos.
+- Dialog e Drawer usam `dialog.showModal()` para modalidade e restauração do acionador, complementado por contenção de Tab/Shift+Tab nas extremidades do diálogo. São controlados por `open`/`onClose`, fecham por Escape e opcionalmente pelo backdrop, e preservam o overflow anterior do body com contagem para sobreposições simultâneas.
+- Popover e Dropdown usam a Popover API nativa (`showPopover`/`hidePopover`) para camada superior, Escape e clique externo. O estado é interno e `onOpenChange` informa transições. Dropdown implementa setas, Home/End, busca por texto e saída por Tab; Tooltip aceita um acionador React que encaminhe `aria-describedby`, mostra em hover/foco e dispensa por Escape.
+- Essas sobreposições exigem navegadores com suporte às APIs nativas utilizadas; não foi adicionado polyfill ou promessa de suporte a navegadores legados. As novas cores de texto e foco usam tons com maior contraste dentro das escalas existentes; warning usa texto neutro escuro.
+- Implementação e estilos continuam separados, com helpers privados em `packages/react/src/internal`. React e Emotion permanecem peers. Na revisão posterior dos ícones, Phosphor passou a ser dependência de runtime, conforme a decisão registrada na seção Ícones.
+
+Todas as famílias têm stories com acessibilidade como erro de teste. Os controles e componentes de navegação/feedback têm testes de comportamento; os fluxos das sobreposições são verificados em Chromium real. A galeria de consumo fica em `apps/playground/src/ComponentGallery.tsx`. As capturas Figma originais continuam imutáveis.
+
+### Conclusão das famílias catalogadas
+
+Na mesma branch, a rodada seguinte acrescentou Cascader, DateTimePicker, Transfer, Chart, FilterItem, AuditStatus, Message, Popconfirm e Result. São nove implementações base pelos tokens existentes, com contratos e limites em [docs/remaining-component-scope.md](docs/remaining-component-scope.md). O pacote agora cobre uma base funcional para as 34 famílias do inventário, além das três primitivas; isso não representa cobertura de todas as variantes nem equivalência visual ao Figma.
+
+Cascader compõe Selects nativos e submete somente folhas válidas. Transfer compõe busca e checkboxes em duas listas e submete os IDs do destino. Ambos aceitam estado controlado/não controlado, grupos desabilitados e reset de formulário. DateTimePicker reutiliza Input para os tipos nativos date/time/datetime-local; o calendário depende do navegador. Chart oferece barras horizontais, valores negativos/zero, estado vazio e leitura textual. Popconfirm oferece confirmação não modal pela Popover API, foco inicial em Cancelar e retorno de foco nas ações. Message é feedback em fluxo sem fila/timer; AuditStatus e Result recebem significado e ícones do consumidor.
+
+Os exemplos desta rodada ficam em `apps/playground/src/RemainingComponentsGallery.tsx`. As capturas detalhadas do Figma ainda se limitam a Input e Checkbox; o restante exige consultas dirigidas antes dos ajustes visuais.
+
+## Movimento e novos controles de apresentação
+
+As superfícies de Alert, Dialog, Drawer, Popover, Popconfirm, Dropdown e Tooltip usam os tokens existentes de motion para entrada e saída. Dialog/Drawer usam slow (240ms); superfícies menores e conteúdo de Tabs usam normal (160ms); estados de campos, paginação, filtros, marcadores e Checkbox usam fast (120ms). Abertura usa entrance, fechamento usa exit e mudanças de estado usam standard. O painel do Drawer vem da direita por padrão; side="left" espelha o movimento. O backdrop continua cobrindo toda a viewport.
+
+Os helpers privados em packages/react/src/internal/motion.style.ts compartilham esses estilos. Nenhuma biblioteca de animação foi adicionada. As superfícies permanecem visualmente durante a saída usando @starting-style e transições discretas de display/overlay. Isso é um aprimoramento progressivo: sem suporte CSS, abrir/fechar continua funcional, mas a saída pode ser imediata. prefers-reduced-motion: reduce remove as transições e animações. Controles fechados ficam fora da árvore acessível e recebem inert durante a saída; Dialog e Popover mantêm suas APIs nativas e o contrato de foco. Para animar a saída, o consumidor deve manter o componente montado enquanto altera o estado.
+
+Alert agora aceita open (padrão true), com uma story de abrir/fechar via Button. Badge aceita size="small" | "medium" | "large", preservando a dimensão anterior em small. Tooltip aceita os seis intents semânticos, com neutral preservando o visual escuro anterior. FilterItem tem uma demonstração com filtros combinados que de fato alteram uma lista de projetos. As páginas Documentação desses componentes mostram as novas APIs.
+
+Validação em 18/10/2026: gate completo com npm 11.6.2 (147 testes React, quatro testes do CLI, 99 stories, três testes do app gerado, lint, formatação, builds, consumo dos tarballs e ambos os builds do Storybook). A revisão adicional em Chromium verificou entrada/saída real, overlay do Drawer, reabertura rápida, Escape, clique externo, foco, movimento reduzido, tamanhos do Badge e os exemplos a 320px. Axe não apontou violações nos seis intents do Tooltip. Essa revisão não representa uma matriz completa de navegadores ou leitores de tela.
+
+## Documentação futura no GitBook
+
+O trabalho foi planejado na [issue principal #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37), com seis tarefas vinculadas: estrutura/sincronização GitHub, instalação/create-app, fundamentos/acessibilidade, guias de componentes/receitas, diagramas Mermaid de arquitetura/fluxos e contribuição/versões/manutenção. O Storybook permanece o catálogo interativo; a proposta do GitBook é organizar a documentação conceitual e de adoção, evitando duplicar a manutenção dos exemplos. Nenhum portal ou sincronização foi publicado/configurado nesta etapa. As issues contêm escopo e critérios de aceite para execução futura.
 
 ## Estrutura do repositório
 
@@ -86,6 +137,16 @@ Contém componentes acessíveis e reutilizáveis para React. O pacote importa to
 
 Os componentes React ficam organizados em `packages/react/src/<Component>/`, com implementação, estilos, story e testes juntos. Cada pasta tem um `index.ts` e o `packages/react/src/index.ts` agrega a API pública do pacote.
 
+O componente `Input` usa um input HTML nativo com ref, atributos de formulário e modos controlado/não controlado. `label`, `helpText` e `error` são associados por IDs e `aria-describedby`, preservando descrições externas; `error` também ativa `aria-invalid`. `size` aceita `small` (24px, Caption), `medium` (36px, Body, padrão) e `large` (40px, Subtitle). Essas alturas seguem o Figma e diferem intencionalmente do Button existente. A largura acompanha o contêiner, e mensagens longas participam do fluxo normal.
+
+`clearable` habilita a ação de limpar em campos textuais editáveis, visível quando preenchidos e com foco no controle. O botão participa do teclado, possui nome acessível por `clearLabel` e devolve foco ao input. Em modo não controlado, limpa o valor nativo; no controlado, o consumidor atualiza `value` em `onClear`. A limpeza chama `onClear` e não sintetiza eventos `onChange`; estes continuam correspondendo à edição nativa. Reset de formulário permanece nativo. Tipos não textuais, `readOnly` e `disabled` não expõem essa ação.
+
+O componente `Checkbox` usa input `type="checkbox"`, ref nativa, `checked`/`defaultChecked`, `name`, `value`, `required`, `disabled` e label associado. `indeterminate` aplica a propriedade DOM: o indicador é um quadrado de 8px dentro da caixa de 16px, conforme o Figma. A ativação nativa resolve a seleção parcial; grupos controlados devem recalcular `indeterminate` a partir dos itens selecionados. Sem label visível, o consumidor precisa fornecer nome acessível externo. Textos longos quebram com a caixa alinhada à primeira linha; cores forçadas usam a aparência nativa do navegador.
+
+Os SVGs originais de check e limpar ficam no pacote React, são usados como máscaras nas dimensões dos respectivos slots e são incorporados pelo build, sem URLs temporárias. Esses dois controles preservam os assets da referência; os outros símbolos internos usam Phosphor. Cores vêm dos tokens atuais. O foco por teclado acrescenta o anel existente de `focus`, inclusive em estados sem desenho de foco na referência. Os snapshots em `docs/figma/` e os SVGs originais ficam fora do Prettier para preservar bytes, hashes e proveniência.
+
+A mensagem de erro de Input usa `danger.800` para corrigir o contraste insuficiente de `danger.600` no texto de 12/14px da referência; a borda de erro mantém `danger.600`. A paleta de bordas e placeholders e o anel global de foco continuam seguindo os tokens existentes e precisam de revisão de contraste não textual antes de declarar conformidade integral de acessibilidade.
+
 O componente `Box` é um contêiner `div` com padding por tokens de espaçamento e opções de fundo, raio e sombra. Cada opção visual é independente e opcional; atributos nativos de `div` e `children` são encaminhados ao elemento.
 
 O componente `Container` centraliza conteúdo com largura fluida e gutters horizontais de `spacing[4]` por padrão. A prop `maxWidth` escolhe um limite baseado nos breakpoints `sm`, `md`, `lg` e `xl`, ou `full` para ocupar toda a largura disponível; o padrão é `xl`. `background` aceita tokens escalares (`white`, `black`, `paper` etc.) e tokens de escala no formato `primary.600`; `padding` e `margin` aceitam valores da escala `spacing`, e `margin` também aceita `auto` (padrão centralizado). Use `Container` para limitar a largura da página e `Box` para compor superfícies dentro dele.
@@ -104,17 +165,21 @@ Componentes interativos usam elementos HTML nativos, labels explícitos para cam
 
 Aplicação privada de desenvolvimento que reúne stories dos pacotes. As stories ficam junto dos componentes para facilitar a manutenção e o Storybook as descobre pela configuração em `apps/storybook/.storybook/main.ts`.
 
+Cada um dos 37 componentes públicos do React possui também uma página `Component.mdx` junto da implementação e das stories. A página se vincula ao módulo de stories com `Meta of` e aparece como **Documentação**, com o ícone de documento, dentro do grupo do componente. Ela explica finalidade, importação de `@art-liz/react`, exemplo completo de uso e orientações específicas. Os exemplos incluem os imports e o estado necessários para copiar e adaptar. A configuração descobre `packages/react/src/**/*.mdx`; mantenha essa documentação ao criar componentes ou alterar suas APIs.
+
 ### `@art-liz/playground`
 
 Aplicação Vite privada usada para testar o pacote React em um consumidor real, fora do ambiente do Storybook.
 
 ## Ícones
 
-Phosphor Icons (`@phosphor-icons/react`, licença MIT) é a biblioteca adotada para o catálogo visual e os exemplos do design system. É dependência de runtime de `apps/storybook` e dependência de desenvolvimento de `packages/react` para as stories co-localizadas; o pacote público `@art-liz/react` permanece agnóstico em runtime e recebe ícones como `ReactNode` por `startIcon`/`endIcon`.
+Phosphor Icons (`@phosphor-icons/react`, licença MIT) é a biblioteca adotada para o catálogo visual, exemplos e símbolos internos do design system. Em 18/10/2026, a pessoa usuária pediu substituir caracteres usados como ícones pela biblioteca. Por isso Phosphor passou a ser dependência de runtime de `packages/react`, também utilizada pelo Storybook e pelo template. A revisão seguinte centralizou a integração em `packages/react/src/Icons`. Somente essa pasta importa o fornecedor por subpaths, externos no build da biblioteca. Componentes internos usam `import * as Icons from '../Icons'`; consumidores usam `import { Icons } from '@art-liz/react'`. ESLint impede imports diretos de Phosphor fora da camada central. Os slots `startIcon`/`endIcon` e demais slots públicos continuam aceitando qualquer `ReactNode`.
 
-O catálogo `Foundations/Icons` importa ícones por subpath para reduzir o trabalho do Vite e mostra um ícone por vez. Seus controles selecionam o nome do ícone, o tamanho pela escala `typography.fontSizes` (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`), peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`) e origem da cor: paleta semântica do DS ou HEX customizado para casos especiais. O line-height do preview acompanha o tamanho selecionado. Phosphor usa `currentColor` por padrão, então ícones nos botões acompanham a cor do texto; `size="1em"` mantém alinhamento com a tipografia do botão.
+Alert, Message, Tag e Dialog (também usado por Drawer) usam Icons.XIcon nas ações de fechar/remover, com os nomes acessíveis preservados e SVGs decorativos. Steps usa Icons.CheckIcon/Icons.WarningIcon; Breadcrumb usa Icons.CaretRightIcon, e Pagination usa Icons.DotsThreeIcon. Números de etapas e páginas continuam sendo dados textuais. Input e Checkbox preservam os SVGs da referência Figma, acessados internamente por Icons/assets sem modificar bytes, máscaras ou dimensões.
 
-Ícones decorativos nos slots do Button recebem `aria-hidden`. Um Button sem conteúdo textual precisa de nome acessível por `aria-label` ou `aria-labelledby`. Evite controles Storybook para elementos React: crie o JSX da story no `render`, pois Controls serializam args.
+O catálogo `Foundations/Icons` usa o namespace público Icons do DS e mostra um ícone por vez. Sua página Documentação demonstra a importação e os slots de Button. O catálogo público preserva os nomes existentes e também inclui os ícones usados no template. Seus controles selecionam o nome do ícone, o tamanho pela escala `typography.fontSizes` (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`), peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`) e origem da cor: paleta semântica do DS ou HEX customizado para casos especiais. O line-height do preview acompanha o tamanho selecionado. Phosphor usa `currentColor` por padrão, então ícones nos botões acompanham a cor do texto; `size="1em"` mantém alinhamento com a tipografia do botão.
+
+Button não importa uma biblioteca de ícones: recebe ReactNode em startIcon/endIcon. Os exemplos usam `<Icons.PlusIcon />` nesses slots. Ícones decorativos nos slots do Button recebem `aria-hidden`. Um Button sem conteúdo textual precisa de nome acessível por `aria-label` ou `aria-labelledby`. Evite controles Storybook para elementos React: crie o JSX da story no `render`, pois Controls serializam args.
 
 ## Instalação e desenvolvimento
 
@@ -163,12 +228,12 @@ npm run ci
 ```
 
 - `npm test` compila tokens e executa os testes Vitest do pacote React.
-- `npm run test:storybook` executa as stories como testes de componente em browser mode com Vitest e Playwright.
+- `npm run test:storybook` compila tokens e React antes de executar as stories como testes de componente em browser mode com Vitest e Playwright.
 - `npm run lint` executa ESLint em cada workspace e valida sintaxe do script shell.
 - `npm run format` aplica Prettier; `npm run format:check` verifica o padrão sem modificar arquivos.
 - `npm run build` compila tokens, empacota o React e compila o playground.
 
-Os pacotes React e tokens são compilados antes do Storybook para que os workspaces consumam seus artefatos `dist`.
+Os pacotes React e tokens são compilados antes do servidor e dos testes do Storybook para que os workspaces consumam seus artefatos `dist`. O script test:storybook faz essa preparação explicitamente, inclusive quando chamado sozinho. O catálogo de ícones usa o export público de @art-liz/react e a configuração de testes pré-otimiza esse pacote para evitar recargas durante a execução. O CI não pode depender de builds ou caches locais anteriores. A falha do Quality gates na PR #44 revelou essa preparação ausente; os erros de importação e acessibilidade no overlay do Vite eram consequências de dist ainda não existir. A falha foi reproduzida em uma cópia limpa e a correção passou no npm run ci completo, com Node 24.12.0 e npm 11.6.2, sem dist ou cache Vite anteriores: 147 testes React, 99 stories, quatro testes do CLI, três testes do app gerado, lint, formatação, builds e validação dos tarballs.
 
 `npm run ci` reúne os gates locais que o workflow do GitHub executa: testes de pacote, testes do Storybook, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
 
@@ -176,7 +241,7 @@ O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json
 
 ## Ícones
 
-O Storybook mantém um catálogo de ícones Phosphor em `Foundations/Icons`, com controles para cor, tamanho e peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`). As stories importam ícones por subpath para não carregar o barrel completo. `@art-liz/react` declara Phosphor como dependência de desenvolvimento para compilar suas stories; consumidores passam seus próprios componentes de ícone pelos slots genéricos `startIcon` e `endIcon`, sem dependência de Phosphor em runtime.
+O Storybook mantém um catálogo de ícones Phosphor em `Foundations/Icons`, com controles para cor, tamanho e peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`). As stories usam o catálogo Icons de @art-liz/react; somente a camada central importa os ícones por subpath. `@art-liz/react` declara Phosphor como dependência de runtime para seus símbolos internos; consumidores também podem passar componentes de ícone pelos slots genéricos `startIcon` e `endIcon`.
 
 ## Trabalho com Codex
 
@@ -386,6 +451,9 @@ Agentes especializados não são necessários para a fase atual. Codex e outros 
 
 ## Itens ainda em aberto
 
+- Executar a documentação GitBook planejada na [issue #37 e suas seis tarefas](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37).
+
+- Ajustar visualmente ao Figma as 31 famílias acrescentadas nas duas expansões e auditar Button; as APIs básicas das 34 famílias catalogadas já existem. Consultar variantes detalhadas antes de ampliar os escopos iniciais, especialmente Cascader, DateTimePicker, Transfer e Chart (limites em docs/remaining-component-scope.md).
 - Definir escalas completas de tipografia, cores, espaçamento e elevação.
 - Definir temas e estratégia para modo claro/escuro, se os produtos precisarem.
 - Estabelecer critérios de acessibilidade e compatibilidade de navegadores para os componentes.

@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as DialogStories from './Dialog.stories'
+
+<Meta of={DialogStories} name="Documentação" />
+
+Componentes React
+
+# Dialog
+
+Dialog abre uma janela modal para uma tarefa que exige atenção antes de continuar na interface. Use-o para editar informações ou apresentar uma decisão com contexto.
+
+## Importação
+
+```tsx
+import { Dialog } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Dialog, Button, Input } from '@art-liz/react'
+
+export function Exemplo() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Editar projeto</Button>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Editar projeto"
+        description="Atualize o nome do projeto."
+      >
+        <Input label="Nome do projeto" defaultValue="Art-Liz" />
+      </Dialog>
+    </>
+  )
+}
+```
+
+## Orientações
+
+open/onClose controlam a visibilidade. Usa dialog.showModal(), contém o foco durante a interação e fecha por Escape; dismissOnBackdrop controla o clique fora. Exige suporte à API nativa de dialog.

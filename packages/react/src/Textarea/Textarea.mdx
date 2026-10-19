@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as TextareaStories from './Textarea.stories'
+
+<Meta of={TextareaStories} name="Documentação" />
+
+Componentes React
+
+# Textarea
+
+Textarea permite escrever textos com múltiplas linhas, como descrições ou observações. Use label, helpText e error para orientar o preenchimento e indicar problemas.
+
+## Importação
+
+```tsx
+import { Textarea } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Textarea } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Textarea
+      label="Descrição do projeto"
+      name="description"
+      rows={4}
+      maxLength={500}
+      helpText="Escreva um resumo com até 500 caracteres."
+    />
+  )
+}
+```
+
+## Orientações
+
+Aceita value/onChange, defaultValue e atributos nativos de textarea. size escolhe a escala visual do controle; rows define a quantidade inicial de linhas.

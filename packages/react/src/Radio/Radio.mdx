@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as RadioStories from './Radio.stories'
+
+<Meta of={RadioStories} name="Documentação" />
+
+Componentes React
+
+# Radio
+
+Radio permite escolher uma única opção entre alternativas de um mesmo grupo. Use o mesmo name nos controles relacionados e uma label clara em cada alternativa.
+
+## Importação
+
+```tsx
+import { Radio } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Radio } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <fieldset>
+      <legend>Visibilidade do projeto</legend>
+      <Radio label="Privado" name="visibility" value="private" defaultChecked />
+      <Radio label="Público" name="visibility" value="public" />
+    </fieldset>
+  )
+}
+```
+
+## Orientações
+
+O navegador mantém a exclusividade da seleção e a navegação por teclado entre radios do mesmo grupo. Para controlar o estado externamente, use checked e onChange.

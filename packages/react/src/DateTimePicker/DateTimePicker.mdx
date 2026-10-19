@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as DateTimePickerStories from './DateTimePicker.stories'
+
+<Meta of={DateTimePickerStories} name="Documentação" />
+
+Componentes React
+
+# DateTimePicker
+
+DateTimePicker permite informar uma data, um horário ou uma data com horário local. Use-o em campos como prazo, agendamento ou horário de atendimento.
+
+## Importação
+
+```tsx
+import { DateTimePicker } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { DateTimePicker } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <DateTimePicker
+      label="Prazo de entrega"
+      name="deadline"
+      mode="date"
+      min="2026-01-01"
+      max="2026-12-31"
+      helpText="Escolha uma data dentro do período informado."
+    />
+  )
+}
+```
+
+## Orientações
+
+mode aceita date, time e datetime-local (padrão). O seletor é nativo e varia por navegador e sistema operacional. Aceita min/max/step; datetime-local não inclui fuso horário, que deve ser tratado pela aplicação.

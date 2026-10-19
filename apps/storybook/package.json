@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@art-liz/react": "1.0.0",
-    "@art-liz/tokens": "0.2.0",
-    "@phosphor-icons/react": "^2.1.10"
+    "@art-liz/tokens": "0.2.0"
   }
 }

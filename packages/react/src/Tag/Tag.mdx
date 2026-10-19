@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as TagStories from './Tag.stories'
+
+<Meta of={TagStories} name="Documentação" />
+
+Componentes React
+
+# Tag
+
+Tag identifica categorias, filtros ou itens selecionados em um formato compacto. Pode oferecer uma ação de remover quando a seleção for editável.
+
+## Importação
+
+```tsx
+import { Tag } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Tag } from '@art-liz/react'
+
+export function Exemplo() {
+  const [visible, setVisible] = useState(true)
+
+  return (
+    <>
+      {visible && (
+        <Tag onRemove={() => setVisible(false)} removeLabel="Remover categoria Design">
+          Design
+        </Tag>
+      )}
+    </>
+  )
+}
+```
+
+## Orientações
+
+onRemove solicita a remoção: a aplicação deve atualizar a lista ou deixar de renderizar a Tag. Sem esse callback, o botão de remover não aparece.

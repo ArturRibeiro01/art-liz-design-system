@@ -28,9 +28,9 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - Vite para desenvolvimento e build.
 - Vitest, Testing Library e jsdom para testes.
 - Storybook com Vite para catálogo, documentação visual, addon de acessibilidade e testes de stories via Vitest em navegador.
-- Phosphor Icons (`@phosphor-icons/react`) para o catálogo e exemplos de ícones no Storybook; `packages/react` pode usá-la como dependência de desenvolvimento para suas stories, mas mantém slots genéricos `ReactNode` e não depende da biblioteca em runtime.
+- Ícones são consumidos pelo catálogo `Icons` do DS: componentes internos usam `import * as Icons from '../Icons'`; aplicações e o catálogo do Storybook usam `import { Icons } from '@art-liz/react'`. Button conserva slots ReactNode (`startIcon`/`endIcon`), preenchidos com elementos como `<Icons.PlusIcon />`. Phosphor é dependência de runtime apenas como implementação centralizada em `packages/react/src/Icons`; não importar o fornecedor fora dessa pasta. ESLint verifica essa fronteira. Assets Figma de Input/Checkbox permanecem intactos e são acessados por Icons/assets. Não usar caracteres como substitutos de ícones.
 - Changesets para controle de versões.
-- `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores.
+- `packages/create-app`: CLI npm que distribui um template monolítico React + Vite para projetos consumidores. A tela inicial demonstra os componentes atuais, com estilos próprios em HomePage.style.ts, criação local em Dialog, abas, preferências e estado Zustand. Os componentes são importados do pacote completo; não são copiados individualmente para o app.
 - Pacotes publicáveis planejados: `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`.
 - Publicação de homologação usa a tag npm `beta`; publicação estável usa `latest`.
 - O workflow `publish-beta.yml` tem uma recuperação manual por `workflow_dispatch` com `publish-current=true` para publicar snapshots pré-release das versões atuais ainda ausentes do npm quando os changesets já foram consumidos.
@@ -53,6 +53,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - `apps/storybook`: configuração e execução local do Storybook.
 - `apps/playground`: app Vite usado como consumidor de teste.
 - `DESIGN_SYSTEM.md`: documentação completa para pessoas desenvolvedoras.
+- `FIGMA_INVENTORY.md`: referência Figma, inventário com níveis de evidência, mapeamento e primeira etapa proposta; `docs/figma-inventory.json` preserva o snapshot e IDs para evitar consultas repetidas.
 - `templates/gitflow/README.md`: instruções para adotar o fluxo em outros repositórios.
 - `README.md`: início rápido e comandos mais usados.
 
@@ -75,7 +76,7 @@ npm run build:storybook:homolog
 npm run build:storybook:prod
 ```
 
-`npm run storybook` compila tokens e React antes de iniciar o servidor Storybook. `npm run test:storybook` executa as stories em modo browser com Vitest e Playwright/Chromium. Os builds estáticos ficam em `storybook-static/homolog` e `storybook-static/prod`. Confira `package.json` antes de citar comandos, pois scripts podem ser alterados.
+`npm run storybook` compila tokens e React antes de iniciar o servidor Storybook. `npm run test:storybook` também compila tokens e React antes de executar as stories em modo browser com Vitest e Playwright/Chromium. Preserve essa preparação: o catálogo Icons consome o export público de @art-liz/react em dist e o CI parte de checkout limpo. Os builds estáticos ficam em `storybook-static/homolog` e `storybook-static/prod`. Confira `package.json` antes de citar comandos, pois scripts podem ser alterados.
 
 ## Regras ao implementar
 
@@ -90,7 +91,7 @@ npm run build:storybook:prod
 - Ao trabalhar como Codex, consulte os critérios da issue ativa, implemente na branch de trabalho baseada em `develop`, rode a verificação específica e o gate apropriado, e não faça commit/push/merge sem pedido explícito.
 - Separe implementação e estilos dos componentes React: `Component.tsx` contém API e comportamento; `Component.style.ts` contém os estilos Emotion e seus elementos estilizados.
 - Ao referenciar tipos do componente no arquivo de estilos, use `import type` para não criar uma dependência de runtime circular.
-- Para novos componentes, avalie export público, story, teste de comportamento e uso no playground.
+- Para novos componentes, avalie export público, story, teste de comportamento e uso no playground. Inclua também `Component.mdx` com a página Documentação vinculada às stories por `Meta of`: finalidade, importação, exemplo completo de uso e orientações relevantes.
 - Mantenha React e Emotion como dependências peer do pacote de componentes; confira os manifests antes de mudar essa estratégia.
 - Não publique pacotes, altere credenciais, faça deploy ou execute ações externas sem solicitação explícita.
 - Não crie commits ou inicialize Git sem pedido. Este workspace já tem Git e remoto configurados; confirme branch atual, mudanças locais e permissões antes de operar no histórico ou no remoto.
@@ -111,15 +112,24 @@ Não trate o reinício como correção de código se um build limpo também falh
 
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
 - O pacote React contém o componente `Button`, com aparências `primary`, `outline`, `ghost` e `link`, e intents semânticos `primary`, `danger`, `success`, `info` e `warning`.
-- O pacote React também contém `Box`, `Container` e `Text`; `Text` aplica as variantes tipográficas definidas em `typography.textStyles`.
+- O pacote React contém 37 componentes após as duas expansões em lote, incluindo `Box`, `Container`, `Text`, `Input` e `Checkbox`; a lista atual está em `packages/react/src/index.ts` e `COMPONENTS.md`. Input segue as alturas Figma 24/36/40px e usa `onClear` para limpeza controlada; Checkbox tem `indeterminate` nativo. `Text` aplica as variantes tipográficas de `typography.textStyles`.
+- As 34 famílias do inventário Figma têm correspondência funcional base. A última rodada inclui Cascader, DateTimePicker nativo, Transfer, Chart de barras, FilterItem, AuditStatus, Message, Popconfirm e Result; contratos/limites em `docs/remaining-component-scope.md`. Somente Input e Checkbox têm capturas detalhadas locais; o ajuste visual das 31 famílias novas permanece pendente, conforme a prioridade de tokens atuais autorizada pela pessoa usuária.
 - O Storybook tem stories de Button, addon de acessibilidade, testes de stories via Vitest/Playwright e scripts de build estático para homologação e produção.
 - Os testes, lint, build integrado e builds estáticos do Storybook passaram na validação inicial.
 - A resolução de `@art-liz/react` no playground exigiu reiniciar o servidor Vite depois da instalação dos workspaces; o comando com `--force` passou a transformar o import para o artefato local.
 - O repositório fixa npm `11.6.2` em `package.json` e nos workflows para manter instalações limpas reproduzíveis entre macOS e Linux. O workflow stable atualiza para `npm@11.21.0` apenas antes de `npm dist-tag`, porque essa operação via OIDC exige npm 11.21.0+.
 - Esses resultados são registros históricos, não garantias de que o estado atual continua igual. Reexecute as verificações relevantes antes de afirmar que ainda passam.
 
+## Movimento e documentação futura
+
+- Transições compartilhadas ficam em packages/react/src/internal/motion.style.ts e usam os tokens existentes. Preservar prefers-reduced-motion, inert/aria-hidden na saída e as APIs nativas de dialog/popover. As animações de saída dependem de manter os componentes montados; CSS discreto é um aprimoramento progressivo.
+- Alert aceita open (padrão true); Badge tem size small/medium/large (padrão small); Tooltip tem os seis intents semânticos (neutral padrão). As respectivas páginas MDX documentam os contratos.
+- O plano GitBook está na issue #37 e nas tarefas #38 a #43, incluindo diagramas Mermaid. O portal ainda não foi configurado/publicado; a execução fica para trabalho futuro.
+
 ## Pendências conhecidas
 
 Consulte a seção "Itens ainda em aberto" de `DESIGN_SYSTEM.md`. Entre as pendências estão escala visual completa e critérios de acessibilidade/cobertura.
+
+A consulta Figma de 18/10/2026 está em [FIGMA_INVENTORY.md](FIGMA_INVENTORY.md). Foram listadas 50 páginas e inspecionados Button, Input, Checkbox, Radio e Toggle em seis chamadas de leitura, além da evidência anterior de Steps. Input Basic e Checkbox foram implementados a partir dos contextos completos e imagens em `docs/figma/`, além de Button, Text, Box e Container. Há stories, testes e formulário no playground. Radio, Switch e outras 20 famílias já possuem implementações base. A pessoa usuária autorizou em 18/10/2026 priorizar os tokens e padrões atuais para esse lote, com ajuste visual ao Figma posterior; não exigir nova captura para continuar essa implementação base. A branch foi renomeada para `feat/component-library-expansion`. Consulte os snapshots e IDs antes de gastar novas chamadas. As capturas são imutáveis; não alterar seus bytes/hashes ao formatar. Fonte configurável, largura fluida, anel de foco e texto de erro em danger.800 são adaptações do projeto; não afirmar paridade completa ou conformidade de contraste sem validação específica.
 
 Ao concluir um trabalho que altere essas decisões ou pendências, atualize este resumo e `DESIGN_SYSTEM.md` para que a próxima sessão possa continuar sem depender desta conversa.

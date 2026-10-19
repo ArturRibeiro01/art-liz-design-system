@@ -1,7 +1,4 @@
-import { ArrowRightIcon } from '@phosphor-icons/react/dist/csr/ArrowRight'
-import { CheckIcon } from '@phosphor-icons/react/dist/csr/Check'
-import { PlusIcon } from '@phosphor-icons/react/dist/csr/Plus'
-import { TrashIcon } from '@phosphor-icons/react/dist/csr/Trash'
+import * as Icons from '../Icons'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 import type { ButtonIntent, ButtonProps, ButtonVariant } from './Button'
@@ -11,10 +8,10 @@ const intents: ButtonIntent[] = ['primary', 'danger', 'success', 'info', 'warnin
 const variants: ButtonVariant[] = ['primary', 'outline', 'ghost', 'link']
 const iconComponents = {
   None: null,
-  ArrowRight: ArrowRightIcon,
-  Check: CheckIcon,
-  Plus: PlusIcon,
-  Trash: TrashIcon,
+  ArrowRight: Icons.ArrowRightIcon,
+  Check: Icons.CheckIcon,
+  Plus: Icons.PlusIcon,
+  Trash: Icons.TrashIcon,
 } as const
 
 type ButtonIconName = keyof typeof iconComponents

@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as PaginationStories from './Pagination.stories'
+
+<Meta of={PaginationStories} name="Documentação" />
+
+Componentes React
+
+# Pagination
+
+Pagination permite navegar entre páginas de uma coleção de resultados. Use-a quando a aplicação apresentar dados divididos em páginas e precisar informar a posição atual.
+
+## Importação
+
+```tsx
+import { Pagination } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Pagination } from '@art-liz/react'
+
+export function Exemplo() {
+  const [page, setPage] = useState(1)
+
+  return (
+    <>
+      <p>Página atual: {page}</p>
+      <Pagination page={page} pageCount={12} onPageChange={setPage} />
+    </>
+  )
+}
+```
+
+## Orientações
+
+page começa em 1 e pageCount deve ser um inteiro positivo. O estado é controlado; onPageChange solicita a próxima página. A aplicação carrega ou filtra os resultados correspondentes.

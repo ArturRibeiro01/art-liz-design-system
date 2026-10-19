@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as MessageStories from './Message.stories'
+
+<Meta of={MessageStories} name="Documentação" />
+
+Componentes React
+
+# Message
+
+Message oferece um feedback compacto sobre uma ação, como salvar alterações ou concluir uma operação. Use-o em uma área visível da página para informar o resultado ao usuário.
+
+## Importação
+
+```tsx
+import { Message } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Message } from '@art-liz/react'
+
+export function Exemplo() {
+  const [visible, setVisible] = useState(true)
+
+  return (
+    <>
+      {visible && (
+        <Message intent="success" onDismiss={() => setVisible(false)}>
+          Alterações salvas com sucesso.
+        </Message>
+      )}
+    </>
+  )
+}
+```
+
+## Orientações
+
+O role padrão é status; role="alert" serve para avisos urgentes. onDismiss solicita remoção pelo consumidor. Message permanece em fluxo, sem fila global nem temporizador automático.

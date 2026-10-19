@@ -47,7 +47,7 @@ npm run ci
 ```
 
 - `npm test`: compila tokens e executa testes dos pacotes.
-- `npm run test:storybook`: executa as stories como testes de componente em Chromium headless.
+- `npm run test:storybook`: compila tokens e React, depois executa as stories como testes de componente em Chromium headless, inclusive em checkout limpo.
 - `npm run lint`: roda ESLint por workspace e valida sintaxe do script shell.
 - `npm run format`: aplica Prettier.
 - `npm run format:check`: verifica Prettier sem modificar arquivos.

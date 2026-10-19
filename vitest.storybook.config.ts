@@ -11,6 +11,7 @@ export default defineConfig({
     projects: [
       {
         extends: true,
+        optimizeDeps: { include: ['@art-liz/react'] },
         plugins: [
           storybookTest({
             configDir: path.join(dirname, 'apps/storybook/.storybook'),

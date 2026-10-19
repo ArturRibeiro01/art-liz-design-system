@@ -1,0 +1,44 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as SliderStories from './Slider.stories'
+
+<Meta of={SliderStories} name="Documentação" />
+
+Componentes React
+
+# Slider
+
+Slider permite ajustar um valor numérico dentro de um intervalo. Use-o para preferências graduais, como volume ou intensidade, quando a posição no intervalo ajuda a escolher.
+
+## Importação
+
+```tsx
+import { Slider } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Slider } from '@art-liz/react'
+
+export function Exemplo() {
+  const [volume, setVolume] = useState(50)
+
+  return (
+    <Slider
+      label="Volume"
+      name="volume"
+      min={0}
+      max={100}
+      step={10}
+      value={volume}
+      aria-valuetext={`${volume}%`}
+      onChange={(event) => setVolume(Number(event.target.value))}
+    />
+  )
+}
+```
+
+## Orientações
+
+Usa input type="range" e mantém o teclado nativo. min, max e step definem o intervalo; aria-valuetext pode informar a unidade de forma compreensível.

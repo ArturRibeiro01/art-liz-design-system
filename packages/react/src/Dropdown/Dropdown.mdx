@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as DropdownStories from './Dropdown.stories'
+
+<Meta of={DropdownStories} name="Documentação" />
+
+Componentes React
+
+# Dropdown
+
+Dropdown reúne ações em um menu aberto por um botão. Use-o quando houver ações secundárias relacionadas ao mesmo objeto ou contexto.
+
+## Importação
+
+```tsx
+import { Dropdown } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Dropdown } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Dropdown
+      trigger="Ações do projeto"
+      label="Ações disponíveis"
+      items={[
+        { id: 'edit', label: 'Editar', onSelect: () => window.alert('Editar projeto') },
+        { id: 'archive', label: 'Arquivar', onSelect: () => window.alert('Arquivar projeto') },
+        { id: 'remove', label: 'Excluir', disabled: true },
+      ]}
+    />
+  )
+}
+```
+
+## Orientações
+
+trigger recebe conteúdo para o botão existente. O menu oferece setas, Home/End, busca por texto, Escape e saída por Tab. Use Select para escolher valores de formulário. Exige a Popover API nativa.

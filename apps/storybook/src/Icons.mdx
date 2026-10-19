@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as IconsStories from './Icons.stories'
+
+<Meta of={IconsStories} name="Documentação" />
+
+Fundamentos
+
+# Icons
+
+Icons é o catálogo de ícones do Art-Liz Design System. Use essa entrada para manter a mesma origem dos desenhos nos componentes e nas aplicações consumidoras. O seletor da página Playground mostra os ícones disponíveis e suas opções de tamanho, peso e cor.
+
+## Importação
+
+```tsx
+import { Icons } from '@art-liz/react'
+```
+
+## Uso com Button
+
+```tsx
+import { Button, Icons } from '@art-liz/react'
+
+export function Adicionar() {
+  return <Button startIcon={<Icons.PlusIcon size="1em" weight="regular" />}>Adicionar item</Button>
+}
+```
+
+O Button recebe elementos React em startIcon e endIcon. O ícone decorativo herda a cor e acompanha a tipografia com size="1em". Para um botão sem texto, forneça aria-label ou aria-labelledby no botão.
+
+## Uso em outros conteúdos
+
+```tsx
+import { Icons } from '@art-liz/react'
+
+export function Aviso() {
+  return (
+    <span>
+      <Icons.WarningIcon aria-hidden="true" focusable="false" size={16} />
+      Revise as informações antes de continuar.
+    </span>
+  )
+}
+```
+
+O texto comunica o significado; aria-hidden oculta o desenho decorativo dos leitores de tela. Os ícones aceitam size, weight e color; sem color, herdam currentColor. Os pesos são thin, light, regular, bold, fill e duotone.
+
+## Convenção do projeto
+
+Componentes internos importam o catálogo por `import * as Icons from '../Icons'`. O catálogo do Storybook e aplicações importam `{ Icons }` de `@art-liz/react`. A integração com Phosphor fica concentrada em `packages/react/src/Icons`; os demais componentes não importam diretamente o fornecedor. Os SVGs originais de Input e Checkbox continuam preservados, com acesso interno centralizado nessa pasta.

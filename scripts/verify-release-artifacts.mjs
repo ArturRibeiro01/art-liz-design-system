@@ -72,6 +72,10 @@ try {
   for (const peer of ['react', 'react-dom', '@emotion/react', '@emotion/styled']) {
     assert.ok(reactManifest.peerDependencies[peer], `peer dependency ausente: ${peer}`)
   }
+  assert.ok(
+    reactManifest.dependencies['@phosphor-icons/react'],
+    'Phosphor deve ser dependência de runtime dos ícones internos',
+  )
   assert.ok(packedPackages['create-app'].manifest.bin['create-app'])
 
   const consumerManifest = {
@@ -113,7 +117,68 @@ try {
     [
       '--input-type=module',
       '--eval',
-      "import { Box, Button, Container, Text } from '@art-liz/react'; import { colors, typography } from '@art-liz/tokens'; if (![Box, Button, Container, Text].every((component) => typeof component === 'function') || !colors.primary[600] || !typography.textStyles.h1) process.exit(1)",
+      "import { Box, Button, Checkbox, Container, Input, Text } from '@art-liz/react'; import { createElement } from 'react'; import { renderToStaticMarkup } from 'react-dom/server'; import { colors, typography } from '@art-liz/tokens'; if (![Box, Button, Container, Text].every((component) => typeof component === 'function') || !colors.primary[600] || !typography.textStyles.h1) process.exit(1); const html = renderToStaticMarkup(createElement('form', null, createElement(Input, { label: 'Name', clearable: true, defaultValue: 'Liz' }), createElement(Checkbox, { label: 'Accept', defaultChecked: true }))); if (!html.includes('type=\"checkbox\"') || !html.includes('Limpar campo')) process.exit(1)",
+    ],
+    consumerDirectory,
+  )
+
+  run(
+    process.execPath,
+    [
+      '--input-type=module',
+      '--eval',
+      `import { Alert, Icons, Steps } from '@art-liz/react'
+       import { createElement } from 'react'
+       import { renderToStaticMarkup } from 'react-dom/server'
+       const icon = renderToStaticMarkup(createElement(Icons.PlusIcon, {'aria-hidden': true, size: 16}))
+       if (!icon.includes('<svg')) throw new Error('Invalid public DS icon catalog')
+       const alert = renderToStaticMarkup(createElement(Alert, {onDismiss: () => {}}, 'Notice'))
+       const steps = renderToStaticMarkup(createElement(Steps, {items: [{title: 'Done', status: 'finished'}, {title: 'Failed', status: 'error'}]}))
+       if (!alert.includes('<svg') || alert.includes('×') || !alert.includes('Fechar aviso')) throw new Error('Invalid packaged close icon')
+       if ((steps.match(/<svg/g) || []).length !== 2) throw new Error('Invalid packaged step icons')`,
+    ],
+    consumerDirectory,
+  )
+
+  const publicComponents = [
+    'AuditStatus',
+    'Cascader',
+    'Chart',
+    'DateTimePicker',
+    'FilterItem',
+    'Message',
+    'Popconfirm',
+    'Result',
+    'Transfer',
+    'Alert',
+    'Badge',
+    'Breadcrumb',
+    'ButtonGroup',
+    'Dialog',
+    'Drawer',
+    'Dropdown',
+    'Form',
+    'Link',
+    'Pagination',
+    'Popover',
+    'Radio',
+    'Select',
+    'Slider',
+    'Steps',
+    'Switch',
+    'Table',
+    'Tabs',
+    'Tag',
+    'Textarea',
+    'Tooltip',
+    'Upload',
+  ]
+  run(
+    process.execPath,
+    [
+      '--input-type=module',
+      '--eval',
+      `import * as components from '@art-liz/react'; const names = ${JSON.stringify(publicComponents)}; for (const name of names) { if (!components[name]) throw new Error('Missing export: ' + name) }`,
     ],
     consumerDirectory,
   )
@@ -146,7 +211,7 @@ try {
 
   await writeFile(
     join(consumerDirectory, 'consumer.tsx'),
-    `import { Box, Button, Container, Text } from '@art-liz/react'\nimport type { TextFontFamily } from '@art-liz/react'\nimport { colors, typography } from '@art-liz/tokens'\n\nconst fontFamily: TextFontFamily = typography.fontFamilies.mono\n\nexport const Consumer = () => (\n  <Container background="neutral.50" maxWidth="md" padding={4}>\n    <Box background="white" padding={4}>\n      <Text as="a" color="primary.600" fontFamily={fontFamily} href="/docs" variant="h1">Docs</Text>\n      <Button>Continue</Button>\n      <span>{colors.primary[600]}</span>\n    </Box>\n  </Container>\n)\n`,
+    `import { Box, Button, Checkbox, Container, Input, Text } from '@art-liz/react'\nimport type { TextFontFamily } from '@art-liz/react'\nimport { colors, typography } from '@art-liz/tokens'\n\nconst fontFamily: TextFontFamily = typography.fontFamilies.mono\n\nexport const Consumer = () => (\n  <Container background="neutral.50" maxWidth="md" padding={4}>\n    <Box background="white" padding={4}>\n      <Text as="a" color="primary.600" fontFamily={fontFamily} href="/docs" variant="h1">Docs</Text>\n      <Input label="Name" helpText="Your preferred name" size="small" />\n      <Checkbox label="Accept" indeterminate />\n      <Button>Continue</Button>\n      <span>{colors.primary[600]}</span>\n    </Box>\n  </Container>\n)\n`,
   )
 
   run(

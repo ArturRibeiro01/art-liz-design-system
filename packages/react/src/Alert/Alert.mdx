@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as AlertStories from './Alert.stories'
+
+<Meta of={AlertStories} name="Documentação" />
+
+Componentes React
+
+# Alert
+
+Alert destaca uma informação contextual que merece atenção, como um aviso, sucesso ou erro relacionado a uma seção. Pode conter título, conteúdo e uma ação opcional de fechar.
+
+## Importação
+
+```tsx
+import { Alert } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Alert, Button } from '@art-liz/react'
+
+export function Exemplo() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button variant="ghost" onClick={() => setOpen(true)}>
+        Mostrar aviso
+      </Button>
+      <Alert
+        open={open}
+        title="Dados atualizados"
+        intent="success"
+        onDismiss={() => setOpen(false)}
+      >
+        Suas preferências foram salvas.
+      </Alert>
+    </>
+  )
+}
+```
+
+## Orientações
+
+O role padrão é status; role="alert" pode ser usado em avisos urgentes. onDismiss solicita fechamento, e o consumidor atualiza open. Mantenha o componente montado e use open para animar a entrada e a saída; omitir open preserva o comportamento sempre visível. Se a ação de fechar estava focada, devolva o foco a um controle apropriado. A story Abrir e fechar demonstra esse fluxo.
+
+As transições usam tokens de motion e respeitam prefers-reduced-motion. Navegadores sem suporte a transições discretas de display podem fechar imediatamente.

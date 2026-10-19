@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as InputStories from './Input.stories'
+
+<Meta of={InputStories} name="Documentação" />
+
+Componentes React
+
+# Input
+
+Input permite inserir uma linha de texto em formulários, com label, ajuda e erro associados ao campo. Use atributos nativos como type, name, required e autoComplete para adaptar a entrada.
+
+## Importação
+
+```tsx
+import { Input } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Input } from '@art-liz/react'
+
+export function Exemplo() {
+  const [name, setName] = useState('')
+
+  return (
+    <Input
+      label="Nome"
+      name="name"
+      helpText="Informe como prefere ser chamado."
+      value={name}
+      onChange={(event) => setName(event.target.value)}
+      clearable
+      onClear={() => setName('')}
+    />
+  )
+}
+```
+
+## Orientações
+
+Em modo controlado, onClear deve atualizar value; limpar não sintetiza onChange. Para uso não controlado, use defaultValue. size aceita small, medium e large; error exibe a mensagem e ativa aria-invalid.

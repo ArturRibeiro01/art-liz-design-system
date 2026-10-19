@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as TabsStories from './Tabs.stories'
+
+<Meta of={TabsStories} name="Documentação" />
+
+Componentes React
+
+# Tabs
+
+Tabs alterna entre painéis de conteúdo relacionados dentro da mesma área. Use-as quando o usuário precisar explorar seções sem sair da página.
+
+## Importação
+
+```tsx
+import { Tabs } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Tabs } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Tabs
+      label="Informações do projeto"
+      items={[
+        { id: 'summary', label: 'Resumo', content: <p>Informações gerais do projeto.</p> },
+        { id: 'settings', label: 'Preferências', content: <p>Configurações do projeto.</p> },
+      ]}
+    />
+  )
+}
+```
+
+## Orientações
+
+As abas usam setas, Home e End e ignoram itens desabilitados. value/defaultValue escolhem a aba por id; onValueChange informa a seleção. Os painéis inativos continuam montados, mas ficam ocultos.

@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as PopconfirmStories from './Popconfirm.stories'
+
+<Meta of={PopconfirmStories} name="Documentação" />
+
+Componentes React
+
+# Popconfirm
+
+Popconfirm pede uma confirmação breve junto ao botão de uma ação. Use-o quando a decisão for simples e o usuário precisar confirmar ou cancelar sem abrir um diálogo modal completo.
+
+## Importação
+
+```tsx
+import { Popconfirm } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Popconfirm } from '@art-liz/react'
+
+export function Exemplo() {
+  const [removed, setRemoved] = useState(false)
+
+  return (
+    <>
+      <Popconfirm
+        trigger="Remover item"
+        title="Remover este item?"
+        description="O item será retirado da lista."
+        intent="danger"
+        confirmLabel="Remover"
+        onConfirm={() => setRemoved(true)}
+      />
+      <p>{removed ? 'Item removido.' : 'Item disponível.'}</p>
+    </>
+  )
+}
+```
+
+## Orientações
+
+trigger é o conteúdo de um botão já criado pelo componente. O foco inicial vai para Cancelar. Confirmar e cancelar fecham antes de chamar os callbacks; Escape cancela, e clique externo apenas fecha. Requer a Popover API nativa; operações assíncronas são tratadas pelo consumidor.

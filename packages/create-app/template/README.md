@@ -17,7 +17,8 @@ npm run preview
 
 ## Estrutura
 
-- `src/pages`: páginas e rotas do React Router.
+- `src/pages`: páginas e rotas do React Router; a tela inicial demonstra componentes do design system.
+- `src/pages/HomePage.style.ts`: apresentação e layout responsivo da tela inicial.
 - `src/store`: estado de cliente com Zustand.
 - `src/App.tsx`: roteamento e provider do TanStack Query.
 - `src/App.test.tsx`: exemplo de teste com Vitest e Testing Library.
@@ -33,3 +34,17 @@ npm update @art-liz/react @art-liz/tokens
 ```
 
 O projeto inclui Zustand para estado local e TanStack Query para estado de servidor. Storybook não é instalado por padrão; adicione-o se o produto precisar de um catálogo próprio.
+
+## Explore a tela inicial
+
+- Crie um projeto de demonstração no diálogo; o nome aparece no cartão de boas-vindas.
+- Use as abas para testar o contador compartilhado, as preferências de formulário e os marcadores removíveis.
+- Consulte as mensagens, etapas, popover e tooltip como exemplos de composição.
+
+Os dados desses exemplos são locais e não são enviados a um servidor. O contador usa Zustand; o projeto e o feedback usam estado React da página. Navegar para outra rota pode descartar os estados locais da página. Os componentes já estão disponíveis no pacote completo:
+
+```tsx
+import { Alert, Dialog, Input, Tabs } from '@art-liz/react'
+```
+
+Não é necessário instalar cada componente. Ícones vêm do catálogo Icons de @art-liz/react, e a apresentação pode ser adaptada pelos tokens e pelo arquivo de estilos da página. Dialog e Popover usam APIs nativas do navegador.

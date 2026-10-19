@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as UploadStories from './Upload.stories'
+
+<Meta of={UploadStories} name="Documentação" />
+
+Componentes React
+
+# Upload
+
+Upload permite selecionar arquivos locais em um formulário. Use accept e multiple para orientar os tipos e a quantidade de arquivos que o usuário pode escolher.
+
+## Importação
+
+```tsx
+import { Upload } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Upload } from '@art-liz/react'
+
+export function Exemplo() {
+  const [fileNames, setFileNames] = useState<string[]>([])
+
+  return (
+    <>
+      <Upload
+        label="Referências do projeto"
+        name="references"
+        accept="image/*,.pdf"
+        multiple
+        onChange={(event) =>
+          setFileNames(Array.from(event.target.files ?? [], (file) => file.name))
+        }
+      />
+      <p>{fileNames.length ? fileNames.join(', ') : 'Nenhum arquivo selecionado.'}</p>
+    </>
+  )
+}
+```
+
+## Orientações
+
+O componente seleciona arquivos; o envio ao servidor e a validação de conteúdo, tamanho e tipo são responsabilidades da aplicação. accept orienta o seletor, mas não substitui validação.
