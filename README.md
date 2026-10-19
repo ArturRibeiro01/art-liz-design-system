@@ -10,6 +10,7 @@ Design system pessoal em React e TypeScript, organizado como monorepo npm. Os pa
 - [FIGMA_INVENTORY.md](FIGMA_INVENTORY.md): referência Figma, inventário, mapeamento para o código e primeira etapa proposta.
 - [STORYBOOK.md](STORYBOOK.md): Storybook local, builds estáticos e GitHub Pages.
 - [RELEASES.md](RELEASES.md): Changesets, beta/latest e publicação npm.
+- [GITBOOK.md](GITBOOK.md): estrutura dos guias, canais e configuração da sincronização com GitBook.
 - [templates/gitflow/README.md](templates/gitflow/README.md): bootstrap do GitFlow em outros repositórios.
 
 ## Estrutura
