@@ -35,13 +35,10 @@ Os diagramas descrevem as configurações atuais. Confira workflows, rulesets e 
 
 ## Situação da entrega
 
-| Frente                     | Evidência disponível                                                                             | Pendência e responsável                                                                              |
-| -------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| Adoção, issue #39          | Guias integrados na PR #50; exemplos testados com pacotes publicados.                            | Pessoa mantenedora confere a prévia e a atualização incremental.                                     |
-| Fundamentos, issue #40     | APIs/snippets, links e cálculos registrados em GITBOOK.md.                                       | Autor e revisor conferem novas páginas após merge.                                                   |
-| Receitas, issue #41        | Quatro snippets compilados, testes no consumidor e fluxos em Chromium; resultados em GITBOOK.md. | Autor e revisor conferem os guias no portal; contraste permanece pendente no núcleo.                 |
-| Diagramas, issue #42       | Fontes Mermaid, imagens de apoio e alternativas textuais.                                        | Pessoa mantenedora valida renderização efetiva no GitBook.                                           |
-| Manutenção, issue #43      | Processo, responsabilidades e checklist nesta página.                                            | Pessoa mantenedora/revisor concluem busca, navegação e layout do portal atualizado.                  |
-| Canal estável e publicação | Proposta main/latest, separada da develop/beta.                                                  | Pessoa mantenedora configura o espaço/site e registra URL/status; não presumir publicação concluída. |
+As 25 páginas iniciais foram integradas a `develop` pelas PRs #49–#51. Em 20/10/2026, a pessoa mantenedora confirmou o funcionamento do portal atualizado após ressincronizar e autorizou o encerramento das issues #37–#43. Os comentários das issues registram evidências e limites. O agente não auditou o serviço autenticado; a confirmação manual não representa um teste individual de cada item do checklist acima.
 
-Uma issue só deve ser fechada quando seus critérios tiverem evidência. Conteúdo preparado localmente, diagrama válido e importação inicial não substituem revisão do portal atualizado. Consulte [GITBOOK.md no repositório](https://github.com/ArturRibeiro01/art-liz-design-system/blob/develop/GITBOOK.md) para resultados e limites de cada etapa.
+O [guia editorial](guia-editorial.md) acrescenta a 26ª página e está preparado para cadastro no Style guide. Publicação e canal estável continuam separados: a captura do painel mostra **Not published** e a conexão atual usa `develop`. Antes de criar o canal `main`/`latest`, conferir a presença dos guias nessa branch e alinhar APIs, comandos e links ao Storybook de produção. A pessoa mantenedora configura o serviço e registra o resultado em GITBOOK.md.
+
+A próxima atualização deve verificar se o Git Sync funciona sem ressincronização manual. Contraste da paleta permanece uma pendência do núcleo, descrita em [Acessibilidade e limites atuais](acessibilidade-e-limites.md).
+
+Consulte [GITBOOK.md no repositório](https://github.com/ArturRibeiro01/art-liz-design-system/blob/develop/GITBOOK.md) para os resultados e limites das verificações locais e do aceite manual.

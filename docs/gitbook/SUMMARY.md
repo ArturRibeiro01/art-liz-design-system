@@ -38,4 +38,5 @@
 
 - [Desenvolvimento local](desenvolvimento-local.md)
 - [Atualizar a documentação](contribuicao.md)
+- [Guia editorial](guia-editorial.md)
 - [Manutenção e revisão do portal](manutencao.md)

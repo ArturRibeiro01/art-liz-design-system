@@ -74,6 +74,8 @@ Validação em 18/10/2026: gate completo com npm 11.6.2 (147 testes React, quatr
 
 ## Documentação no GitBook
 
+Estado em 20/10/2026: as PRs #49–#51 foram integradas a develop. A pessoa mantenedora confirmou o conteúdo atualizado após ressincronizar e autorizou encerrar as issues #37–#43; todas foram fechadas com evidências e limites. Essa aceitação manual substitui as pendências de aceite da entrega descritas historicamente abaixo, sem constituir auditoria autenticada do agente. A captura do painel ainda mostra Not published. Canal estável/main, publicação e validação de atualização sem ressincronização continuam pendentes. O novo guia editorial em docs/gitbook/guia-editorial.md está preparado localmente para revisão e cadastro no Style guide; não configura o serviço automaticamente. O sumário local passa a ter 26 páginas.
+
 O trabalho foi planejado na [issue principal #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37), com seis tarefas vinculadas: estrutura/sincronização GitHub, instalação/create-app, fundamentos/acessibilidade, guias de componentes/receitas, diagramas Mermaid de arquitetura/fluxos e contribuição/versões/manutenção. O Storybook permanece o catálogo interativo; o GitBook organiza a documentação conceitual e de adoção, evitando duplicar a manutenção dos exemplos. As issues contêm escopo e critérios de aceite para a evolução desses guias.
 
 A implementação da estrutura da issue #38 começou em 19/10/2026: os guias ficam em `docs/gitbook/`, com `SUMMARY.md` e `.gitbook.yaml`. O arquivo `gitbook-docs.yaml` na mesma pasta configura Site Git Sync; na interface, o diretório de projeto é `docs/gitbook/` e o conteúdo do espaço é `./`, com chave estável `art-liz-docs`. A pessoa mantenedora confirmou a sincronização inicial do espaço **Documentação** com `develop` por captura, mostrando o commit `a32a4b90`, correspondente ao merge da PR #49. A política proposta mantém `main` como canal estável independente, ainda pendente de configuração. O Git Sync sincroniza o conteúdo após o merge, mas a atualização dos guias permanece parte da mudança de código. Busca, links e leitura responsiva não foram auditados pelo agente; atualização incremental e publicação continuam pendentes de validação/configuração. Consulte [GITBOOK.md](GITBOOK.md) para o procedimento e o estado atual.
@@ -473,7 +475,7 @@ Agentes especializados não são necessários para a fase atual. Codex e outros 
 
 ## Itens ainda em aberto
 
-- Executar a documentação GitBook planejada na [issue #37 e suas seis tarefas](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37).
+- Configurar o canal estável do GitBook após promover e alinhar os guias a main/latest; definir publicação e observar uma atualização incremental sem ressincronização. A entrega #37–#43 foi encerrada com aceite manual. Cadastrar o guia editorial no serviço e avaliar MCP/change requests preservando PRs e checks.
 
 - Ajustar visualmente ao Figma as 31 famílias acrescentadas nas duas expansões e auditar Button; as APIs básicas das 34 famílias catalogadas já existem. Consultar variantes detalhadas antes de ampliar os escopos iniciais, especialmente Cascader, DateTimePicker, Transfer e Chart (limites em docs/remaining-component-scope.md).
 - Definir escalas completas de tipografia, cores, espaçamento e elevação.
