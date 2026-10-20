@@ -48,7 +48,7 @@ O workflow:
 3. Atualiza npm para uma versão compatível com `dist-tag` via OIDC.
 4. Promove as versões atuais para `latest`.
 
-O job usa o environment protegido `npm-production`.
+O job usa o environment `npm-production`. Na consulta de 20/10/2026, esse environment tinha política de branches, sem required reviewers; `npm-beta` não tinha regras de proteção. Não há gate de aprovação humana do environment confirmado nessa configuração. A promoção para main continua passando pela PR e pelos checks obrigatórios de branch.
 
 ## Trusted Publishing
 
