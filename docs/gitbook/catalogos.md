@@ -19,6 +19,6 @@ Os guias do GitBook devem apontar para essas referências ao explicar composiç�
 
 ## Versões do portal
 
-A política proposta é um espaço de homologação associado a `develop` e um espaço estável associado a `main`, com o conteúdo de `docs/gitbook/` em cada branch. A conexão dos espaços e sua apresentação no GitBook ainda precisam ser configuradas e verificadas.
+A política proposta é um espaço de homologação associado a `develop` e um espaço estável associado a `main`, com o conteúdo de `docs/gitbook/` em cada branch. A sincronização inicial do espaço **Documentação** com `develop` foi confirmada em 19/10/2026. A apresentação na prévia e a conexão do canal estável ainda precisam ser verificadas/configuradas.
 
-Enquanto essa configuração estiver pendente, use os catálogos acima e consulte o [fluxo de releases no repositório](https://github.com/ArturRibeiro01/art-liz-design-system/blob/develop/RELEASES.md).
+Use os catálogos acima para explorar as versões dos componentes e consulte o [fluxo de releases no repositório](https://github.com/ArturRibeiro01/art-liz-design-system/blob/develop/RELEASES.md).

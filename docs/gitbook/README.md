@@ -4,6 +4,8 @@ O Art-Liz reúne tokens, componentes React e um gerador de aplicações para com
 
 Este guia atende quem vai consumir o DS em uma aplicação e quem vai contribuir com sua evolução. Comece pelos [primeiros passos](primeiros-passos.md), consulte os [catálogos e ambientes](catalogos.md) para explorar os componentes e leia como [atualizar a documentação](contribuicao.md) ao contribuir.
 
+Para adotar o DS, confira [instalação e requisitos](instalacao.md), [gere uma aplicação](create-app.md) e siga o [primeiro projeto com formulário e navegação](primeiro-projeto.md). Quem já tem um app pode consultar [atualizações](atualizacao.md); contribuições ao monorepo começam pelo [desenvolvimento local](desenvolvimento-local.md).
+
 ## Pacotes
 
 | Pacote                | Finalidade                                                                                |
@@ -18,4 +20,4 @@ O GitBook organiza a adoção, as decisões e a composição de interfaces. O St
 
 ## Estado desta documentação
 
-Esta é a estrutura inicial do portal. Os guias completos de fundamentos, receitas, arquitetura e contribuição estão planejados na [issue #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37). A existência destes arquivos não confirma uma publicação nem uma sincronização ativa no GitBook.
+O portal tem guias de adoção e sua sincronização inicial com `develop` foi confirmada em 19/10/2026. A pessoa mantenedora também confirmou que a prévia abriu e está funcional. Fundamentos, receitas ampliadas, arquitetura e contribuição continuam no [plano #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37). Publicação e canal estável são etapas separadas da prévia de homologação.

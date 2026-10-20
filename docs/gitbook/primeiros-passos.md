@@ -2,6 +2,8 @@
 
 Você pode gerar uma aplicação com o CLI ou instalar os componentes em um projeto React existente. Escolha o [canal estável ou beta](catalogos.md) conforme a versão que pretende usar.
 
+Confira os [requisitos e versões publicadas](instalacao.md), as [opções do create-app](create-app.md) e o [roteiro completo de primeiro projeto](primeiro-projeto.md). Para aplicações já criadas, veja [Atualizar um projeto](atualizacao.md); para alterar o monorepo, veja [Desenvolvimento local](desenvolvimento-local.md).
+
 ## Criar uma aplicação
 
 ```sh
@@ -44,4 +46,4 @@ O exemplo demonstra o evento do botão. A aplicação consumidora implementa a p
 
 Projetos gerados não recebem automaticamente mudanças do template. Atualize as dependências do DS no seu projeto, confira o changelog e valide os fluxos afetados. Mudanças na estrutura do template precisam ser incorporadas ao projeto existente quando fizerem sentido.
 
-Este roteiro inicial será ampliado e validado em um projeto gerado na [issue #39](https://github.com/ArturRibeiro01/art-liz-design-system/issues/39).
+O roteiro de [primeiro projeto com componentes](primeiro-projeto.md) usa a combinação publicada beta registrada no guia de instalação. Nela estão os componentes novos; na consulta de 19/10/2026, o canal estável ainda tinha React 1.0.0 e CLI 0.2.1. Confira a versão instalada antes de copiar exemplos do Storybook de homologação.
