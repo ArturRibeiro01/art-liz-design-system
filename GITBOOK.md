@@ -79,7 +79,7 @@ Antes de concluir a issue #38:
 - A pessoa mantenedora concluiu a conexão e enviou a confirmação de importação inicial do espaço Documentação em 19/10/2026, no commit a32a4b90 da develop. As ferramentas GitBook não ficaram disponíveis nesta sessão; a confirmação se baseia na captura enviada e no merge remoto.
 - Sincronização inicial de homologação: confirmada. Atualização incremental, canal estável e publicação: pendentes de validação/configuração.
 - Prévia inicial: funcionamento confirmado pela pessoa mantenedora. Busca, links e responsividade não foram auditados pelo agente; as páginas acrescentadas depois dessa confirmação precisam de nova revisão após merge.
-- Guias completos de instalação, fundamentos, receitas, diagramas e contribuição: continuam nas issues [#39](https://github.com/ArturRibeiro01/art-liz-design-system/issues/39), [#40](https://github.com/ArturRibeiro01/art-liz-design-system/issues/40), [#41](https://github.com/ArturRibeiro01/art-liz-design-system/issues/41), [#42](https://github.com/ArturRibeiro01/art-liz-design-system/issues/42) e [#43](https://github.com/ArturRibeiro01/art-liz-design-system/issues/43).
+- Guias de adoção da issue #39 integrados pela PR #50. Fundamentos (#40), receitas (#41), diagramas (#42) e contribuição/manutenção (#43) preparados na branch docs/gitbook-foundations. A revisão do portal atualizado e a renderização efetiva dos diagramas no GitBook ainda estão pendentes; não tratar a epic #37 como concluída apenas pelo conteúdo local.
 
 Este início não conclui a issue #38. O Storybook continua sendo a referência executável de API; os guias não duplicam suas matrizes de props.
 
@@ -99,4 +99,49 @@ Os blocos TSX do Markdown foram extraídos para o projeto, incluindo a página P
 - `npm run check:commit`: cinco testes (três do template e dois do guia), lint, formatação e build;
 - verificação de links locais e de páginas únicas no sumário dos guias.
 
-Essa validação cobre compilação e comportamento no ambiente jsdom do projeto gerado. Não representa uma revisão visual dos guias novos no GitBook nem uma auditoria de teclado, responsividade ou navegador real. A confirmação da prévia enviada pela pessoa mantenedora se refere ao conteúdo inicial; as páginas da issue #39 ainda dependem de merge e revisão na prévia atualizada. A suíte integral do monorepo não foi repetida nesta mudança de documentação.
+Essa validação cobre compilação e comportamento no ambiente jsdom do projeto gerado. Não representa uma revisão visual dos guias novos no GitBook nem uma auditoria de teclado, responsividade ou navegador real. Os guias da issue #39 foram integrados pela [PR #50](https://github.com/ArturRibeiro01/art-liz-design-system/pull/50), no commit bb9cad58. A confirmação da prévia enviada pela pessoa mantenedora se refere ao conteúdo inicial; não foi feita uma nova inspeção autenticada do portal pelo agente. A suíte integral do monorepo não foi repetida nessa mudança de documentação.
+
+## Fundamentos — issue #40
+
+Os seis guias de fundamentos cobrem os exports reais dos tokens, personalização por variáveis CSS, tipografia/layout, motion/foco, Icons e acessibilidade/limites. Os componentes atuais não consomem um contrato de tema do Emotion; sobrescrever cores e fonte não cria um tema escuro validado nem troca tokens de dimensões.
+
+Os links interativos foram conferidos contra o index.json publicado do Storybook de homologação. As orientações de acessibilidade têm referências oficiais WAI/WCAG. Os cálculos de contraste usam os HEX de fallback de tokens 0.2.0, sem transparência; branco sobre primary.600 resulta em aproximadamente 2,12:1. Essa limitação foi documentada sem alterar o visual dos componentes ou afirmar conformidade integral.
+
+As páginas da issue #40 ainda precisam de merge e revisão no GitBook. O arquivo de mapeamento do site e a chave art-liz-docs permanecem os mesmos.
+
+### Validação dos fundamentos
+
+Em 20/10/2026, sete blocos TS/TSX foram extraídos diretamente dos seis guias e compilados em uma aplicação temporária gerada pelo CLI publicado, com Node 24.12.0/npm 11.6.2, React 1.1.0 e tokens 0.2.0 do npm. Não foram usados links para os workspaces locais.
+
+Passaram typecheck e check:commit: nove testes (três originais e seis verificações dos exemplos), lint, formatação e build. As verificações dos exemplos cobriram nomes acessíveis e ícones decorativos, descrição/erro de campo, semântica de heading e SSR dos estilos de marca, media query, foco e movimento reduzido. As asserções de CSS consideram diferenças de espaços na serialização.
+
+Também passaram a formatação do repositório, os links locais e os 16 links de stories dos fundamentos, conferidos contra o índice publicado de homologação; o sumário tem 15 páginas únicas. As verificações SSR de CSS não medem aparência, contraste de estilos computados ou execução de animações no navegador. A prévia atualizada do GitBook continua pendente após o merge. A suíte completa do monorepo não foi repetida nesta alteração de documentação.
+
+## Receitas, diagramas e manutenção — issues #41 a #43
+
+A expansão feita em 20/10/2026 mantém a mesma branch e acrescenta catálogo por finalidade dos 37 componentes, quatro receitas completas (formulário, dados/filtros/paginação, Dialog/Drawer e confirmação), contratos de estado/reset/limites, arquitetura, GitFlow, versões/publicação e manutenção do portal. O sumário passa a ter 25 páginas.
+
+O catálogo aponta para 37 páginas Documentação e 37 stories reais do índice de homologação. Os guias de composição não copiam matrizes de props do MDX. As receitas foram extraídas do Markdown para o mesmo consumidor temporário da validação dos fundamentos, com React 1.1.0 e tokens 0.2.0 publicados, sem vínculos aos workspaces.
+
+### Exemplos e navegador
+
+Passou o check:commit do consumidor: 11 testes (três do template, seis dos fundamentos e dois das receitas), lint, formatação e build, que também executa TypeScript. As duas verificações novas cobrem validação/reset do formulário e filtros/paginação/estado vazio.
+
+Em Chromium headless, com APIs nativas sem mocks, passaram os fluxos de formulário/reset, filtros/paginação, Dialog aplicar/cancelar, Drawer e Popconfirm confirmar/cancelar. Foram verificados foco inicial e retorno, Escape, Tab dentro do modal e o foco no resultado da exclusão. A preferência por movimento reduzido removeu a transição do Drawer. Não houve erro de página nem rolagem horizontal nas larguras 1280, 390 e 320px. As capturas de 320px da página e do Drawer foram inspecionadas.
+
+O axe com regras WCAG A/AA encontrou duas ocorrências de color-contrast na tela de exemplos. A paleta padrão, incluindo o contraste branco/primary.600, permanece uma pendência do núcleo já descrita em acessibilidade-e-limites.md. Não foi alterado o runtime para ocultar esses achados nem declarada aprovação integral de acessibilidade. O resultado vale para o cenário exercitado, não para todos os estados, browsers ou leitores de tela.
+
+### Diagramas e configuração remota
+
+Os três fontes Mermaid ficam nos blocos de arquitetura.md, fluxo-desenvolvimento.md e versoes-e-publicacao.md. Foram renderizados com mermaid 11.12.0 no Chromium/Playwright, exportados para PNG em diagramas/ e inspecionados: arquitetura (1251x638), GitFlow (875x1046) e releases (604x1187). Os arquivos Markdown preservam alternativas textuais e links para as imagens. O renderer foi instalado apenas em diretório temporário, sem dependência nova no projeto.
+
+A inspeção por API do GitHub confirmou rulesets ativos de main/develop, sem bypass, checks obrigatórios e zero reviews exigidas. npm-beta não tinha regras de proteção; npm-production tinha política de branches, sem required reviewers. Os guias e a documentação técnica foram corrigidos para não prometer aprovação humana de environment inexistente. Nenhuma proteção, permissão ou credencial foi alterada.
+
+### O que ainda exige revisão no serviço
+
+- Depois do merge, conferir o SHA sincronizado e a renderização das 25 páginas no GitBook.
+- Verificar Mermaid no espaço real; as imagens e o texto são alternativas prontas, mas uma renderização local não comprova a integração do portal.
+- Conferir busca, links, teclado, leitura em desktop/celular e correspondência entre versão npm e ambiente do catálogo no GitBook atualizado.
+- Registrar a configuração do canal estável e a decisão/URL de publicação; a conexão de develop não confirma essas etapas.
+
+Essas pendências têm responsáveis e checklist em manutencao.md. As issues #41–#43 não devem ser fechadas como integralmente concluídas antes das validações de portal previstas em seus critérios. A suíte completa do monorepo não foi repetida: esta entrega altera documentação e imagens, com verificação específica dos snippets e do consumidor.
