@@ -1,0 +1,14 @@
+[
+  {
+    "symbol": "imgCheck",
+    "url": "https://www.figma.com/api/mcp/asset/9c6f97b6-67b7-4187-8548-25a2e2bf7e32/a394b.svg",
+    "file": "assets/a394b.svg",
+    "usedByNodeIds": ["10:2280", "I10:2285;7126:80"]
+  },
+  {
+    "symbol": "imgCheck1",
+    "url": "https://www.figma.com/api/mcp/asset/9c6f97b6-67b7-4187-8548-25a2e2bf7e32/a5276.svg",
+    "file": "assets/a5276.svg",
+    "usedByNodeIds": ["10:2304", "I10:2309;7126:97"]
+  }
+]

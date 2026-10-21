@@ -9,14 +9,14 @@ import { fileURLToPath } from 'node:url'
 const packageRoot = resolve(fileURLToPath(new URL('..', import.meta.url)))
 const generatorPath = resolve(fileURLToPath(new URL('../bin/create-app.js', import.meta.url)))
 
-test('copies a complete project template and applies its directory name', async () => {
+test('copies a complete project template with explicit latest and applies its directory name', async () => {
   const temporaryDirectory = await mkdtemp(join(tmpdir(), 'art-liz-create-app-'))
   const projectDirectory = join(temporaryDirectory, 'My New App')
 
   try {
     const result = spawnSync(
       process.execPath,
-      [generatorPath, projectDirectory, '--no-install', '--no-git'],
+      [generatorPath, projectDirectory, '--tag', 'latest', '--no-install', '--no-git'],
       { encoding: 'utf8' },
     )
 
@@ -25,6 +25,7 @@ test('copies a complete project template and applies its directory name', async 
     const manifest = JSON.parse(await readFile(join(projectDirectory, 'package.json'), 'utf8'))
     assert.equal(manifest.name, 'my-new-app')
     assert.equal(manifest.dependencies['@art-liz/react'], 'latest')
+    assert.equal(manifest.dependencies['@art-liz/tokens'], 'latest')
     assert.equal(manifest.dependencies['@emotion/react'], '^11.14.0')
     assert.equal(manifest.dependencies['@emotion/styled'], '^11.14.1')
     assert.ok(manifest.dependencies['react-router-dom'])
@@ -77,61 +78,45 @@ test('uses beta versions when requested', async () => {
   }
 })
 
-test('defaults to beta versions when the CLI version is a prerelease', async () => {
-  const temporaryDirectory = await mkdtemp(join(tmpdir(), 'art-liz-create-app-prerelease-'))
-  const packageDirectory = join(temporaryDirectory, 'create-app')
-  const projectDirectory = join(temporaryDirectory, 'prerelease-app')
-  const stableProjectDirectory = join(temporaryDirectory, 'stable-app')
+for (const { version, defaultTag } of [
+  { version: '0.3.0', defaultTag: 'latest' },
+  { version: '0.3.0-beta-20261011', defaultTag: 'beta' },
+  { version: '0.0.0-beta-20261019033628', defaultTag: 'beta' },
+  { version: '0.3.0-beta-recovery.20261019033628', defaultTag: 'beta' },
+]) {
+  test(`CLI ${version} defaults to ${defaultTag} and accepts a tag override`, async () => {
+    const temporaryDirectory = await mkdtemp(join(tmpdir(), 'art-liz-create-app-version-'))
+    const packageDirectory = join(temporaryDirectory, 'create-app')
+    const generator = join(packageDirectory, 'bin', 'create-app.js')
 
-  try {
-    await cp(packageRoot, packageDirectory, { recursive: true })
+    try {
+      await cp(packageRoot, packageDirectory, { recursive: true })
+      const packageManifestPath = join(packageDirectory, 'package.json')
+      const packageManifest = JSON.parse(await readFile(packageManifestPath, 'utf8'))
+      packageManifest.version = version
+      await writeFile(packageManifestPath, `${JSON.stringify(packageManifest, null, 2)}\n`)
 
-    const packageManifestPath = join(packageDirectory, 'package.json')
-    const packageManifest = JSON.parse(await readFile(packageManifestPath, 'utf8'))
-    packageManifest.version = '0.3.0-beta-20261011'
-    await writeFile(packageManifestPath, `${JSON.stringify(packageManifest, null, 2)}\n`)
-
-    const result = spawnSync(
-      process.execPath,
-      [
-        join(packageDirectory, 'bin', 'create-app.js'),
-        projectDirectory,
-        '--no-install',
-        '--no-git',
-      ],
-      { encoding: 'utf8' },
-    )
-
-    assert.equal(result.status, 0, result.stderr)
-
-    const manifest = JSON.parse(await readFile(join(projectDirectory, 'package.json'), 'utf8'))
-    assert.equal(manifest.dependencies['@art-liz/react'], 'beta')
-    assert.equal(manifest.dependencies['@art-liz/tokens'], 'beta')
-
-    const stableResult = spawnSync(
-      process.execPath,
-      [
-        join(packageDirectory, 'bin', 'create-app.js'),
-        stableProjectDirectory,
-        '--tag',
-        'latest',
-        '--no-install',
-        '--no-git',
-      ],
-      { encoding: 'utf8' },
-    )
-
-    assert.equal(stableResult.status, 0, stableResult.stderr)
-
-    const stableManifest = JSON.parse(
-      await readFile(join(stableProjectDirectory, 'package.json'), 'utf8'),
-    )
-    assert.equal(stableManifest.dependencies['@art-liz/react'], 'latest')
-    assert.equal(stableManifest.dependencies['@art-liz/tokens'], 'latest')
-  } finally {
-    await rm(temporaryDirectory, { force: true, recursive: true })
-  }
-})
+      const override = defaultTag === 'beta' ? 'latest' : 'beta'
+      for (const { directory, tag, options } of [
+        { directory: 'default-app', tag: defaultTag, options: [] },
+        { directory: 'override-app', tag: override, options: ['--tag', override] },
+      ]) {
+        const projectDirectory = join(temporaryDirectory, directory)
+        const result = spawnSync(
+          process.execPath,
+          [generator, projectDirectory, ...options, '--no-install', '--no-git'],
+          { encoding: 'utf8' },
+        )
+        assert.equal(result.status, 0, result.stderr)
+        const manifest = JSON.parse(await readFile(join(projectDirectory, 'package.json'), 'utf8'))
+        assert.equal(manifest.dependencies['@art-liz/react'], tag)
+        assert.equal(manifest.dependencies['@art-liz/tokens'], tag)
+      }
+    } finally {
+      await rm(temporaryDirectory, { force: true, recursive: true })
+    }
+  })
+}
 
 test('does not overwrite a non-empty destination', async () => {
   const temporaryDirectory = await mkdtemp(join(tmpdir(), 'art-liz-create-app-existing-'))

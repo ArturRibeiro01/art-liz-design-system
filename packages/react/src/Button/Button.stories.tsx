@@ -1,8 +1,6 @@
-import { ArrowRightIcon } from '@phosphor-icons/react/dist/csr/ArrowRight'
-import { CheckIcon } from '@phosphor-icons/react/dist/csr/Check'
-import { PlusIcon } from '@phosphor-icons/react/dist/csr/Plus'
-import { TrashIcon } from '@phosphor-icons/react/dist/csr/Trash'
+import * as Icons from '../Icons'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import type { ButtonIntent, ButtonProps, ButtonVariant } from './Button'
 import { Button } from './Button'
 
@@ -10,10 +8,10 @@ const intents: ButtonIntent[] = ['primary', 'danger', 'success', 'info', 'warnin
 const variants: ButtonVariant[] = ['primary', 'outline', 'ghost', 'link']
 const iconComponents = {
   None: null,
-  ArrowRight: ArrowRightIcon,
-  Check: CheckIcon,
-  Plus: PlusIcon,
-  Trash: TrashIcon,
+  ArrowRight: Icons.ArrowRightIcon,
+  Check: Icons.CheckIcon,
+  Plus: Icons.PlusIcon,
+  Trash: Icons.TrashIcon,
 } as const
 
 type ButtonIconName = keyof typeof iconComponents
@@ -52,7 +50,16 @@ export const ButtonDefault: Story = {
     children: 'Primary action',
     disabled: false,
     intent: 'primary',
+    onClick: fn(),
     variant: 'primary',
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button', { name: 'Primary action' })
+
+    await expect(button).toBeEnabled()
+    await userEvent.click(button)
+    await expect(args.onClick).toHaveBeenCalledTimes(1)
   },
 }
 
@@ -67,24 +74,22 @@ export const IntentMatrix: Story = {
       </div>
 
       {intents.map((intent) => (
-        <>
-          <section key={intent} style={{ display: 'grid', gap: 12 }}>
-            <strong>{intent}</strong>
-            <div
-              style={{
-                display: 'grid',
-                gap: 12,
-                gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
-              }}
-            >
-              {variants.map((variant) => (
-                <Button intent={intent} key={`${intent}-${variant}`} variant={variant}>
-                  {variant}
-                </Button>
-              ))}
-            </div>
-          </section>
-        </>
+        <section key={intent} style={{ display: 'grid', gap: 12 }}>
+          <strong>{intent}</strong>
+          <div
+            style={{
+              display: 'grid',
+              gap: 12,
+              gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
+            }}
+          >
+            {variants.map((variant) => (
+              <Button intent={intent} key={`${intent}-${variant}`} variant={variant}>
+                {variant}
+              </Button>
+            ))}
+          </div>
+        </section>
       ))}
     </div>
   ),

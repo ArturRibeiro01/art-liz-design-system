@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as TransferStories from './Transfer.stories'
+
+<Meta of={TransferStories} name="Documentação" />
+
+Componentes React
+
+# Transfer
+
+Transfer move itens entre uma lista de disponíveis e uma lista de selecionados. Use-o quando o usuário precisar montar uma seleção explícita a partir de um conjunto de opções.
+
+## Importação
+
+```tsx
+import { Transfer } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Transfer } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Transfer
+      label="Componentes do projeto"
+      name="components"
+      items={[
+        { id: 'button', label: 'Button' },
+        { id: 'input', label: 'Input' },
+        { id: 'checkbox', label: 'Checkbox' },
+      ]}
+      defaultTargetKeys={['input']}
+    />
+  )
+}
+```
+
+## Orientações
+
+Oferece busca, seleção dos itens visíveis e movimentação em lote. Itens disabled permanecem fixos. targetKeys/onTargetKeysChange permitem controle externo; name submete os IDs do destino presentes em items. Os IDs devem ser únicos.

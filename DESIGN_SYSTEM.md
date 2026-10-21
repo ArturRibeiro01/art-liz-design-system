@@ -14,16 +14,83 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Estilização:** Emotion (`@emotion/react` e `@emotion/styled`).
 - **Build:** Vite em modo de biblioteca para os pacotes e para aplicações.
 - **Testes:** Vitest, Testing Library e jsdom.
-- **Documentação visual:** Storybook com integração Vite.
-- **Ícones:** Phosphor Icons (`@phosphor-icons/react`) no catálogo e nas stories; componentes React recebem ícones via `ReactNode` e não acoplam consumidores à biblioteca.
+- **Documentação visual:** Storybook com integração Vite, docs, acessibilidade e testes de stories via Vitest em navegador.
+- **Ícones:** catálogo público `Icons` do DS, usado por componentes, stories e aplicações. A integração Phosphor fica restrita a `packages/react/src/Icons`; slots públicos continuam aceitando `ReactNode`.
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
 - **Task runner:** scripts npm e workspaces; Nx/Turborepo não são necessários para a escala atual.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
 - **GitFlow:** `develop` é a branch padrão/homologação; `main` representa produção. PRs para `main` só podem vir de `develop`; PRs para `develop` aceitam qualquer branch.
-- **Qualidade:** ESLint flat compartilhado com comando por workspace, Prettier, format-on-save no VS Code e Husky/lint-staged no pre-commit.
+- **Qualidade:** ESLint flat compartilhado com comando por workspace, Prettier, format-on-save no VS Code e Husky/lint-staged seguido de testes, lint, formatação e build no pre-commit.
 
 Essas decisões descrevem a base atual. Novas dependências devem ser adicionadas quando houver uma necessidade concreta de produto ou desenvolvimento.
+
+## Tela inicial do create-app
+
+O template consome todos os exports da biblioteca pelo pacote `@art-liz/react`; não precisa de registro nem cópia por componente. A tela inicial usa Container, Box, Text, Badge, AuditStatus, Steps, Tabs, Form, Input, Select, Switch, Message, Tag, Popover, Tooltip, Dialog, ButtonGroup, Button e Link. O diálogo cria um projeto demonstrativo em estado local, o formulário aplica preferências à demonstração e o contador usa Zustand com incremento/reset. A navegação continua com React Router, e o provider do TanStack Query permanece configurado.
+
+A apresentação está separada em `src/pages/HomePage.style.ts`, com tokens, layout responsivo e exemplos locais sem envio de dados. Os estilos próprios do template não alteram as APIs nem o tema global dos componentes. O template mantém dependências por tag (latest para CLI estável, beta para pré-release, com --tag como override). A nova tela deve ser distribuída junto da versão do pacote React que contém os novos exports; release:verify gera um projeto pelo tarball do CLI, instala os tarballs locais de React/tokens e executa typecheck, testes, lint e build. Nenhum pacote é publicado por essa verificação.
+
+Validação em 18/10/2026: gate completo com npm 11.6.2, incluindo 144 testes React, quatro testes do CLI, 95 stories e três testes do app gerado por tarball, lint, formatação, builds e renderização SSR dos ícones em consumidor limpo. A revisão no navegador verificou criação/validação/foco no diálogo, navegação e estado compartilhado, reset, preferências, marcadores, popover/tooltip e layout a 320/390px sem rolagem horizontal. Axe não apontou violações WCAG A/AA nas três abas da nova tela. Isso não substitui auditoria integral de navegadores ou acessibilidade.
+
+## Referência Figma e evolução dos componentes
+
+A referência visual consultada é o [arquivo Figma fornecido, aberto na página Steps](https://www.figma.com/design/ah40tGdCZ8OKiGMkTSB8JO/?node-id=4-1856), identificado visualmente como TapTap Design System. O [inventário e mapeamento](FIGMA_INVENTORY.md), registrado em 18/10/2026, lista as 50 páginas e distingue páginas catalogadas de componentes efetivamente inspecionados. O [snapshot estrutural](docs/figma-inventory.json) preserva IDs e propriedades para economizar futuras chamadas à integração.
+
+O pacote já contém 37 componentes, incluindo Button, Text, Box, Container, Input e Checkbox e a expansão em lote descrita abaixo. A primeira etapa de formulários usa os [contextos e capturas locais](docs/figma/README.md) de Input Basic (`11:7949`) e Checkbox (`10:2274`), extraídos por `get_design_context`. Radio, Switch e outras 20 famílias foram adicionados em uma expansão baseada nos tokens atuais, autorizada pela pessoa usuária; o ajuste visual dirigido dessas famílias ao Figma fica para depois. Os snapshots preservam a referência original; os componentes acrescentam comportamento nativo, composição de labels/mensagens e foco visível. A fonte continua configurável, sem impor PingFang SC aos consumidores.
+
+## Expansão da biblioteca em lote
+
+Em 18/10/2026, a pessoa usuária priorizou construir a maioria dos componentes com os tokens e padrões existentes, deixando o ajuste fino ao Figma para depois. A branch de trabalho passou a ser `feat/component-library-expansion`. Essa decisão substitui o requisito de extrair capturas completas antes de implementar cada nova família nesta expansão. Input e Checkbox conservam suas referências completas; os demais componentes não declaram paridade com as variantes Figma.
+
+Foram acrescentados Radio, Switch (correspondência de Toggle), Textarea, Select, Slider, Upload, Form, ButtonGroup, Link (correspondência de Anchor), Badge, Tag, Alert, Breadcrumb, Pagination, Tabs, Steps, Table, Dialog, Drawer, Popover, Dropdown e Tooltip. Essa primeira expansão cobriu uma base funcional para 25 das 34 famílias de componentes catalogadas, além das primitivas Text, Box e Container. As APIs e exemplos ficam em [COMPONENTS.md](COMPONENTS.md).
+
+- Campos usam HTML nativo, refs, labels, descrições e validação/participação em formulário do navegador. Select não é um combobox pesquisável; Upload seleciona arquivos locais e não envia dados. Form oferece composição visual sobre `form`, sem gerenciador de estado ou validação próprio.
+- Tabs tem seleção controlada/não controlada, IDs associados e foco móvel por setas/Home/End, ignorando abas desabilitadas. Pagination recebe `page`, `pageCount` e `onPageChange`, com faixa compacta de números. Breadcrumb, Steps e Table preservam semântica de listas, etapa atual, caption e cabeçalhos.
+- Dialog e Drawer usam `dialog.showModal()` para modalidade e restauração do acionador, complementado por contenção de Tab/Shift+Tab nas extremidades do diálogo. São controlados por `open`/`onClose`, fecham por Escape e opcionalmente pelo backdrop, e preservam o overflow anterior do body com contagem para sobreposições simultâneas.
+- Popover e Dropdown usam a Popover API nativa (`showPopover`/`hidePopover`) para camada superior, Escape e clique externo. O estado é interno e `onOpenChange` informa transições. Dropdown implementa setas, Home/End, busca por texto e saída por Tab; Tooltip aceita um acionador React que encaminhe `aria-describedby`, mostra em hover/foco e dispensa por Escape.
+- Essas sobreposições exigem navegadores com suporte às APIs nativas utilizadas; não foi adicionado polyfill ou promessa de suporte a navegadores legados. As novas cores de texto e foco usam tons com maior contraste dentro das escalas existentes; warning usa texto neutro escuro.
+- Implementação e estilos continuam separados, com helpers privados em `packages/react/src/internal`. React e Emotion permanecem peers. Na revisão posterior dos ícones, Phosphor passou a ser dependência de runtime, conforme a decisão registrada na seção Ícones.
+
+Todas as famílias têm stories com acessibilidade como erro de teste. Os controles e componentes de navegação/feedback têm testes de comportamento; os fluxos das sobreposições são verificados em Chromium real. A galeria de consumo fica em `apps/playground/src/ComponentGallery.tsx`. As capturas Figma originais continuam imutáveis.
+
+### Conclusão das famílias catalogadas
+
+Na mesma branch, a rodada seguinte acrescentou Cascader, DateTimePicker, Transfer, Chart, FilterItem, AuditStatus, Message, Popconfirm e Result. São nove implementações base pelos tokens existentes, com contratos e limites em [docs/remaining-component-scope.md](docs/remaining-component-scope.md). O pacote agora cobre uma base funcional para as 34 famílias do inventário, além das três primitivas; isso não representa cobertura de todas as variantes nem equivalência visual ao Figma.
+
+Cascader compõe Selects nativos e submete somente folhas válidas. Transfer compõe busca e checkboxes em duas listas e submete os IDs do destino. Ambos aceitam estado controlado/não controlado, grupos desabilitados e reset de formulário. DateTimePicker reutiliza Input para os tipos nativos date/time/datetime-local; o calendário depende do navegador. Chart oferece barras horizontais, valores negativos/zero, estado vazio e leitura textual. Popconfirm oferece confirmação não modal pela Popover API, foco inicial em Cancelar e retorno de foco nas ações. Message é feedback em fluxo sem fila/timer; AuditStatus e Result recebem significado e ícones do consumidor.
+
+Os exemplos desta rodada ficam em `apps/playground/src/RemainingComponentsGallery.tsx`. As capturas detalhadas do Figma ainda se limitam a Input e Checkbox; o restante exige consultas dirigidas antes dos ajustes visuais.
+
+## Movimento e novos controles de apresentação
+
+As superfícies de Alert, Dialog, Drawer, Popover, Popconfirm, Dropdown e Tooltip usam os tokens existentes de motion para entrada e saída. Dialog/Drawer usam slow (240ms); superfícies menores e conteúdo de Tabs usam normal (160ms); estados de campos, paginação, filtros, marcadores e Checkbox usam fast (120ms). Abertura usa entrance, fechamento usa exit e mudanças de estado usam standard. O painel do Drawer vem da direita por padrão; side="left" espelha o movimento. O backdrop continua cobrindo toda a viewport.
+
+Os helpers privados em packages/react/src/internal/motion.style.ts compartilham esses estilos. Nenhuma biblioteca de animação foi adicionada. As superfícies permanecem visualmente durante a saída usando @starting-style e transições discretas de display/overlay. Isso é um aprimoramento progressivo: sem suporte CSS, abrir/fechar continua funcional, mas a saída pode ser imediata. prefers-reduced-motion: reduce remove as transições e animações. Controles fechados ficam fora da árvore acessível e recebem inert durante a saída; Dialog e Popover mantêm suas APIs nativas e o contrato de foco. Para animar a saída, o consumidor deve manter o componente montado enquanto altera o estado.
+
+Alert agora aceita open (padrão true), com uma story de abrir/fechar via Button. Badge aceita size="small" | "medium" | "large", preservando a dimensão anterior em small. Tooltip aceita os seis intents semânticos, com neutral preservando o visual escuro anterior. FilterItem tem uma demonstração com filtros combinados que de fato alteram uma lista de projetos. As páginas Documentação desses componentes mostram as novas APIs.
+
+Validação em 18/10/2026: gate completo com npm 11.6.2 (147 testes React, quatro testes do CLI, 99 stories, três testes do app gerado, lint, formatação, builds, consumo dos tarballs e ambos os builds do Storybook). A revisão adicional em Chromium verificou entrada/saída real, overlay do Drawer, reabertura rápida, Escape, clique externo, foco, movimento reduzido, tamanhos do Badge e os exemplos a 320px. Axe não apontou violações nos seis intents do Tooltip. Essa revisão não representa uma matriz completa de navegadores ou leitores de tela.
+
+## Documentação no GitBook
+
+Decisão posterior em 20/10/2026: publicar primeiro o site de desenvolvimento com develop/beta, deixando produção para depois. A configuração do Style guide foi adiada por causa do período gratuito de 15 dias informado pela pessoa mantenedora; MCP e adoção de change requests também foram adiados. O guia editorial fica como referência Markdown. A pessoa mantenedora publicou a [documentação de desenvolvimento](https://arturs-organization-13.gitbook.io/art-liz-design-system/) em 20/10/2026. O agente confirmou HTTP 200 sem autenticação na página inicial e em três páginas internas; não consultou o SHA no painel nem realizou auditoria visual do site. Consulte GITBOOK.md para o procedimento.
+
+Estado em 20/10/2026: as PRs #49–#51 foram integradas a develop. A pessoa mantenedora confirmou o conteúdo atualizado após ressincronizar e autorizou encerrar as issues #37–#43; todas foram fechadas com evidências e limites. Essa aceitação manual substitui as pendências de aceite da entrega descritas historicamente abaixo, sem constituir auditoria autenticada do agente. A publicação de desenvolvimento foi confirmada posteriormente à captura inicial Not published. Canal estável/main e validação de atualização sem ressincronização continuam pendentes. O novo guia editorial em docs/gitbook/guia-editorial.md está preparado localmente para revisão e cadastro no Style guide; não configura o serviço automaticamente. O sumário local passa a ter 26 páginas.
+
+O trabalho foi planejado na [issue principal #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37), com seis tarefas vinculadas: estrutura/sincronização GitHub, instalação/create-app, fundamentos/acessibilidade, guias de componentes/receitas, diagramas Mermaid de arquitetura/fluxos e contribuição/versões/manutenção. O Storybook permanece o catálogo interativo; o GitBook organiza a documentação conceitual e de adoção, evitando duplicar a manutenção dos exemplos. As issues contêm escopo e critérios de aceite para a evolução desses guias.
+
+A implementação da estrutura da issue #38 começou em 19/10/2026: os guias ficam em `docs/gitbook/`, com `SUMMARY.md` e `.gitbook.yaml`. O arquivo `gitbook-docs.yaml` na mesma pasta configura Site Git Sync; na interface, o diretório de projeto é `docs/gitbook/` e o conteúdo do espaço é `./`, com chave estável `art-liz-docs`. A pessoa mantenedora confirmou a sincronização inicial do espaço **Documentação** com `develop` por captura, mostrando o commit `a32a4b90`, correspondente ao merge da PR #49. A política proposta mantém `main` como canal estável independente, ainda pendente de configuração. O Git Sync sincroniza o conteúdo após o merge, mas a atualização dos guias permanece parte da mudança de código. Busca, links e leitura responsiva não foram auditados pelo agente; atualização incremental e canal estável continuam pendentes de validação/configuração; o canal de desenvolvimento foi publicado posteriormente em 20/10/2026. Consulte [GITBOOK.md](GITBOOK.md) para o procedimento e o estado atual.
+
+A pessoa mantenedora confirmou em seguida que a prévia abriu e está funcional. A etapa da issue #39 acrescenta os guias de instalação/peers, opções do create-app, atualização de projetos, workspaces/dist/cache e um primeiro projeto com formulário, Icons e navegação. O roteiro fixa CLI beta `0.0.0-beta-20261019054917`, React `1.1.0` e tokens `0.2.0`, publicados no npm; o canal latest ainda tem CLI `0.2.1` e React `1.0.0` na consulta de 19/10/2026. Novos guias precisam de merge para serem sincronizados e de revisão da prévia atualizada.
+
+Validação do roteiro da issue #39 em consumidor temporário gerado pelo CLI publicado, sem vínculos aos workspaces: Node 24.12.0/npm 11.6.2, TypeScript e check:commit aprovados (cinco testes, lint, formatação e build). Os exemplos foram extraídos dos blocos do Markdown. A verificação não inclui revisão visual das páginas novas no GitBook; detalhes em GITBOOK.md.
+
+Os guias de adoção foram integrados pela PR #50 (bb9cad58). A etapa seguinte, issue #40, acrescenta seis páginas de fundamentos: tokens, cores/personalização, tipografia/layout, movimento/foco, Icons e acessibilidade/limites. As APIs documentadas foram conferidas no código atual, e os links de stories no índice publicado de homologação. O guia registra que cores e fonte têm variáveis CSS, enquanto o restante dos tokens é fixo e os componentes não leem um ThemeProvider global. Também documenta limites de contraste, navegador, temas e evidência Figma; não altera o runtime nem declara conformidade integral.
+
+Validação da issue #40 em 20/10/2026: sete snippets extraídos para consumidor temporário com os pacotes publicados (React 1.1.0/tokens 0.2.0), typecheck e check:commit aprovados, com nove testes, lint, formatação e build. Verificados também os links de stories e as 15 páginas únicas do sumário. A validação de CSS foi feita por SSR, sem auditoria visual do navegador ou da nova prévia do GitBook; os limites estão em GITBOOK.md.
+
+Na mesma branch, a pessoa usuária autorizou concluir o máximo possível das issues #41–#43. O portal preparado passa a ter 25 páginas: catálogo dos 37 componentes com links para API/stories, quatro receitas completas e contratos de estado/reset/limites, três diagramas Mermaid com imagens e alternativas textuais, arquitetura, GitFlow, releases e manutenção. O consumidor com os snippets publicados passou 11 testes, lint, formatação e build/TypeScript. Chromium verificou fluxos nativos de Dialog/Drawer/Popover, teclado/foco, reset, paginação/filtros, movimento reduzido e larguras 1280/390/320px. Axe encontrou duas ocorrências de contraste, registradas como pendência da paleta; não foi feita uma correção visual fora do escopo dos guias. Os diagramas foram renderizados com Mermaid 11.12.0 e inspecionados. Revisão completa de busca/navegação/layout e Mermaid no GitBook atualizado e canal estável permanecem pendentes; a publicação de desenvolvimento foi confirmada em 20/10/2026. Evidências e responsáveis estão em GITBOOK.md e manutencao.md.
 
 ## Estrutura do repositório
 
@@ -86,6 +153,16 @@ Contém componentes acessíveis e reutilizáveis para React. O pacote importa to
 
 Os componentes React ficam organizados em `packages/react/src/<Component>/`, com implementação, estilos, story e testes juntos. Cada pasta tem um `index.ts` e o `packages/react/src/index.ts` agrega a API pública do pacote.
 
+O componente `Input` usa um input HTML nativo com ref, atributos de formulário e modos controlado/não controlado. `label`, `helpText` e `error` são associados por IDs e `aria-describedby`, preservando descrições externas; `error` também ativa `aria-invalid`. `size` aceita `small` (24px, Caption), `medium` (36px, Body, padrão) e `large` (40px, Subtitle). Essas alturas seguem o Figma e diferem intencionalmente do Button existente. A largura acompanha o contêiner, e mensagens longas participam do fluxo normal.
+
+`clearable` habilita a ação de limpar em campos textuais editáveis, visível quando preenchidos e com foco no controle. O botão participa do teclado, possui nome acessível por `clearLabel` e devolve foco ao input. Em modo não controlado, limpa o valor nativo; no controlado, o consumidor atualiza `value` em `onClear`. A limpeza chama `onClear` e não sintetiza eventos `onChange`; estes continuam correspondendo à edição nativa. Reset de formulário permanece nativo. Tipos não textuais, `readOnly` e `disabled` não expõem essa ação.
+
+O componente `Checkbox` usa input `type="checkbox"`, ref nativa, `checked`/`defaultChecked`, `name`, `value`, `required`, `disabled` e label associado. `indeterminate` aplica a propriedade DOM: o indicador é um quadrado de 8px dentro da caixa de 16px, conforme o Figma. A ativação nativa resolve a seleção parcial; grupos controlados devem recalcular `indeterminate` a partir dos itens selecionados. Sem label visível, o consumidor precisa fornecer nome acessível externo. Textos longos quebram com a caixa alinhada à primeira linha; cores forçadas usam a aparência nativa do navegador.
+
+Os SVGs originais de check e limpar ficam no pacote React, são usados como máscaras nas dimensões dos respectivos slots e são incorporados pelo build, sem URLs temporárias. Esses dois controles preservam os assets da referência; os outros símbolos internos usam Phosphor. Cores vêm dos tokens atuais. O foco por teclado acrescenta o anel existente de `focus`, inclusive em estados sem desenho de foco na referência. Os snapshots em `docs/figma/` e os SVGs originais ficam fora do Prettier para preservar bytes, hashes e proveniência.
+
+A mensagem de erro de Input usa `danger.800` para corrigir o contraste insuficiente de `danger.600` no texto de 12/14px da referência; a borda de erro mantém `danger.600`. A paleta de bordas e placeholders e o anel global de foco continuam seguindo os tokens existentes e precisam de revisão de contraste não textual antes de declarar conformidade integral de acessibilidade.
+
 O componente `Box` é um contêiner `div` com padding por tokens de espaçamento e opções de fundo, raio e sombra. Cada opção visual é independente e opcional; atributos nativos de `div` e `children` são encaminhados ao elemento.
 
 O componente `Container` centraliza conteúdo com largura fluida e gutters horizontais de `spacing[4]` por padrão. A prop `maxWidth` escolhe um limite baseado nos breakpoints `sm`, `md`, `lg` e `xl`, ou `full` para ocupar toda a largura disponível; o padrão é `xl`. `background` aceita tokens escalares (`white`, `black`, `paper` etc.) e tokens de escala no formato `primary.600`; `padding` e `margin` aceitam valores da escala `spacing`, e `margin` também aceita `auto` (padrão centralizado). Use `Container` para limitar a largura da página e `Box` para compor superfícies dentro dele.
@@ -98,11 +175,13 @@ Fontes: `packages/react/src/` e `packages/react/package.json`.
 
 ### Baseline de acessibilidade e validação
 
-Componentes interativos usam elementos HTML nativos, labels explícitos para campos, nomes acessíveis para ações sem texto e foco visível pelos tokens de `focus`. Estados `disabled`, `required` e `readOnly` preservam a semântica nativa. Testes usam Testing Library e `user-event` para nomes acessíveis, ordem de Tab e ativação de botões por Enter/Espaço. jsdom valida comportamento e semântica, mas não renderiza o indicador visual de pseudo-classe; confirme o anel de foco em navegador no Storybook. O projeto ainda não inclui axe ou execução de navegador headless; contraste e aparência de foco permanecem verificações manuais até haver ferramenta e CI de navegador configurados.
+Componentes interativos usam elementos HTML nativos, labels explícitos para campos, nomes acessíveis para ações sem texto e foco visível pelos tokens de `focus`. Estados `disabled`, `required` e `readOnly` preservam a semântica nativa. Testes usam Testing Library e `user-event` para nomes acessíveis, ordem de Tab e ativação de botões por Enter/Espaço. jsdom valida comportamento e semântica, e o Storybook complementa essa cobertura com `@storybook/addon-a11y` e testes de stories via `@storybook/addon-vitest` em Chromium headless. Contraste, aparência de foco e regressão visual continuam exigindo revisão humana até haver critérios formais e testes visuais dedicados.
 
 ### `@art-liz/storybook`
 
 Aplicação privada de desenvolvimento que reúne stories dos pacotes. As stories ficam junto dos componentes para facilitar a manutenção e o Storybook as descobre pela configuração em `apps/storybook/.storybook/main.ts`.
+
+Cada um dos 37 componentes públicos do React possui também uma página `Component.mdx` junto da implementação e das stories. A página se vincula ao módulo de stories com `Meta of` e aparece como **Documentação**, com o ícone de documento, dentro do grupo do componente. Ela explica finalidade, importação de `@art-liz/react`, exemplo completo de uso e orientações específicas. Os exemplos incluem os imports e o estado necessários para copiar e adaptar. A configuração descobre `packages/react/src/**/*.mdx`; mantenha essa documentação ao criar componentes ou alterar suas APIs.
 
 ### `@art-liz/playground`
 
@@ -110,11 +189,13 @@ Aplicação Vite privada usada para testar o pacote React em um consumidor real,
 
 ## Ícones
 
-Phosphor Icons (`@phosphor-icons/react`, licença MIT) é a biblioteca adotada para o catálogo visual e os exemplos do design system. É dependência de runtime de `apps/storybook` e dependência de desenvolvimento de `packages/react` para as stories co-localizadas; o pacote público `@art-liz/react` permanece agnóstico em runtime e recebe ícones como `ReactNode` por `startIcon`/`endIcon`.
+Phosphor Icons (`@phosphor-icons/react`, licença MIT) é a biblioteca adotada para o catálogo visual, exemplos e símbolos internos do design system. Em 18/10/2026, a pessoa usuária pediu substituir caracteres usados como ícones pela biblioteca. Por isso Phosphor passou a ser dependência de runtime de `packages/react`, também utilizada pelo Storybook e pelo template. A revisão seguinte centralizou a integração em `packages/react/src/Icons`. Somente essa pasta importa o fornecedor por subpaths, externos no build da biblioteca. Componentes internos usam `import * as Icons from '../Icons'`; consumidores usam `import { Icons } from '@art-liz/react'`. ESLint impede imports diretos de Phosphor fora da camada central. Os slots `startIcon`/`endIcon` e demais slots públicos continuam aceitando qualquer `ReactNode`.
 
-O catálogo `Foundations/Icons` importa ícones por subpath para reduzir o trabalho do Vite e mostra um ícone por vez. Seus controles selecionam o nome do ícone, o tamanho pela escala `typography.fontSizes` (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`), peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`) e origem da cor: paleta semântica do DS ou HEX customizado para casos especiais. O line-height do preview acompanha o tamanho selecionado. Phosphor usa `currentColor` por padrão, então ícones nos botões acompanham a cor do texto; `size="1em"` mantém alinhamento com a tipografia do botão.
+Alert, Message, Tag e Dialog (também usado por Drawer) usam Icons.XIcon nas ações de fechar/remover, com os nomes acessíveis preservados e SVGs decorativos. Steps usa Icons.CheckIcon/Icons.WarningIcon; Breadcrumb usa Icons.CaretRightIcon, e Pagination usa Icons.DotsThreeIcon. Números de etapas e páginas continuam sendo dados textuais. Input e Checkbox preservam os SVGs da referência Figma, acessados internamente por Icons/assets sem modificar bytes, máscaras ou dimensões.
 
-Ícones decorativos nos slots do Button recebem `aria-hidden`. Um Button sem conteúdo textual precisa de nome acessível por `aria-label` ou `aria-labelledby`. Evite controles Storybook para elementos React: crie o JSX da story no `render`, pois Controls serializam args.
+O catálogo `Foundations/Icons` usa o namespace público Icons do DS e mostra um ícone por vez. Sua página Documentação demonstra a importação e os slots de Button. O catálogo público preserva os nomes existentes e também inclui os ícones usados no template. Seus controles selecionam o nome do ícone, o tamanho pela escala `typography.fontSizes` (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`), peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`) e origem da cor: paleta semântica do DS ou HEX customizado para casos especiais. O line-height do preview acompanha o tamanho selecionado. Phosphor usa `currentColor` por padrão, então ícones nos botões acompanham a cor do texto; `size="1em"` mantém alinhamento com a tipografia do botão.
+
+Button não importa uma biblioteca de ícones: recebe ReactNode em startIcon/endIcon. Os exemplos usam `<Icons.PlusIcon />` nesses slots. Ícones decorativos nos slots do Button recebem `aria-hidden`. Um Button sem conteúdo textual precisa de nome acessível por `aria-label` ou `aria-labelledby`. Evite controles Storybook para elementos React: crie o JSX da story no `render`, pois Controls serializam args.
 
 ## Instalação e desenvolvimento
 
@@ -154,27 +235,33 @@ Componentes compartilhados devem evitar decisões específicas de um único sist
 
 ```sh
 npm test
+npm run test:storybook
 npm run lint
 npm run format
 npm run format:check
 npm run build
+npm run check:commit
 npm run ci
 ```
 
 - `npm test` compila tokens e executa os testes Vitest do pacote React.
+- `npm run test:storybook` compila tokens e React antes de executar as stories como testes de componente em browser mode com Vitest e Playwright.
 - `npm run lint` executa ESLint em cada workspace e valida sintaxe do script shell.
 - `npm run format` aplica Prettier; `npm run format:check` verifica o padrão sem modificar arquivos.
 - `npm run build` compila tokens, empacota o React e compila o playground.
+- `npm run check:commit` executa testes dos pacotes, stories do Storybook, lint, format:check e build, interrompendo na primeira falha.
 
-Os pacotes React e tokens são compilados antes do Storybook para que os workspaces consumam seus artefatos `dist`.
+Os pacotes React e tokens são compilados antes do servidor e dos testes do Storybook para que os workspaces consumam seus artefatos `dist`. O script test:storybook faz essa preparação explicitamente, inclusive quando chamado sozinho. O catálogo de ícones usa o export público de @art-liz/react e a configuração de testes pré-otimiza esse pacote para evitar recargas durante a execução. O CI não pode depender de builds ou caches locais anteriores. A falha do Quality gates na PR #44 revelou essa preparação ausente; os erros de importação e acessibilidade no overlay do Vite eram consequências de dist ainda não existir. A falha foi reproduzida em uma cópia limpa e a correção passou no npm run ci completo, com Node 24.12.0 e npm 11.6.2, sem dist ou cache Vite anteriores: 147 testes React, 99 stories, quatro testes do CLI, três testes do app gerado, lint, formatação, builds e validação dos tarballs.
 
-`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
+`npm run ci` reúne os gates locais que o workflow do GitHub executa: testes de pacote, testes do Storybook, lint, formatação, build integrado e builds do Storybook para homologação e produção. O check reportado pelo workflow chama-se `Quality gates`.
 
-O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. Husky/lint-staged executa ESLint autofix e Prettier somente nos arquivos staged durante o pre-commit. Não há pre-push: a validação completa é feita pelo CI obrigatório em PRs.
+O VS Code aplica Prettier ao salvar arquivos cobertos por `.vscode/settings.json` e recomenda as extensões Prettier e ESLint. O pre-commit executa lint-staged para corrigir os arquivos staged e, se passar, npm run check:commit para validar testes dos pacotes, stories do Storybook, lint, formatação e build. Qualquer falha bloqueia o commit. O template do create-app também executa lint-staged seguido de check:commit, com testes, lint, formatação e build do app. A validação dos tarballs executa esse mesmo comando no projeto gerado.
+
+Os checks verificam o diretório de trabalho atual; alterações parcialmente staged podem produzir conteúdo diferente no commit. Os commits passam a levar o tempo necessário para rodar essas verificações. Chromium deve estar instalado para as stories, conforme as instruções acima. Não há pre-push: o CI obrigatório em PRs continua executando também a validação dos tarballs e os builds estáticos do Storybook.
 
 ## Ícones
 
-O Storybook mantém um catálogo de ícones Phosphor em `Foundations/Icons`, com controles para cor, tamanho e peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`). As stories importam ícones por subpath para não carregar o barrel completo. `@art-liz/react` declara Phosphor como dependência de desenvolvimento para compilar suas stories; consumidores passam seus próprios componentes de ícone pelos slots genéricos `startIcon` e `endIcon`, sem dependência de Phosphor em runtime.
+O Storybook mantém um catálogo de ícones Phosphor em `Foundations/Icons`, com controles para cor, tamanho e peso (`thin`, `light`, `regular`, `bold`, `fill`, `duotone`). As stories usam o catálogo Icons de @art-liz/react; somente a camada central importa os ícones por subpath. `@art-liz/react` declara Phosphor como dependência de runtime para seus símbolos internos; consumidores também podem passar componentes de ícone pelos slots genéricos `startIcon` e `endIcon`.
 
 ## Trabalho com Codex
 
@@ -208,6 +295,14 @@ Saídas:
 
 Os comandos produzem o Storybook estático para publicação em destinos de hospedagem distintos. Ambos usam a mesma configuração e as mesmas stories; a separação é de artefato/destino, não de conteúdo.
 
+As stories são testadas localmente e no CI com:
+
+```sh
+npm run test:storybook
+```
+
+Esse comando usa `vitest.storybook.config.ts`, `@storybook/addon-vitest` e Playwright/Chromium. Em uma máquina nova, instale o navegador do Playwright uma vez com `npx playwright install chromium`; no GitHub Actions o workflow de CI faz essa instalação antes de executar os gates.
+
 O workflow `.github/workflows/deploy-storybook.yml` publica o Storybook no GitHub Pages quando há push em `develop` ou `main` com alterações em `packages/**`, `apps/storybook/**`, `package.json`, `package-lock.json` ou no próprio workflow. Ele também pode ser executado manualmente por `workflow_dispatch`. O site raiz esperado é:
 
 ```text
@@ -219,7 +314,7 @@ Rotas publicadas:
 - Homologação: `/homolog/`, compilada a partir da branch `develop`.
 - Produção: `/prod/`, compilada a partir da branch `main`.
 
-Para o primeiro deploy, configure no GitHub a fonte do Pages em Settings → Pages → Build and deployment → Source → GitHub Actions. O workflow usa as actions oficiais de Pages, com `pages: write` e `id-token: write`, sem `NPM_TOKEN` ou segredo adicional. Como cada deploy do GitHub Pages substitui o artefato publicado, o workflow sempre faz checkout de `develop` e `main`, recompila os dois destinos e publica ambos no mesmo artefato.
+O Pages do repositório usa a fonte `GitHub Actions`. O workflow usa as actions oficiais de Pages, com `pages: write` e `id-token: write`, sem `NPM_TOKEN` ou segredo adicional. Como cada deploy do GitHub Pages substitui o artefato publicado, o workflow sempre faz checkout de `develop` e `main`, recompila os dois destinos e publica ambos no mesmo artefato.
 
 ## Publicação npm
 
@@ -229,31 +324,29 @@ Os pacotes destinados à publicação são:
 - `@art-liz/react`
 - `@art-liz/create-app`
 
-Os três pacotes declaram acesso público. É necessário ter uma conta npm autenticada e permissão para publicar no escopo `@art-liz`. Nenhuma publicação é feita automaticamente até a primeira publicação estável dos três pacotes, a configuração dos Trusted Publishers no npm e a ativação da variável de repositório `NPM_RELEASES_ENABLED=true`.
+Os três pacotes declaram acesso público. A publicação automatizada usa Trusted Publishing/OIDC, sem `NPM_TOKEN`, e depende da variável de repositório `NPM_RELEASES_ENABLED=true` e dos environments `npm-beta` e `npm-production`.
 
-Antes de habilitar os workflows, valide os tarballs em instalação limpa:
+Antes de publicar uma mudança, valide os tarballs em instalação limpa:
 
 ```sh
 npm run release:verify
 ```
 
-Como o escopo npm ainda não foi inicializado, a primeira publicação estável é manual e só deve ocorrer depois dessa validação. Publique `tokens`, depois `react` e por fim `create-app`:
-
-```sh
-npm publish --workspace @art-liz/tokens --access public
-npm publish --workspace @art-liz/react --access public
-npm publish --workspace @art-liz/create-app --access public
-```
-
-Em seguida, configure cada pacote no npm para Trusted Publishing com os workflows `publish-beta.yml`/ambiente `npm-beta` e `publish-stable.yml`/ambiente `npm-production`. O publisher precisa permitir `npm publish`; a primeira publicação de cada configuração confiável deve acontecer em até dois dias após criá-la.
+Cada pacote no npm tem Trusted Publishers para os workflows `publish-beta.yml`/ambiente `npm-beta` e `publish-stable.yml`/ambiente `npm-production`. O publisher beta permite `npm publish`; o publisher estável permite `npm publish` e `npm dist-tag`.
 
 ## Releases automatizados
 
-Cada mudança publicável recebe um Changeset. O workflow `changesets-version.yml` abre/atualiza uma PR de versionamento em `develop`. O workflow `publish-beta.yml` usa `@changesets/read` para confirmar que há arquivos de changeset pendentes com releases para `@art-liz/tokens`, `@art-liz/react` ou `@art-liz/create-app`; quando há releases, cria snapshots com `changeset version --snapshot beta` e publica `0.0.0-beta-*` na dist-tag `beta`. As versões snapshot não são commitadas. Como a checagem usa o parser do Changesets e não compara diffs com `develop`, `README.md`, changesets vazios, detalhes válidos de YAML e Release PRs já versionadas não disparam publicações indevidas nem pulam releases válidos. Em recuperação manual, `workflow_dispatch` aceita `publish-current=true` para publicar snapshots pré-release das versões atuais ainda inexistentes no npm quando os changesets já foram consumidos; esse caminho não move dist-tags de versões que já existem, para preservar a permissão limitada do ambiente `npm-beta`. A promoção aprovada de `develop` para `main` aciona `publish-stable.yml`, que publica as versões estáveis com a dist-tag `latest` após aprovação no environment protegido `npm-production`.
+Cada mudança publicável recebe um Changeset. O workflow `changesets-version.yml` abre/atualiza uma PR de versionamento em `develop`. O workflow `publish-beta.yml` usa `@changesets/read` para confirmar que há arquivos de changeset pendentes com releases para `@art-liz/tokens`, `@art-liz/react` ou `@art-liz/create-app`; quando há releases, cria snapshots com `changeset version --snapshot beta` e publica `0.0.0-beta-*` na dist-tag `beta`. As versões snapshot não são commitadas. Como a checagem usa o parser do Changesets e não compara diffs com `develop`, `README.md`, changesets vazios, detalhes válidos de YAML e Release PRs já versionadas não disparam publicações indevidas nem pulam releases válidos. Em recuperação manual, `workflow_dispatch` aceita `publish-current=true` para publicar snapshots pré-release das versões atuais ainda inexistentes no npm quando os changesets já foram consumidos; esse caminho não move dist-tags de versões que já existem, para preservar a permissão limitada do ambiente `npm-beta`. A promoção explícita de `develop` para `main`, pelos checks obrigatórios da PR, aciona `publish-stable.yml` quando o gatilho for elegível; o job publica as versões estáveis e promove `latest` no environment `npm-production`.
 
-Configure no GitHub o environment `npm-beta` e o environment `npm-production` com required reviewers. Mantenha `NPM_RELEASES_ENABLED` ausente/falso até concluir a publicação inicial e cadastrar os Trusted Publishers. Para a action de versionamento criar PRs, habilite em Settings → Actions → General a opção que permite ao GitHub Actions criar PRs. PRs criadas com `GITHUB_TOKEN` podem não iniciar outros workflows automaticamente; nesse caso, rode `Quality gates` pelo `workflow_dispatch` ou configure um GitHub App token.
+Na consulta ao GitHub em 20/10/2026, `npm-beta` não tinha regras de proteção e `npm-production` tinha política de branches, sem required reviewers. Não descrever uma aprovação humana no environment como um requisito já ativo; essa configuração exige decisão explícita da pessoa mantenedora. Mantenha `NPM_RELEASES_ENABLED` ausente/falso até concluir a publicação inicial e cadastrar os Trusted Publishers. Para a action de versionamento criar PRs, habilite em Settings → Actions → General a opção que permite ao GitHub Actions criar PRs. O workflow de versionamento usa scripts/release-automerge.mjs para validar a PR do bot e mesclar com squash somente depois dos checks obrigatórios. Quando os checks do SHA atual ainda não passaram, ele dispara ci.yml e pr-branch-policy.yml por workflow_dispatch na branch changeset-release/develop e aguarda os resultados. Essa execução explícita evita depender da aprovação manual dos workflows de PRs criadas com GITHUB_TOKEN. O job de versionamento tem actions: write para dispatch e checks: read para consultar os resultados. A política de origem resolve a PR real da branch e confere seu SHA antes de avaliar o destino.
 
-Não configure `NPM_TOKEN`: os jobs de publicação usam OIDC e limitam `id-token: write` ao job que publica. O workflow beta publica `tokens`/`react`/`create-app`; o workflow estável usa os manifests versionados pela PR de Changesets e publica na ordem declarada pelas dependências. O stable mantém `npm@11.6.2` para instalação e CI, mas atualiza para `npm@11.21.0` antes de executar `npm dist-tag add`, porque dist-tags via OIDC exigem npm 11.21.0+ e permissão `Allow npm dist-tag` no Trusted Publisher de produção. A issue #6 permanece aberta até confirmar acesso ao escopo e concluir a primeira instalação a partir do registry.
+O merge automático é restrito a PRs abertas, fora de draft, de github-actions[bot], com origem exata changeset-release/develop e destino develop no mesmo repositório. O diff deve conter apenas manifests, changelogs, lockfile e remoção de changesets, com pelo menos um manifest de pacote atualizado. O script aguarda os gates e usa --match-head-commit no merge imediato, após conferir novamente a PR, para impedir que commits posteriores sejam mesclados sem validação. Os gates Quality gates e Allowed source branch continuam obrigatórios, incluindo atualização com a base. Reviews obrigatórias já estavam em zero; não foi criada exceção de ruleset ou bypass. Outras PRs e a promoção develop → main continuam fora desta automação.
+
+Merges feitos pela automação com GITHUB_TOKEN podem não disparar workflows baseados em push. Essas PRs só consolidam versões e changelogs: os checks são executados no próprio head da PR e o beta da alteração funcional já é disparado pelo push original em develop. A publicação stable continua acontecendo na promoção explícita para main. Veja a [documentação de gatilhos do GitHub](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
+
+Não configure `NPM_TOKEN`: os jobs de publicação usam OIDC e limitam `id-token: write` ao job que publica. O workflow beta publica `tokens`/`react`/`create-app`; o workflow estável usa os manifests versionados pela PR de Changesets e publica na ordem declarada pelas dependências. O stable mantém `npm@11.6.2` para instalação e CI, mas atualiza para `npm@11.21.0` antes de executar `npm dist-tag add`, porque dist-tags via OIDC exigem npm 11.21.0+ e permissão `Allow npm dist-tag` no Trusted Publisher de produção.
+
+Os workflows beta e stable instalam Chromium/Playwright antes de executar o gate completo. No beta, os testes rodam após aplicar changeset version --snapshot beta; por isso a suíte do create-app verifica stable, pré-release, snapshot e recuperação em cópias isoladas com versões explícitas, incluindo o padrão de tag e sua sobrescrita. O teste de cópia completa do template solicita --tag latest explicitamente. Isso preserva o comportamento do CLI: versões estáveis geram dependências latest; pré-releases geram beta por padrão. Em 19/10/2026, a falha beta foi reproduzida em cópia isolada após changeset version --snapshot beta. Com a correção, o npm run ci completo passou nesse cenário com Node 24.12.0 e npm 11.6.2: 147 testes React, sete testes CLI, 99 stories, três testes do app gerado, lint, formatação, consumo dos tarballs e builds do Storybook. As versões dos manifests de trabalho permanecem estáveis; o snapshot foi aplicado somente à cópia de validação.
 
 O beta usa snapshots efêmeros (`0.0.0-beta-*`) e dist-tag `beta`; stable publica versões sem snapshot como `latest`. Para interromper releases automáticos, remova ou desative a variável `NPM_RELEASES_ENABLED`. Um snapshot beta problemático é substituído por outro; uma versão stable é corrigida com novo Changeset patch e promoção aprovada para `main`.
 
@@ -280,19 +373,114 @@ Esse passo limpa a otimização/cache de dependências do processo de desenvolvi
 
 ## UI Kits futuros
 
-UI Kits específicos devem ser adicionados como pacotes independentes em `packages/`, com nome e escopo consistentes, por exemplo `@art-liz/ui-kit-nome-do-projeto`. Um kit pode depender de tokens e componentes base, acrescentando composições, regras ou identidade próprias do sistema correspondente.
+UI Kits específicos devem ser adicionados apenas quando existir um produto consumidor real com componentes, composições ou decisões visuais que não pertençam ao núcleo compartilhado. Não crie pacote de demonstração, pacote vazio ou kit preventivo sem demanda concreta.
 
-Antes de criar um UI Kit, confirme que existe um conjunto real de componentes ou decisões que não pertence ao núcleo. Isso evita criar pacotes vazios e evita acoplar requisitos de um sistema aos consumidores dos demais.
+Use esta fronteira:
+
+- Núcleo (`@art-liz/tokens` e `@art-liz/react`): tokens, primitivas e componentes genéricos que servem a mais de um sistema. Exemplos: `Button`, `Text`, `Box`, `Container`, escala de cores, tipografia e foco.
+- UI Kit específico: composições, variações, regras de negócio visual ou identidade de um produto. Exemplos: `CitizenPortalHeader`, `InvoiceStatusBadge`, `AdminSidebar`, cards com copy/layout de um domínio ou tema visual exclusivo de um sistema.
+- Aplicação consumidora: fluxos, páginas, integração com API, permissões e estados que não precisam ser publicados para outros projetos.
+
+Crie um UI Kit quando pelo menos uma destas condições for verdadeira:
+
+- Dois ou mais componentes específicos do produto precisam ser reutilizados em mais de uma aplicação do mesmo domínio.
+- O produto tem identidade visual própria que não deve alterar o núcleo para todos os consumidores.
+- As composições usam componentes do núcleo, mas adicionam convenções de navegação, cards, headers, tabelas ou badges do domínio.
+- Manter a regra no app duplicaria código ou misturaria decisões de produto com o pacote compartilhado.
+
+Não crie um UI Kit quando a necessidade puder ser resolvida com props existentes, tokens configuráveis, CSS custom properties no app, ou quando houver apenas uma tela isolada sem reutilização prevista.
+
+### Convenções de pacote
+
+Um kit deve ser um workspace independente em `packages/`, com nome de diretório descritivo e estável:
+
+```text
+packages/ui-kit-nome-do-projeto/
+```
+
+O pacote npm deve usar o escopo `@art-liz`, por exemplo:
+
+```json
+{
+  "name": "@art-liz/ui-kit-nome-do-projeto",
+  "private": false,
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
+```
+
+Use `src/index.ts` como ponto público e exporte somente APIs intencionais. Evite exports profundos por componente enquanto não houver necessidade real, para preservar liberdade de reorganizar a estrutura interna.
+
+### Dependências
+
+Um UI Kit pode depender de `@art-liz/react` e `@art-liz/tokens` quando compõe componentes ou lê tokens diretamente. Mantenha `react`, `react-dom`, `@emotion/react` e `@emotion/styled` como `peerDependencies`, seguindo a estratégia do pacote React para evitar cópias duplicadas no consumidor.
+
+Não copie tokens ou componentes do núcleo para dentro do kit. O kit deve importar do núcleo e acrescentar somente a camada específica do produto. O núcleo não deve importar o kit em nenhuma hipótese; essa regra evita dependência circular e mantém o design system base reutilizável.
+
+### Implementação, stories e testes
+
+A estrutura deve seguir o padrão dos componentes do pacote React:
+
+```text
+packages/ui-kit-nome-do-projeto/src/
+  Component/
+    Component.tsx
+    Component.style.ts
+    Component.stories.tsx
+    Component.test.tsx
+    index.ts
+  index.ts
+```
+
+Separe API/comportamento em `Component.tsx` e estilos Emotion em `Component.style.ts`. Quando o estilo precisar de tipos do componente, use `import type`.
+
+Cada componente publicado pelo kit deve ter:
+
+- export público em `src/index.ts`;
+- story no Storybook, em grupo próprio do produto;
+- teste para comportamento observável e nomes acessíveis;
+- cobertura de estados relevantes para o domínio, como vazio, carregando, erro, permissões ou status.
+
+O Storybook deve carregar as stories do kit pelo glob de `apps/storybook/.storybook/main.ts`. Se o kit introduzir dependências visuais específicas, elas devem ficar no próprio kit ou no app Storybook conforme o uso, sem virar dependência runtime de `@art-liz/react`.
+
+### Versionamento e publicação
+
+Um UI Kit deve ter versionamento independente por Changesets. Uma mudança que afete apenas o kit recebe changeset apenas para o pacote do kit; mudanças que exigem nova API no núcleo recebem changesets separados para o núcleo e para o kit.
+
+O fluxo de publicação é o mesmo dos pacotes existentes:
+
+- beta a partir de `develop`, usando a dist-tag `beta`;
+- stable a partir de `main`, promovendo `latest` após aprovação;
+- Trusted Publishers cadastrados no npm para `publish-beta.yml`/`npm-beta` e `publish-stable.yml`/`npm-production`;
+- tarball validado por build, testes, lint e `release:verify` quando o script passar a cobrir o novo pacote.
+
+Antes de publicar o primeiro UI Kit, atualize os scripts de build, teste, release verification e Storybook para incluir o novo workspace. Registre no changeset se o kit depende de versões mínimas de `@art-liz/react` ou `@art-liz/tokens`.
+
+### Template
+
+O `@art-liz/create-app` não deve incluir UI Kits específicos por padrão. Avalie uma opção de template, flag ou preset somente quando existir um primeiro produto real usando o kit e houver benefício claro em automatizar essa instalação.
 
 ## Agentes e automação
 
-Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI, rulesets GitFlow e deploy do Storybook no GitHub Pages já estão configurados; publicação npm automatizada ainda depende da manutenção dos environments e dos Trusted Publishers.
+Agentes especializados não são necessários para a fase atual. Codex e outros agentes devem usar o contexto em `AGENTS.md` e seguir a separação por pacote. CI, rulesets GitFlow, deploy do Storybook no GitHub Pages e publicação npm automatizada já estão configurados; os environments e Trusted Publishers precisam ser mantidos quando houver mudanças nos workflows ou nos pacotes.
 
 ## Itens ainda em aberto
 
+- Observar uma atualização incremental do GitBook de desenvolvimento sem ressincronização; publicação e URL pública já confirmadas em 20/10/2026. Configurar o canal estável depois, alinhando os guias a main/latest. A entrega #37–#43 foi encerrada com aceite manual. Style guide, MCP e adoção de change requests estão adiados por decisão da pessoa mantenedora.
+
+- Ajustar visualmente ao Figma as 31 famílias acrescentadas nas duas expansões e auditar Button; as APIs básicas das 34 famílias catalogadas já existem. Consultar variantes detalhadas antes de ampliar os escopos iniciais, especialmente Cascader, DateTimePicker, Transfer e Chart (limites em docs/remaining-component-scope.md).
 - Definir escalas completas de tipografia, cores, espaçamento e elevação.
 - Definir temas e estratégia para modo claro/escuro, se os produtos precisarem.
 - Estabelecer critérios de acessibilidade e compatibilidade de navegadores para os componentes.
-- Ampliar cobertura de testes e validação dos artefatos npm.
-- Confirmar o primeiro deploy do Storybook no GitHub Pages e registrar a URL final publicada.
-- Confirmar disponibilidade e controle do escopo `@art-liz` no npm antes da primeira publicação.
+- Ampliar cobertura de testes de componentes e validação visual.

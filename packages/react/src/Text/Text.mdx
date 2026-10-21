@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as TextStories from './Text.stories'
+
+<Meta of={TextStories} name="Documentação" />
+
+Componentes React
+
+# Text
+
+Text aplica a tipografia da biblioteca a títulos, parágrafos e trechos de texto. Use variant para definir a aparência e as para escolher o elemento HTML adequado ao conteúdo.
+
+## Importação
+
+```tsx
+import { Text } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Text } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <>
+      <Text as="h1" variant="h1" weight="medium">
+        Minha conta
+      </Text>
+      <Text variant="body" color="neutral.700">
+        Atualize suas informações de contato.
+      </Text>
+    </>
+  )
+}
+```
+
+## Orientações
+
+variant aceita h1, h2, h3, title, subtitle, body e caption. A aparência não altera automaticamente a semântica: um título precisa de as="h1", as="h2" ou outro nível apropriado.

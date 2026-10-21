@@ -1,5 +1,18 @@
 # @art-liz/create-app
 
+## 0.3.1
+
+### Patch Changes
+
+- 26531af: Adiciona validação de testes, lint, formatação e build ao pré-commit dos projetos gerados. O hook preserva o lint-staged e executa check:commit, interrompendo o commit quando uma etapa falha.
+
+## 0.3.0
+
+### Minor Changes
+
+- 8c45d57: uploaded library
+- 6805cac: Renova a tela inicial do template com componentes atuais da biblioteca, incluindo abas, preferências, mensagens, etapas e criação demonstrativa em diálogo. Separa estilos, melhora a apresentação responsiva e adiciona reset do contador Zustand. Mantém a seleção de dependências por tag e valida a combinação com os pacotes React/tokens novos em instalação limpa.
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as ContainerStories from './Container.stories'
+
+<Meta of={ContainerStories} name="Documentação" />
+
+Componentes React
+
+# Container
+
+Container limita a largura do conteúdo e mantém margens laterais em layouts fluidos. Use-o para organizar a área principal de uma página em diferentes tamanhos de tela.
+
+## Importação
+
+```tsx
+import { Container } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Container } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Container maxWidth="lg" padding={6}>
+      <h1>Meus projetos</h1>
+      <p>Conteúdo centralizado na página.</p>
+    </Container>
+  )
+}
+```
+
+## Orientações
+
+maxWidth aceita sm, md, lg, xl e full. O limite padrão é xl; padding e margin usam a escala de espaçamento, e margin também aceita auto.

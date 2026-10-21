@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react-vite'
 
 const preview: Preview = {
+  tags: ['test'],
   parameters: {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     layout: 'centered',

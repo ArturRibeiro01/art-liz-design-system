@@ -16,6 +16,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "check:commit": "npm test && npm run lint && npm run format:check && npm run build",
     "typecheck": "tsc -b",
     "prepare": "husky"
   },
@@ -24,7 +25,6 @@
     "@art-liz/tokens": "latest",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-query": "^5.104.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

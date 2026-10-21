@@ -1,0 +1,479 @@
+const assetPathPrefix = "./assets";
+const imgError = `${assetPathPrefix}/bddf6.svg`;
+const imgError1 = `${assetPathPrefix}/ad5e2.svg`;
+const imgError2 = `${assetPathPrefix}/81bbb.svg`;
+const imgError3 = `${assetPathPrefix}/b35dc.svg`;
+const imgError4 = `${assetPathPrefix}/5788f.svg`;
+const imgError5 = `${assetPathPrefix}/29164.svg`;
+const imgError6 = `${assetPathPrefix}/083cc.svg`;
+const imgError7 = `${assetPathPrefix}/14063.svg`;
+const imgError8 = `${assetPathPrefix}/ce11c.svg`;
+
+type BasicProps = {
+  className?: string;
+  size?: "Large" | "Medium" | "Small";
+  state?: "Default" | "Hover" | "Pressed & Focus" | "Disabled" | "Error";
+  state2?: "Not Applicable" | "Clear Hover" | "Clear Pressed";
+  textEntered?: boolean;
+  typing?: boolean;
+};
+
+export default function Basic({ className, size = "Large", state = "Default", state2 = "Not Applicable", textEntered = false, typing = false }: BasicProps) {
+  if (size === "Medium" && state === "Default" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:7950" data-name="Size=Medium, State=Default, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#e1e1e1] border-solid inset-0 rounded-[4px]" data-node-id="11:7951" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#cacaca] text-[14px] top-[calc(50%-11px)]" data-node-id="11:7952">
+          Text input
+        </p>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Default" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:7953" data-name="Size=Small, State=Default, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#e1e1e1] border-solid inset-0 rounded-[4px]" data-node-id="11:7954" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#cacaca] text-[12px] top-[calc(50%-9px)]" data-node-id="11:7955">
+          Text input
+        </p>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Error" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:7956" data-name="Size=Large, State=Error, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#f64c4c] border-solid inset-0 rounded-[4px]" data-node-id="11:7958" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#cacaca] text-[16px] top-[calc(50%-12px)]" data-node-id="11:7959">
+          Empty,error
+        </p>
+        <div className="absolute content-stretch flex items-start left-0 overflow-clip top-[44px]" data-node-id="11:7960" data-name="Help text">
+          <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#f64c4c] text-[14px] whitespace-nowrap" data-node-id="I11:7960;14:13745">
+            Error Text
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Error" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:7961" data-name="Size=Large, State=Error, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#f64c4c] border-solid inset-0 rounded-[4px]" data-node-id="11:7963" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[16px] top-[calc(50%-12px)]" data-node-id="11:7964">
+          Filled,error
+        </p>
+        <div className="absolute content-stretch flex items-start left-0 overflow-clip top-[44px]" data-node-id="11:7965" data-name="Help text">
+          <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#f64c4c] text-[14px] whitespace-nowrap" data-node-id="I11:7965;14:13745">
+            Error Text
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Error" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:7966" data-name="Size=Medium, State=Error, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#f64c4c] border-solid inset-0 rounded-[4px]" data-node-id="11:7968" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[14px] top-[calc(50%-11px)]" data-node-id="11:7969">
+          Filled,error
+        </p>
+        <div className="absolute content-stretch flex items-start left-0 overflow-clip top-[40px]" data-node-id="11:7970" data-name="Help text">
+          <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#f64c4c] text-[14px] whitespace-nowrap" data-node-id="I11:7970;14:13745">
+            Error Text
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Error" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:7971" data-name="Size=Small, State=Error, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#f64c4c] border-solid inset-0 rounded-[4px]" data-node-id="11:7973" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#4b4b4b] text-[12px] top-[calc(50%-9px)]" data-node-id="11:7974">
+          Filled,error
+        </p>
+        <div className="absolute content-stretch flex items-start left-0 overflow-clip top-[28px]" data-node-id="11:7975" data-name="Help text">
+          <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[18px] not-italic relative shrink-0 text-[#f64c4c] text-[12px] whitespace-nowrap" data-node-id="I11:7975;14:13737">
+            Error Text
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Error" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:7976" data-name="Size=Medium, State=Error, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#f64c4c] border-solid inset-0 rounded-[4px]" data-node-id="11:7978" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#cacaca] text-[14px] top-[calc(50%-11px)]" data-node-id="11:7979">
+          Empty,error
+        </p>
+        <div className="absolute content-stretch flex items-start left-0 overflow-clip top-[40px]" data-node-id="11:7980" data-name="Help text">
+          <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[22px] not-italic relative shrink-0 text-[#f64c4c] text-[14px] whitespace-nowrap" data-node-id="I11:7980;14:13745">
+            Error Text
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Error" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:7981" data-name="Size=Small, State=Error, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#f64c4c] border-solid inset-0 rounded-[4px]" data-node-id="11:7983" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#cacaca] text-[12px] top-[calc(50%-9px)]" data-node-id="11:7984">
+          Empty,error
+        </p>
+        <div className="absolute content-stretch flex items-start left-0 overflow-clip top-[28px]" data-node-id="11:7985" data-name="Help text">
+          <p className="[word-break:break-word] font-['PingFang_SC:Regular'] leading-[18px] not-italic relative shrink-0 text-[#f64c4c] text-[12px] whitespace-nowrap" data-node-id="I11:7985;14:13737">
+            Error Text
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Pressed & Focus" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:7986" data-name="Size=Large, State=Pressed & Focus, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:7987" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[0px] top-[calc(50%-12px)]" data-node-id="11:7988">
+          <span className="leading-[24px] text-[#1f1f1f] text-[16px]">|</span>
+          <span className="leading-[24px] text-[#cacaca] text-[16px]">Empty,focus</span>
+        </p>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Pressed & Focus" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:7989" data-name="Size=Large, State=Pressed & Focus, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:7990" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[16px] top-[calc(50%-12px)]" data-node-id="11:7991">
+          Filled,focus
+        </p>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Pressed & Focus" && typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:7992" data-name="Size=Large, State=Pressed & Focus, Typing=True, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:7993" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[12px] not-italic right-[36px] text-[#4b4b4b] text-[0px] top-[calc(50%-12px)]" data-node-id="11:7994">
+          <span className="leading-[24px] text-[16px]">Filled,foc</span>
+          <span className="leading-[24px] text-[#1f1f1f] text-[16px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute right-[12px] size-[16px] top-1/2" data-node-id="11:7995" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Pressed & Focus" && typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:7996" data-name="Size=Medium, State=Pressed & Focus, Typing=True, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:7997" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[12px] not-italic right-[34px] text-[#4b4b4b] text-[0px] top-[calc(50%-11px)]" data-node-id="11:7998">
+          <span className="leading-[22px] text-[14px]">Filled,foc</span>
+          <span className="leading-[22px] text-[#1f1f1f] text-[14px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute right-[12px] size-[14px] top-1/2" data-node-id="11:7999" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError1} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Pressed & Focus" && typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8000" data-name="Size=Small, State=Pressed & Focus, Typing=True, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8001" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[8px] not-italic right-[24px] text-[#4b4b4b] text-[0px] top-[calc(50%-9px)]" data-node-id="11:8002">
+          <span className="leading-[18px] text-[12px]">Filled,foc</span>
+          <span className="leading-[18px] text-[#1f1f1f] text-[12px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute right-[8px] size-[12px] top-1/2" data-node-id="11:8003" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError2} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Pressed & Focus" && typing && !textEntered && state2 === "Clear Hover") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:8004" data-name="Size=Large, State=Pressed & Focus, Typing=True, Text Entered=False, State 2=Clear Hover">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8005" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[12px] not-italic right-[36px] text-[#4b4b4b] text-[0px] top-[calc(50%-12px)]" data-node-id="11:8006">
+          <span className="leading-[24px] text-[16px]">Filled,foc</span>
+          <span className="leading-[24px] text-[#1f1f1f] text-[16px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute cursor-pointer right-[12px] size-[16px] top-1/2" data-node-id="11:8007" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError3} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Pressed & Focus" && typing && !textEntered && state2 === "Clear Hover") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8008" data-name="Size=Medium, State=Pressed & Focus, Typing=True, Text Entered=False, State 2=Clear Hover">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8009" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[12px] not-italic right-[34px] text-[#4b4b4b] text-[0px] top-[calc(50%-11px)]" data-node-id="11:8010">
+          <span className="leading-[22px] text-[14px]">Filled,foc</span>
+          <span className="leading-[22px] text-[#1f1f1f] text-[14px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute cursor-pointer right-[12px] size-[14px] top-1/2" data-node-id="11:8011" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError4} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Pressed & Focus" && typing && !textEntered && state2 === "Clear Hover") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8012" data-name="Size=Small, State=Pressed & Focus, Typing=True, Text Entered=False, State 2=Clear Hover">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8013" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[8px] not-italic right-[24px] text-[#4b4b4b] text-[0px] top-[calc(50%-9px)]" data-node-id="11:8014">
+          <span className="leading-[18px] text-[12px]">Filled,foc</span>
+          <span className="leading-[18px] text-[#1f1f1f] text-[12px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute cursor-pointer right-[8px] size-[12px] top-1/2" data-node-id="11:8015" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError5} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Pressed & Focus" && typing && textEntered && state2 === "Clear Pressed") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:8016" data-name="Size=Large, State=Pressed & Focus, Typing=True, Text Entered=True, State 2=Clear Pressed">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8017" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[12px] not-italic right-[36px] text-[#4b4b4b] text-[0px] top-[calc(50%-12px)]" data-node-id="11:8018">
+          <span className="leading-[24px] text-[16px]">Filled,foc</span>
+          <span className="leading-[24px] text-[#1f1f1f] text-[16px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute cursor-pointer right-[12px] size-[16px] top-1/2" data-node-id="11:8019" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError6} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Pressed & Focus" && typing && textEntered && state2 === "Clear Pressed") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8020" data-name="Size=Medium, State=Pressed & Focus, Typing=True, Text Entered=True, State 2=Clear Pressed">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8021" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[12px] not-italic right-[34px] text-[#4b4b4b] text-[0px] top-[calc(50%-11px)]" data-node-id="11:8022">
+          <span className="leading-[22px] text-[14px]">Filled,foc</span>
+          <span className="leading-[22px] text-[#1f1f1f] text-[14px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute cursor-pointer right-[12px] size-[14px] top-1/2" data-node-id="11:8023" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError7} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Pressed & Focus" && typing && textEntered && state2 === "Clear Pressed") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8024" data-name="Size=Small, State=Pressed & Focus, Typing=True, Text Entered=True, State 2=Clear Pressed">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8025" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[8px] not-italic right-[24px] text-[#4b4b4b] text-[0px] top-[calc(50%-9px)]" data-node-id="11:8026">
+          <span className="leading-[18px] text-[12px]">Filled,foc</span>
+          <span className="leading-[18px] text-[#1f1f1f] text-[12px]">|</span>
+        </p>
+        <div className="-translate-y-1/2 absolute cursor-pointer right-[8px] size-[12px] top-1/2" data-node-id="11:8027" data-name="Error">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgError8} />
+        </div>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Pressed & Focus" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8028" data-name="Size=Medium, State=Pressed & Focus, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8029" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[14px] top-[calc(50%-11px)]" data-node-id="11:8030">
+          Filled,focus
+        </p>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Pressed & Focus" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8031" data-name="Size=Small, State=Pressed & Focus, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8032" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#4b4b4b] text-[12px] top-[calc(50%-9px)]" data-node-id="11:8033">
+          Filled,focus
+        </p>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Pressed & Focus" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8034" data-name="Size=Medium, State=Pressed & Focus, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8035" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[0px] top-[calc(50%-11px)]" data-node-id="11:8036">
+          <span className="leading-[22px] text-[#1f1f1f] text-[14px]">|</span>
+          <span className="leading-[22px] text-[#cacaca] text-[14px]">Empty,focus</span>
+        </p>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Pressed & Focus" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8037" data-name="Size=Small, State=Pressed & Focus, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#15c5ce] border-solid inset-0 rounded-[4px] shadow-[0px_0px_1px_1px_rgba(21,197,206,0.16)]" data-node-id="11:8038" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[0] left-[8px] not-italic right-[8px] text-[#4b4b4b] text-[0px] top-[calc(50%-9px)]" data-node-id="11:8039">
+          <span className="leading-[18px] text-[#1f1f1f] text-[12px]">|</span>
+          <span className="leading-[18px] text-[#cacaca] text-[12px]">Empty,focus</span>
+        </p>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Hover" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <button className={className || "block cursor-pointer h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:8040" data-name="Size=Large, State=Hover, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#47cfd6] border-solid inset-0 rounded-[4px]" data-node-id="11:8041" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#cacaca] text-[16px] text-left top-[calc(50%-12px)]" data-node-id="11:8042">
+          Empty,hover
+        </p>
+      </button>
+    );
+  }
+  if (size === "Large" && state === "Hover" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <button className={className || "block cursor-pointer h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:8043" data-name="Size=Large, State=Hover, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#47cfd6] border-solid inset-0 rounded-[4px]" data-node-id="11:8044" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[16px] text-left top-[calc(50%-12px)]" data-node-id="11:8045">
+          Filled,hover
+        </p>
+      </button>
+    );
+  }
+  if (size === "Medium" && state === "Hover" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <button className={className || "block cursor-pointer h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8046" data-name="Size=Medium, State=Hover, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#47cfd6] border-solid inset-0 rounded-[4px]" data-node-id="11:8047" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[14px] text-left top-[calc(50%-11px)]" data-node-id="11:8048">
+          Filled,hover
+        </p>
+      </button>
+    );
+  }
+  if (size === "Small" && state === "Hover" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <button className={className || "block cursor-pointer h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8049" data-name="Size=Small, State=Hover, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#47cfd6] border-solid inset-0 rounded-[4px]" data-node-id="11:8050" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#4b4b4b] text-[12px] text-left top-[calc(50%-9px)]" data-node-id="11:8051">
+          Filled,hover
+        </p>
+      </button>
+    );
+  }
+  if (size === "Medium" && state === "Hover" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <button className={className || "block cursor-pointer h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8052" data-name="Size=Medium, State=Hover, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#47cfd6] border-solid inset-0 rounded-[4px]" data-node-id="11:8053" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#cacaca] text-[14px] text-left top-[calc(50%-11px)]" data-node-id="11:8054">
+          Empty,hover
+        </p>
+      </button>
+    );
+  }
+  if (size === "Small" && state === "Hover" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <button className={className || "block cursor-pointer h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8055" data-name="Size=Small, State=Hover, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#47cfd6] border-solid inset-0 rounded-[4px]" data-node-id="11:8056" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#cacaca] text-[12px] text-left top-[calc(50%-9px)]" data-node-id="11:8057">
+          Empty,hover
+        </p>
+      </button>
+    );
+  }
+  if (size === "Large" && state === "Disabled" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:8058" data-name="Size=Large, State=Disabled, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-[#fafafa] border border-[#eee] border-solid inset-0 rounded-[4px]" data-node-id="11:8059" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#e1e1e1] text-[16px] top-[calc(50%-12px)]" data-node-id="11:8060">
+          Disabled
+        </p>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Disabled" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:8061" data-name="Size=Large, State=Disabled, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-[#fafafa] border border-[#eee] border-solid inset-0 rounded-[4px]" data-node-id="11:8062" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#cacaca] text-[16px] top-[calc(50%-12px)]" data-node-id="11:8063">
+          Disabled
+        </p>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Disabled" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8064" data-name="Size=Medium, State=Disabled, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-[#fafafa] border border-[#eee] border-solid inset-0 rounded-[4px]" data-node-id="11:8065" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#cacaca] text-[14px] top-[calc(50%-11px)]" data-node-id="11:8066">
+          Disabled
+        </p>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Disabled" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8067" data-name="Size=Small, State=Disabled, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-[#fafafa] border border-[#eee] border-solid inset-0 rounded-[4px]" data-node-id="11:8068" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#cacaca] text-[12px] top-[calc(50%-9px)]" data-node-id="11:8069">
+          Disabled
+        </p>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Disabled" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8070" data-name="Size=Medium, State=Disabled, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-[#fafafa] border border-[#eee] border-solid inset-0 rounded-[4px]" data-node-id="11:8071" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#e1e1e1] text-[14px] top-[calc(50%-11px)]" data-node-id="11:8072">
+          Disabled
+        </p>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Disabled" && !typing && !textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8073" data-name="Size=Small, State=Disabled, Typing=False, Text Entered=False, State 2=Not Applicable">
+        <div className="absolute bg-[#fafafa] border border-[#eee] border-solid inset-0 rounded-[4px]" data-node-id="11:8074" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#e1e1e1] text-[12px] top-[calc(50%-9px)]" data-node-id="11:8075">
+          Disabled
+        </p>
+      </div>
+    );
+  }
+  if (size === "Large" && state === "Default" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:8079" data-name="Size=Large, State=Default, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#e1e1e1] border-solid inset-0 rounded-[4px]" data-node-id="11:8080" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[16px] top-[calc(50%-12px)]" data-node-id="11:8081">
+          Filled
+        </p>
+      </div>
+    );
+  }
+  if (size === "Medium" && state === "Default" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[36px] relative rounded-[4px] w-[190px]"} data-node-id="11:8082" data-name="Size=Medium, State=Default, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#e1e1e1] border-solid inset-0 rounded-[4px]" data-node-id="11:8083" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[22px] left-[12px] not-italic right-[12px] text-[#4b4b4b] text-[14px] top-[calc(50%-11px)]" data-node-id="11:8084">
+          Filled
+        </p>
+      </div>
+    );
+  }
+  if (size === "Small" && state === "Default" && !typing && textEntered && state2 === "Not Applicable") {
+    return (
+      <div className={className || "h-[24px] relative rounded-[4px] w-[190px]"} data-node-id="11:8085" data-name="Size=Small, State=Default, Typing=False, Text Entered=True, State 2=Not Applicable">
+        <div className="absolute bg-white border border-[#e1e1e1] border-solid inset-0 rounded-[4px]" data-node-id="11:8086" data-name="Base" />
+        <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[18px] left-[8px] not-italic right-[8px] text-[#4b4b4b] text-[12px] top-[calc(50%-9px)]" data-node-id="11:8087">
+          Filled
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className={className || "h-[40px] relative rounded-[4px] w-[190px]"} data-node-id="11:8076" data-name="Size=Large, State=Default, Typing=False, Text Entered=False, State 2=Not Applicable">
+      <div className="absolute bg-white border border-[#e1e1e1] border-solid inset-0 rounded-[4px]" data-node-id="11:8077" data-name="Base" />
+      <p className="[word-break:break-word] absolute font-['PingFang_SC:Regular'] leading-[24px] left-[12px] not-italic right-[12px] text-[#cacaca] text-[16px] top-[calc(50%-12px)]" data-node-id="11:8078">
+        Text input
+      </p>
+    </div>
+  );
+}

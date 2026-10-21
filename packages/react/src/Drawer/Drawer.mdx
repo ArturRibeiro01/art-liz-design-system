@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as DrawerStories from './Drawer.stories'
+
+<Meta of={DrawerStories} name="Documentação" />
+
+Componentes React
+
+# Drawer
+
+Drawer apresenta um painel modal lateral para detalhes ou tarefas relacionadas à página atual. Use-o quando precisar de mais espaço para conteúdo complementar sem trocar de página.
+
+## Importação
+
+```tsx
+import { Drawer } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { useState } from 'react'
+import { Drawer, Button } from '@art-liz/react'
+
+export function Exemplo() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Ver detalhes</Button>
+      <Drawer open={open} onClose={() => setOpen(false)} title="Detalhes do projeto" side="right">
+        <p>Informações complementares sobre o projeto.</p>
+      </Drawer>
+    </>
+  )
+}
+```
+
+## Orientações
+
+Compartilha o comportamento modal de Dialog e aceita side="left" ou side="right". O estado é controlado por open/onClose; exige suporte à API nativa de dialog.

@@ -1,0 +1,307 @@
+{
+  "capturedOn": "2026-10-18",
+  "fileKey": "ah40tGdCZ8OKiGMkTSB8JO",
+  "codeRevision": "a039387b0a7b13a491e3ee17685881aa750fbbe1",
+  "scope": "Documentation capture only; no implementation or Figma writes",
+  "skills": ["figma-design-to-code", "figma-use"],
+  "calls": {
+    "total": 7,
+    "get_design_context": 2,
+    "use_figma": 5,
+    "successfulMeasurementCalls": 2,
+    "responseSizeFailures": 3,
+    "responseLimitBytes": 20480,
+    "screenshotReturnedByContext": true,
+    "get_screenshot": 0
+  },
+  "components": [
+    {
+      "slug": "input-basic",
+      "nodeId": "11:7949",
+      "pageId": "11:7661",
+      "variantCount": 39,
+      "layerCount": 153,
+      "images": [
+        {
+          "file": "input-basic/screenshot.png",
+          "mimeType": "image/png",
+          "width": 958,
+          "height": 1024,
+          "source": "get_design_context inline image; unmodified bytes"
+        },
+        {
+          "file": "input-basic/assets/bddf6.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "16",
+            "height": "16",
+            "viewBox": "0 0 16 16"
+          },
+          "sourceNodeIds": ["11:7995"],
+          "symbol": "imgError"
+        },
+        {
+          "file": "input-basic/assets/ad5e2.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "14",
+            "height": "14",
+            "viewBox": "0 0 14 14"
+          },
+          "sourceNodeIds": ["11:7999"],
+          "symbol": "imgError1"
+        },
+        {
+          "file": "input-basic/assets/81bbb.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "12",
+            "height": "12",
+            "viewBox": "0 0 12 12"
+          },
+          "sourceNodeIds": ["11:8003"],
+          "symbol": "imgError2"
+        },
+        {
+          "file": "input-basic/assets/b35dc.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "16",
+            "height": "16",
+            "viewBox": "0 0 16 16"
+          },
+          "sourceNodeIds": ["11:8007"],
+          "symbol": "imgError3"
+        },
+        {
+          "file": "input-basic/assets/5788f.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "14",
+            "height": "14",
+            "viewBox": "0 0 14 14"
+          },
+          "sourceNodeIds": ["11:8011"],
+          "symbol": "imgError4"
+        },
+        {
+          "file": "input-basic/assets/29164.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "12",
+            "height": "12",
+            "viewBox": "0 0 12 12"
+          },
+          "sourceNodeIds": ["11:8015"],
+          "symbol": "imgError5"
+        },
+        {
+          "file": "input-basic/assets/083cc.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "16",
+            "height": "16",
+            "viewBox": "0 0 16 16"
+          },
+          "sourceNodeIds": ["11:8019"],
+          "symbol": "imgError6"
+        },
+        {
+          "file": "input-basic/assets/14063.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "14",
+            "height": "14",
+            "viewBox": "0 0 14 14"
+          },
+          "sourceNodeIds": ["11:8023"],
+          "symbol": "imgError7"
+        },
+        {
+          "file": "input-basic/assets/ce11c.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "12",
+            "height": "12",
+            "viewBox": "0 0 12 12"
+          },
+          "sourceNodeIds": ["11:8027"],
+          "symbol": "imgError8"
+        }
+      ]
+    },
+    {
+      "slug": "checkbox",
+      "nodeId": "10:2274",
+      "pageId": "4:4379",
+      "variantCount": 12,
+      "layerCount": 52,
+      "images": [
+        {
+          "file": "checkbox/screenshot.png",
+          "mimeType": "image/png",
+          "width": 960,
+          "height": 496,
+          "source": "get_design_context inline image; unmodified bytes"
+        },
+        {
+          "file": "checkbox/assets/a394b.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "10",
+            "height": "10",
+            "viewBox": "0 0 10 10"
+          },
+          "sourceNodeIds": ["10:2280", "I10:2285;7126:80"],
+          "symbol": "imgCheck"
+        },
+        {
+          "file": "checkbox/assets/a5276.svg",
+          "mimeType": "image/svg+xml",
+          "originalRootAttributes": {
+            "width": "10",
+            "height": "10",
+            "viewBox": "0 0 10 10"
+          },
+          "sourceNodeIds": ["10:2304", "I10:2309;7126:97"],
+          "symbol": "imgCheck1"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 4183,
+      "sha256": "ff597b8615332096994b82d396246dae0f6cb402d2df2be620574de2a809c255"
+    },
+    {
+      "file": "checkbox/README.md",
+      "bytes": 8550,
+      "sha256": "6cc1f803e74a24bf3612dfe8d0b4a9d26694edcb78f9f9b7769a99dd2c179845"
+    },
+    {
+      "file": "checkbox/assets.json",
+      "bytes": 438,
+      "sha256": "2fafe9749aacad3a4530d15065de9d7b4d64598a38cd0b3381f51c9b5dc1cbed"
+    },
+    {
+      "file": "checkbox/assets/a394b.svg",
+      "bytes": 486,
+      "sha256": "575c639fe2e5395a7f30ef1f9f82267784c6c7a96c9941ecbd39a32f55481b09"
+    },
+    {
+      "file": "checkbox/assets/a5276.svg",
+      "bytes": 488,
+      "sha256": "c9036505595f16a9d85fcedbf23c25ad7b381b747ca7bed5764b689da34ed0dd"
+    },
+    {
+      "file": "checkbox/context.json",
+      "bytes": 13296,
+      "sha256": "6e6dbdc8cab00ec8d7591fe1d87bf08dad6ecf5137ebb80e5e512108b6eb484a"
+    },
+    {
+      "file": "checkbox/measurements.json",
+      "bytes": 14333,
+      "sha256": "f3e95c5b68c11d92a93118f647603e993107b6444aa9910ce241b741c1e04f74"
+    },
+    {
+      "file": "checkbox/reference-code.txt",
+      "bytes": 10451,
+      "sha256": "58c81bc17f6e76c21350ee05beee0b88dcd00d4991d12a8d94e6fcb90ae95bb2"
+    },
+    {
+      "file": "checkbox/screenshot.png",
+      "bytes": 7019,
+      "sha256": "aeb3c4169d8595a62c23fed2107c3462d213fe40d405e64bc83096a79f6d16d6"
+    },
+    {
+      "file": "input-basic/README.md",
+      "bytes": 17016,
+      "sha256": "93c5b3fa30f601f4807eb2b3c114b202a67fab7a69b2a957f78af85b7ff1eaea"
+    },
+    {
+      "file": "input-basic/assets.json",
+      "bytes": 1784,
+      "sha256": "745df5cd8ca25a4eee3c1856b1d47aea5f7675d829a01df70040f2661562de4f"
+    },
+    {
+      "file": "input-basic/assets/083cc.svg",
+      "bytes": 732,
+      "sha256": "47c347d119ec7711b2e9c5bc82a397cdc94bcc71855972d07d52bf80cb04a046"
+    },
+    {
+      "file": "input-basic/assets/14063.svg",
+      "bytes": 732,
+      "sha256": "ba6e9950abddc7ad917b4eb026ba73463aa6bf2bec75c72ff5c8d124eed2e212"
+    },
+    {
+      "file": "input-basic/assets/29164.svg",
+      "bytes": 681,
+      "sha256": "720549b570846d6c0b6e5c99eca43249dffc988669cf5544b4189efdc3047958"
+    },
+    {
+      "file": "input-basic/assets/5788f.svg",
+      "bytes": 732,
+      "sha256": "832f731c81f765b3c78837221b7c918bec5a13840143d13c1ba9c0505c877c49"
+    },
+    {
+      "file": "input-basic/assets/81bbb.svg",
+      "bytes": 681,
+      "sha256": "1100daa6033396f0d04d8b88f8373863ae12d9698c232006646e15c9ebb21ede"
+    },
+    {
+      "file": "input-basic/assets/ad5e2.svg",
+      "bytes": 732,
+      "sha256": "f39028a9c58f2bcb80fca36215cea25d53cd45a98b7bb43e6a85f615952c6049"
+    },
+    {
+      "file": "input-basic/assets/b35dc.svg",
+      "bytes": 732,
+      "sha256": "2f53bbea2c095e54884bcb007ca31fbe17e833c85680f99049b6c0d81f646c97"
+    },
+    {
+      "file": "input-basic/assets/bddf6.svg",
+      "bytes": 732,
+      "sha256": "c4a53261eebf5df18034ec50005123bc35a8e773c3bbad7962cce937848f5c7c"
+    },
+    {
+      "file": "input-basic/assets/ce11c.svg",
+      "bytes": 681,
+      "sha256": "123b563d939236ed97bde98c278190fac58b5289afa96b26d7e40c248afdb324"
+    },
+    {
+      "file": "input-basic/context.json",
+      "bytes": 40792,
+      "sha256": "7cd049c8593e7bdcce7559ee8e25b6d429dacc2b7d0f93a8b80e0b5116e75392"
+    },
+    {
+      "file": "input-basic/measurements.json",
+      "bytes": 35264,
+      "sha256": "366693bf0762d3c60092f5bd3edd091f90e465dc0ad6179761b717205dfeee6c"
+    },
+    {
+      "file": "input-basic/reference-code.txt",
+      "bytes": 36538,
+      "sha256": "cad85844b957328e6892548bb1ec4c1771dd24876bdbb25b5dac477150f10817"
+    },
+    {
+      "file": "input-basic/screenshot.png",
+      "bytes": 55563,
+      "sha256": "116131e3605c16b4df12b629cca610022ed1093a1d5dc5088e79bdb046d8a8ac"
+    }
+  ],
+  "notes": [
+    "Manifest excludes its own hash.",
+    "context.json text content is preserved verbatim; inline image bytes live in screenshot.png.",
+    "reference-code.txt only changes assetPathPrefix to a local path; it is not executable application code.",
+    "measurements.json Input names were joined from original context by ID; profiles are deduplicated."
+  ],
+  "verification": {
+    "variantIdsAndNamesMatchOriginalContext": true,
+    "localLinksExist": true,
+    "assetSlotsMatchLayerIds": true,
+    "pngAndSvgMetadataChecked": true,
+    "measurementReferencesValid": true
+  }
+}

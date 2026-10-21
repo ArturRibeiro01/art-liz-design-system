@@ -85,6 +85,10 @@ jobs:
         if: steps.changesets.outputs.count != '0'
         run: npx changeset version --snapshot beta
 
+      - name: Install Playwright browser
+        if: steps.changesets.outputs.count != '0' || inputs['publish-current']
+        run: npx playwright install --with-deps chromium
+
       - name: Test, build, and validate package tarballs
         if: steps.changesets.outputs.count != '0' || inputs['publish-current']
         run: npm run ci

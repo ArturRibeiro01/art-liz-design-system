@@ -16,33 +16,24 @@ const meta = {
   },
   args: { maxWidth: 'xl', background: 'primary.50', padding: 4, margin: 'auto' },
   render: ({ maxWidth, background, padding, margin }) => (
-    <div
+    <Container
+      background={background}
+      margin={margin}
+      maxWidth={maxWidth}
+      padding={padding}
       style={{
-        background: colors.neutral[100],
-        minHeight: 480,
-        paddingBlock: 32,
-        width: '100%',
+        border: `1px solid ${colors.neutral[500]}`,
+        minHeight: 416,
       }}
     >
-      <Container
-        background={background}
-        margin={margin}
-        maxWidth={maxWidth}
-        padding={padding}
-        style={{
-          border: `2px dashed ${colors.primary[600]}`,
-          minHeight: 416,
-        }}
-      >
-        <div style={{ display: 'grid', gap: 12 }}>
-          <strong>Container maxWidth: {maxWidth}</strong>
-          <p style={{ margin: 0 }}>
-            A área destacada mostra a largura máxima selecionada. Em telas menores, o container
-            continua fluido e mantém gutters laterais.
-          </p>
-        </div>
-      </Container>
-    </div>
+      <div style={{ display: 'grid', gap: 12 }}>
+        <strong>Container maxWidth: {maxWidth}</strong>
+        <p style={{ margin: 0 }}>
+          A área destacada mostra a largura máxima selecionada. Em telas menores, o container
+          continua fluido e mantém gutters laterais.
+        </p>
+      </div>
+    </Container>
   ),
 } satisfies Meta<typeof Container>
 

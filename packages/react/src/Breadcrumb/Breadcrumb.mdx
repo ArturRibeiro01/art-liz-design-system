@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as BreadcrumbStories from './Breadcrumb.stories'
+
+<Meta of={BreadcrumbStories} name="Documentação" />
+
+Componentes React
+
+# Breadcrumb
+
+Breadcrumb mostra a posição da página atual dentro de uma hierarquia. Use-o em interfaces com níveis de navegação para facilitar o retorno a páginas anteriores.
+
+## Importação
+
+```tsx
+import { Breadcrumb } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Breadcrumb } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Breadcrumb
+      items={[
+        { label: 'Início', href: '/' },
+        { label: 'Projetos', href: '/projects' },
+        { label: 'Art-Liz' },
+      ]}
+    />
+  )
+}
+```
+
+## Orientações
+
+O último item representa a página atual e recebe aria-current="page". Informe href nos itens anteriores que permitam navegação.

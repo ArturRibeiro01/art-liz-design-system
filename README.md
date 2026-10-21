@@ -2,11 +2,22 @@
 
 Design system pessoal em React e TypeScript, organizado como monorepo npm. Os pacotes compartilhados podem ser publicados separadamente e UI Kits específicos podem ser adicionados em `packages/` quando surgir um projeto que justifique essa separação.
 
+## Documentação
+
+- [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md): arquitetura, decisões técnicas e contexto completo.
+- [DEVELOPMENT.md](DEVELOPMENT.md): comandos locais, qualidade de código e fluxo de desenvolvimento.
+- [COMPONENTS.md](COMPONENTS.md): uso básico dos componentes, tokens e ícones.
+- [FIGMA_INVENTORY.md](FIGMA_INVENTORY.md): referência Figma, inventário, mapeamento para o código e primeira etapa proposta.
+- [STORYBOOK.md](STORYBOOK.md): Storybook local, builds estáticos e GitHub Pages.
+- [RELEASES.md](RELEASES.md): Changesets, beta/latest e publicação npm.
+- [GITBOOK.md](GITBOOK.md): estrutura dos guias, canais e configuração da sincronização com GitBook.
+- [templates/gitflow/README.md](templates/gitflow/README.md): bootstrap do GitFlow em outros repositórios.
+
 ## Estrutura
 
 - `packages/tokens`: tokens e temas sem dependência de framework.
-- `packages/react`: componentes React estilizados com Emotion, organizados em `src/Box`, `src/Button` e `src/Container`.
-- `packages/create-app`: CLI npm com um template monolítico React + Vite pronto para o Design System.
+- `packages/react`: componentes React estilizados com Emotion.
+- `packages/create-app`: CLI npm com template React + Vite pronto para o Design System.
 - `apps/storybook`: catálogo e documentação dos componentes.
 - `apps/playground`: aplicação Vite para testar os pacotes como consumidor.
 
@@ -18,162 +29,35 @@ npm run storybook
 npm run dev --workspace @art-liz/playground
 ```
 
-## Verificações e builds
+## Verificações
 
 ```sh
 npm test
 npm run lint
-npm run format
 npm run format:check
-npm run ci
 npm run build
-npm run build:storybook:homolog
-npm run build:storybook:prod
+npm run ci
 ```
 
-Os builds do Storybook ficam em `storybook-static/homolog` e `storybook-static/prod`, prontos para publicação em destinos de homologação e produção separados.
+## Storybook Publicado
 
-O Storybook também documenta os tokens em páginas `Tokens/*`, incluindo exemplos de como trocar fonte e cores via CSS custom properties no projeto consumidor.
+- Homologação: <https://arturribeiro01.github.io/art-liz-design-system/homolog/>
+- Produção: <https://arturribeiro01.github.io/art-liz-design-system/prod/>
 
-O deploy automático do Storybook usa GitHub Pages. A raiz do site aponta para os ambientes publicados:
-
-- Homologação: `https://arturribeiro01.github.io/art-liz-design-system/homolog/`
-- Produção: `https://arturribeiro01.github.io/art-liz-design-system/prod/`
-
-O workflow recompila e publica os dois ambientes quando há push em `develop` ou `main` com alterações em `packages/**`, `apps/storybook/**`, `package.json`, `package-lock.json` ou no próprio workflow. Para o primeiro uso, configure o Pages do repositório com source `GitHub Actions`.
-
-## Criar um projeto
-
-O scaffolder cria um projeto React independente, com o Design System configurado. Depois da publicação do CLI e dos pacotes do DS, o comando será:
+## Criar Um Projeto
 
 ```sh
 npm create @art-liz/app@latest minha-aplicacao
 npm create @art-liz/app@beta minha-aplicacao-beta
 ```
 
-O template inclui Vite, TypeScript, React Router, Zustand, TanStack Query, Vitest, Testing Library, ESLint, Prettier, Husky e lint-staged. O CLI estável usa dependências `latest`; o CLI beta usa dependências `beta`, e `--tag latest|beta` sobrescreve essa escolha. Projetos criados não se atualizam automaticamente; atualize `@art-liz/react` e `@art-liz/tokens` quando quiser adotar novas versões. Veja [packages/create-app/README.md](packages/create-app/README.md) para opções do CLI.
+O CLI estável usa dependências `latest`; o CLI beta usa dependências `beta`. Veja [packages/create-app/README.md](packages/create-app/README.md) para as opções do scaffolder.
 
-Para exercitar o template localmente sem instalar dependências, use `node packages/create-app/bin/create-app.js minha-aplicacao --no-install --no-git`.
-
-Os tarballs publicados são verificados por `npm run release:verify`; a automação beta/latest está protegida por `NPM_RELEASES_ENABLED` e Trusted Publishing. Veja o bootstrap e os ambientes necessários em [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md#publicação-npm).
-
-## Qualidade de código
-
-Cada workspace tem um script `lint` local; `npm run lint` executa todos. `npm run format` aplica o padrão Prettier e `npm run format:check` verifica sem modificar arquivos. O workspace VS Code habilita format-on-save e recomenda as extensões Prettier e ESLint. O hook Husky/lint-staged executa autofix apenas nos arquivos staged antes do commit; os gates completos continuam no CI.
-
-## Button
-
-Importe `Button` de `@art-liz/react`. As props `variant`, `intent` e `size` escolhem a aparência, a intenção semântica e a escala; `startIcon` e `endIcon` aceitam qualquer elemento React.
-
-```tsx
-import { ArrowRightIcon } from '@phosphor-icons/react/dist/csr/ArrowRight'
-import { Button } from '@art-liz/react'
-
-export function ContinueButton() {
-  return (
-    <Button
-      endIcon={<ArrowRightIcon size="1em" weight="regular" />}
-      intent="success"
-      size="medium"
-      variant="outline"
-    >
-      Continuar
-    </Button>
-  )
-}
-```
-
-O texto do botão fornece seu nome acessível. Para ações somente com ícone, informe `aria-label` ou `aria-labelledby`.
-
-## Text
-
-`Text` aplica os estilos tipográficos do design system. Use `variant` para escolher a escala e `as` para preservar a semântica HTML do conteúdo.
-
-```tsx
-import { Text } from '@art-liz/react'
-
-export function PageHeading() {
-  return (
-    <Text as="h1" variant="h1" weight="medium">
-      Minha conta
-    </Text>
-  )
-}
-```
-
-Variantes: `h1`, `h2`, `h3`, `title`, `subtitle`, `body` e `caption`. Os valores de font-size e line-height vêm de `typography.textStyles`; `color` aceita tokens de cor escalares ou tokens de escala, como `danger.600`. `fontFamily` aceita `component`, `sans`, `mono` ou uma stack CSS personalizada; fontes externas precisam ser carregadas pelo produto consumidor.
-
-## Layout
-
-```tsx
-<Text fontFamily="sans">Fonte padrão sans</Text>
-<Text fontFamily='"Figtree", sans-serif'>Fonte do produto</Text>
-```
-
-## Layout
-
-Use `Container` para centralizar e limitar a largura do conteúdo da página, e `Box` para controlar a apresentação de uma seção:
-
-```tsx
-import { Box, Container } from '@art-liz/react'
-
-export function AccountPage() {
-  return (
-    <Container background="neutral.50" margin="auto" maxWidth="lg" padding={6}>
-      <Box background="white" borderRadius="small" padding={6} shadow="sm">
-        Dados da conta
-      </Box>
-    </Container>
-  )
-}
-```
-
-## Ícones
-
-O Storybook usa [Phosphor Icons](https://phosphoricons.com/) (`@phosphor-icons/react`, licença MIT) no catálogo `Foundations/Icons` e nos exemplos do Button. A biblioteca é dependência de runtime de `@art-liz/storybook` e dependência de desenvolvimento de `@art-liz/react` para compilar suas stories junto aos componentes. O pacote público continua independente em runtime e aceita qualquer elemento React em `startIcon`/`endIcon`.
-
-No catálogo, escolha um ícone por vez. Os controles permitem selecionar o tamanho pela escala `typography.fontSizes` (`xs` a `3xl`), peso Phosphor, cor dos tokens do DS ou uma cor HEX customizada. O line-height acompanha o tamanho tipográfico selecionado.
-
-Consumidores que adotarem Phosphor podem importar somente os ícones usados:
-
-```tsx
-import { PlusIcon } from '@phosphor-icons/react/dist/csr/Plus'
-import { Button } from '@art-liz/react'
-
-function AddButton() {
-  return <Button startIcon={<PlusIcon size="1em" weight="regular" />}>Adicionar</Button>
-}
-```
-
-Os ícones herdam `currentColor` quando não recebem `color`; `size="1em"` acompanha o tamanho do slot definido pelo Button: `md` em `small`, `xl` no padrão `medium` e `2xl` em `large`. Ícones decorativos ficam ocultos da árvore acessível. Um Button sem conteúdo textual exige `aria-label` ou `aria-labelledby`.
-
-## GitFlow
-
-O fluxo usa `develop` como homologação/default e `main` como produção. Consulte [templates/gitflow/README.md](templates/gitflow/README.md) para copiar os workflows e fazer o bootstrap dos rulesets. Branches de origem são apagadas após merge, enquanto `main` e `develop` permanecem protegidas.
-
-## Publicação npm
-
-Os pacotes publicáveis são `@art-liz/tokens`, `@art-liz/react` e `@art-liz/create-app`. O campo `publishConfig.access` configura o acesso público. Use Changesets para registrar a alteração e calcular versões:
+## Pacotes
 
 ```sh
-npm run changeset
-npm run version-packages
+npm install @art-liz/react
+npm install @art-liz/react@beta
 ```
 
-Depois de autenticar com `npm login` e executar os builds, publique uma versão de homologação com a tag `beta`:
-
-```sh
-npm publish --workspace @art-liz/tokens --tag beta
-npm publish --workspace @art-liz/react --tag beta
-npm publish --workspace @art-liz/create-app --tag beta
-```
-
-Para produção, publique na tag padrão `latest`:
-
-```sh
-npm publish --workspace @art-liz/tokens
-npm publish --workspace @art-liz/react
-npm publish --workspace @art-liz/create-app
-```
-
-Consumidores podem instalar homologação com `npm install @art-liz/react@beta` e produção com `npm install @art-liz/react`.
+`@art-liz/react` depende de `@art-liz/tokens`; o npm instala os tokens automaticamente como dependência do pacote React.

@@ -1,6 +1,7 @@
 name: PR branch policy
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - develop
@@ -8,16 +9,34 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   allowed-source:
     name: Allowed source branch
     runs-on: ubuntu-latest
     steps:
+      - name: Resolve pull request for a dispatched branch check
+        if: github.event_name == 'workflow_dispatch'
+        id: dispatched-pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          metadata=$(gh pr view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
+            --json baseRefName,headRefName,headRefOid \
+            --jq '[.baseRefName, .headRefName, .headRefOid] | @tsv')
+          IFS=$'\t' read -r base_ref head_ref head_sha <<< "$metadata"
+          if [[ "$head_sha" != "$GITHUB_SHA" || "$head_ref" != "$GITHUB_REF_NAME" ]]; then
+            echo 'Pull request changed while dispatching the branch check.' >&2
+            exit 1
+          fi
+          printf 'base=%s\nhead=%s\n' "$base_ref" "$head_ref" >> "$GITHUB_OUTPUT"
+
       - name: Enforce source branch for production
         env:
-          BASE_REF: ${{ github.base_ref }}
-          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref || steps.dispatched-pr.outputs.base }}
+          HEAD_REF: ${{ github.head_ref || steps.dispatched-pr.outputs.head }}
         run: |
           if [[ "$BASE_REF" == "main" && "$HEAD_REF" != "develop" ]]; then
             echo "Pull requests to main must come from develop; got '$HEAD_REF'." >&2

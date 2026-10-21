@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as BoxStories from './Box.stories'
+
+<Meta of={BoxStories} name="Documentação" />
+
+Componentes React
+
+# Box
+
+Box é uma superfície para agrupar conteúdos e compor blocos de interface. Use padding, fundo, raio e sombra dos tokens para apresentar cartões ou seções de forma consistente.
+
+## Importação
+
+```tsx
+import { Box } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Box } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Box background="white" borderRadius="medium" padding={6} shadow="sm">
+      <h2>Resumo do projeto</h2>
+      <p>Informações reunidas em uma mesma superfície.</p>
+    </Box>
+  )
+}
+```

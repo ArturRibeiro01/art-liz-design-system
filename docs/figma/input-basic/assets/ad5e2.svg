@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Error" clip-path="url(#clip0_0_49)">
+<path id="Subtract" d="M7 13.4167C10.5438 13.4167 13.4167 10.5438 13.4167 7C13.4167 3.45617 10.5438 0.583333 7 0.583333C3.45617 0.583333 0.583333 3.45617 0.583333 7C0.583333 10.5438 3.45617 13.4167 7 13.4167ZM10.0787 9.17127L9.17127 10.0787L7 7.90745L4.82873 10.0787L3.92127 9.17127L6.09255 7L3.92127 4.82873L4.82873 3.92127L7 6.09255L9.17127 3.92127L10.0787 4.82873L7.90745 7L10.0787 9.17127Z" fill="#CACACA"/>
+</g>
+<defs>
+<clipPath id="clip0_0_49">
+<rect width="14" height="14" fill="white"/>
+</clipPath>
+</defs>
+</svg>

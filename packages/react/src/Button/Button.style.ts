@@ -533,6 +533,10 @@ export const StyledButton = styled('button', {
     border-color ${motion.durations.normal} ${motion.easings.standard},
     color ${motion.durations.normal} ${motion.easings.standard};
 
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
   &:hover:not(:disabled) {
     background: ${({ intent, variant }) => intentVariantStyles[intent][variant].hover.background};
     border-color: ${({ intent, variant }) => intentVariantStyles[intent][variant].hover.borderColor};

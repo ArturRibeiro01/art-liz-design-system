@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import * as ChartStories from './Chart.stories'
+
+<Meta of={ChartStories} name="Documentação" />
+
+Componentes React
+
+# Chart
+
+Chart apresenta dados numéricos em barras horizontais para facilitar comparações entre categorias. Use-o para mostrar quantidades ou variações, mantendo rótulos e valores legíveis.
+
+## Importação
+
+```tsx
+import { Chart } from '@art-liz/react'
+```
+
+## Uso
+
+```tsx
+import { Chart } from '@art-liz/react'
+
+export function Exemplo() {
+  return (
+    <Chart
+      title="Componentes por categoria"
+      data={[
+        { id: 'forms', label: 'Formulários', value: 12 },
+        { id: 'navigation', label: 'Navegação', value: 5 },
+        { id: 'feedback', label: 'Feedback', value: 8 },
+      ]}
+      valueFormatter={(value) => `${value} componentes`}
+    />
+  )
+}
+```
+
+## Orientações
+
+A versão inicial oferece barras horizontais, inclusive valores negativos, zero e estado vazio. data precisa de IDs únicos e valores finitos; valueFormatter personaliza o texto dos valores.
