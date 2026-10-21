@@ -48,6 +48,16 @@ O workflow:
 3. Atualiza npm para uma versão compatível com `dist-tag` via OIDC.
 4. Promove as versões atuais para `latest`.
 
+Antes da promoção, `scripts/promote-stable-packages.mjs` confirma a versão exata dos três pacotes com `npm view --prefer-online`. Cada consulta tem até 12 tentativas, com intervalo de 10 segundos, para tolerar indisponibilidade temporária após `npm publish`. As chamadas têm timeout e preservam os erros no log. Se uma versão não for confirmada, essa etapa falha antes de alterar qualquer dist-tag. A promoção continua usando OIDC; falhas de permissão ao alterar tags interrompem a execução.
+
+### Recuperar uma falha depois da publicação
+
+Em 21/10/2026, a execução stable informou sucesso ao publicar `@art-liz/create-app@0.3.1`, mas a consulta única da etapa seguinte não encontrou a versão cerca de dez segundos depois. A implementação anterior descartava o erro do npm; o log não permite distinguir cache, propagação do registro ou falha temporária de rede. Na investigação, consultas com `--prefer-online` confirmaram CLI `0.3.1` e React `1.1.0`, ambos já em `latest`.
+
+Nesse cenário, confira as versões e dist-tags com os comandos abaixo antes de gerar outra versão. Não é necessário criar Changeset nem incrementar a versão apenas para recuperar a consulta. Após confirmar o registro, a pessoa mantenedora pode reexecutar o job que falhou em **Actions → Publish stable packages → Re-run failed jobs**. O Changesets ignora versões já publicadas; o workflow volta a verificar as versões e promover as tags. Não alterar credenciais ou habilitar bypass como tentativa de resolver uma falha de consulta.
+
+Validação local da correção em 21/10/2026: `npm run ci` aprovado com Node 24.12.0/npm 11.6.2, incluindo seis testes novos de promoção, as suítes existentes, 99 stories, lint, formatação, consumo dos tarballs e os dois builds estáticos do Storybook. Os testes de promoção usam um executor simulado; não publicam pacotes nem alteram tags no npm. A alteração do workflow ainda depende de integração pelo GitFlow.
+
 O job usa o environment `npm-production`. Na consulta de 20/10/2026, esse environment tinha política de branches, sem required reviewers; `npm-beta` não tinha regras de proteção. Não há gate de aprovação humana do environment confirmado nessa configuração. A promoção para main continua passando pela PR e pelos checks obrigatórios de branch.
 
 ## Trusted Publishing

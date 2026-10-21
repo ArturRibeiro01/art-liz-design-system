@@ -112,6 +112,8 @@ Não trate o reinício como correção de código se um build limpo também falh
 
 ## Baseline e validações históricas
 
+- Publicação stable: scripts/promote-stable-packages.mjs confirma todas as versões exatas via npm view --prefer-online antes de promover tags, com até 12 tentativas/intervalo de 10s, timeout e erros visíveis. Em 21/10/2026, o publish do CLI 0.3.1 foi aceito, mas a consulta imediata falhou; depois CLI 0.3.1 e React 1.1.0 já estavam em latest. Não atribuir a falha a credenciais ou ao build: o shell antigo ocultou o erro da consulta. Testes de recuperação e falha estão no gate; procedimento de reexecução em RELEASES.md. Nenhuma publicação ou dist-tag foi alterada durante a investigação.
+
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
 - O pacote React contém o componente `Button`, com aparências `primary`, `outline`, `ghost` e `link`, e intents semânticos `primary`, `danger`, `success`, `info` e `warning`.
 - O pacote React contém 37 componentes após as duas expansões em lote, incluindo `Box`, `Container`, `Text`, `Input` e `Checkbox`; a lista atual está em `packages/react/src/index.ts` e `COMPONENTS.md`. Input segue as alturas Figma 24/36/40px e usa `onClear` para limpeza controlada; Checkbox tem `indeterminate` nativo. `Text` aplica as variantes tipográficas de `typography.textStyles`.

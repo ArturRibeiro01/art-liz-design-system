@@ -359,6 +359,8 @@ npm install @art-liz/react
 
 O primeiro comando seleciona a versão beta; o segundo seleciona a versão estável. Como `@art-liz/react` depende de `@art-liz/tokens`, publique os tokens antes de publicar uma versão do React que dependa deles.
 
+A promoção stable usa scripts/promote-stable-packages.mjs para confirmar as versões exatas com npm view --prefer-online antes de qualquer alteração de dist-tag nessa etapa. São até 12 tentativas por pacote, com intervalo de 10s, timeout e erros visíveis no log. A consulta pode falhar temporariamente logo após npm publish. Em 21/10/2026, o log informou publicação bem-sucedida do CLI 0.3.1, mas a verificação imediata falhou; na investigação, CLI 0.3.1 e React 1.1.0 já estavam em latest. O erro original da consulta foi descartado pelo shell anterior, portanto não foi possível distinguir cache, propagação ou rede. Os testes do script cobrem recuperação de consulta, versão exata, esgotamento das tentativas sem promoção parcial nessa etapa e falha de permissão na promoção. O script está no gate de testes/lint; não exige Changeset para essa correção de workflow. Recuperação documentada em RELEASES.md.
+
 ## Resolução de pacotes locais
 
 Os workspaces npm vinculam os pacotes do monorepo localmente. Os campos `exports` dos pacotes apontam para os artefatos compilados em `dist`, portanto compile os pacotes antes de usar o Storybook, fazer o build do playground ou publicar.
