@@ -6,13 +6,15 @@ O arquivo [docs/gitbook/gitbook-docs.yaml](docs/gitbook/gitbook-docs.yaml) confi
 
 ## Site informado
 
+- Documentação pública de desenvolvimento: [Art-Liz Design System — desenvolvimento](https://arturs-organization-13.gitbook.io/art-liz-design-system/), publicada pela pessoa mantenedora em 20/10/2026 e associada a `develop`.
+- Verificação sem autenticação: HTTP 200 na página inicial, Primeiros passos, Componentes por finalidade e Formulários e mensagens. O SHA sincronizado não foi consultado no painel; esta verificação não cobre busca, layout ou todos os links.
 - [Painel do site no GitBook](https://app.gitbook.com/o/Y1Zb10Li6FcqK1UHMSWu/sites/site_kpJQe), fornecido pela pessoa mantenedora em 19/10/2026.
 - Organização indicada no endereço: `Y1Zb10Li6FcqK1UHMSWu`; site: `site_kpJQe`.
-- Este é um endereço interno do painel, não a URL pública da documentação nem um ID de espaço. A captura enviada pela pessoa mantenedora confirma a sincronização do espaço **Documentação** com `develop`; a prévia, as permissões e a publicação ainda não foram verificadas por acesso autenticado.
+- Este é um endereço interno do painel, não a URL pública da documentação nem um ID de espaço. A captura enviada pela pessoa mantenedora confirma a sincronização do espaço **Documentação** com `develop`; a publicação foi confirmada pela pessoa mantenedora e pelo acesso público acima. Permissões e SHA não foram auditados por acesso autenticado.
 
 ## Atualização automática
 
-O projeto usa o Git Sync nativo do GitBook, com a importação inicial de `develop` confirmada em 19/10/2026. O conteúdo é escrito e revisado no repositório. Depois do merge na branch conectada, a integração sincroniza as páginas do espaço. Isso evita uma etapa manual de copiar os guias para o editor do GitBook. A próxima alteração dos guias permitirá verificar também uma atualização incremental.
+O projeto usa o Git Sync nativo do GitBook, com a importação inicial de `develop` confirmada em 19/10/2026. O conteúdo é escrito e revisado no repositório. Depois do merge na branch conectada, a integração sincroniza as páginas do espaço. Isso evita uma etapa manual de copiar os guias para o editor do GitBook. Após a PR #51, a pessoa mantenedora informou em 20/10/2026 que precisou ressincronizar e que o conteúdo atualizado passou a funcionar. Isso confirma a atualização manualmente recuperada; ainda é necessário observar o próximo merge para confirmar uma atualização incremental sem intervenção.
 
 A sincronização não escreve guias a partir de mudanças no código. Quem altera a API atualiza o MDX do componente e os guias afetados na mesma PR, conforme [Atualizar a documentação](docs/gitbook/contribuicao.md).
 
@@ -25,7 +27,7 @@ O Git Sync é bidirecional. Neste projeto, o fluxo de contribuição começa no 
 | Homologação | `develop` | `docs/gitbook/`     | Storybook `/homolog/`, pacotes `beta` |
 | Estável     | `main`    | `docs/gitbook/`     | Storybook `/prod/`, pacotes `latest`  |
 
-Cada espaço deve sincronizar com sua branch. Se a configuração de site disponível usar uma única branch para todos os espaços, configurar Git Sync independente por espaço para manter esses canais. Confirmar os recursos disponíveis na conta ao conectar; o painel do site foi informado acima, mas os espaços por canal e a URL pública ainda não foram identificados.
+Cada espaço deve sincronizar com sua branch. Se a configuração de site disponível usar uma única branch para todos os espaços, configurar Git Sync independente por espaço para manter esses canais. Confirmar os recursos disponíveis na conta ao conectar; o painel e a URL pública de desenvolvimento estão informados acima; o canal estável ainda não foi configurado.
 
 O espaço **Documentação** já foi sincronizado com `develop`. A associação do canal estável a `main` permanece pendente; a conexão atual não confirma a configuração dos dois canais.
 
@@ -63,7 +65,7 @@ O modelo de mensagem identifica eventuais commits exportados do GitBook; não mu
 
 A captura da tela **Git Sync complete** mostra o repositório correto, a base `develop`, o espaço **Documentação** e o último commit sincronizado `a32a4b90`. Esse SHA corresponde ao merge da [PR #49](https://github.com/ArturRibeiro01/art-liz-design-system/pull/49), cujos checks obrigatórios passaram.
 
-Antes de concluir a issue #38:
+Checklist operacional para revisões futuras (as issues da entrega foram encerradas com aceite manual em 20/10/2026):
 
 - [x] Confirmar o merge dos arquivos de configuração e guias na branch `develop`.
 - [x] Confirmar a importação inicial pela tela **Git Sync complete** enviada pela pessoa mantenedora.
@@ -71,17 +73,38 @@ Antes de concluir a issue #38:
 - [ ] Conferir a renderização dos blocos de código, a navegação e os links dos dois Storybooks.
 - [ ] Conferir busca e leitura em desktop e celular.
 - [ ] Depois do próximo merge que altere os guias, verificar o novo SHA em **Last synchronized commit** e a mudança correspondente na prévia.
-- [ ] Registrar a decisão de publicação e verificar a estratégia do canal estável, sem presumir que a conexão com `develop` também cobre `main`.
+- [x] Registrar a publicação do canal de desenvolvimento e sua URL pública, confirmadas em 20/10/2026.
+- [ ] Configurar o canal estável separadamente; a conexão com `develop` não cobre `main`.
 
 ## Estado e próximos passos
 
-- Estrutura local criada: página inicial, primeiros passos, catálogos, política de canais e manutenção da documentação. A configuração do site inteiro também está preparada em docs/gitbook/gitbook-docs.yaml.
-- A pessoa mantenedora concluiu a conexão e enviou a confirmação de importação inicial do espaço Documentação em 19/10/2026, no commit a32a4b90 da develop. As ferramentas GitBook não ficaram disponíveis nesta sessão; a confirmação se baseia na captura enviada e no merge remoto.
-- Sincronização inicial de homologação: confirmada. Atualização incremental, canal estável e publicação: pendentes de validação/configuração.
-- Prévia inicial: funcionamento confirmado pela pessoa mantenedora. Busca, links e responsividade não foram auditados pelo agente; as páginas acrescentadas depois dessa confirmação precisam de nova revisão após merge.
-- Guias de adoção da issue #39 integrados pela PR #50. Fundamentos (#40), receitas (#41), diagramas (#42) e contribuição/manutenção (#43) preparados na branch docs/gitbook-foundations. A revisão do portal atualizado e a renderização efetiva dos diagramas no GitBook ainda estão pendentes; não tratar a epic #37 como concluída apenas pelo conteúdo local.
+- As 25 páginas da entrega foram integradas pelas PRs #49, #50 e #51. A PR #51 chegou a `develop` no commit `58a4e3a4`, com `Quality gates`, `Allowed source branch` e o status GitBook aprovados.
+- Em 20/10/2026, a pessoa mantenedora confirmou o funcionamento do conteúdo atualizado após ressincronizar e autorizou encerrar as issues #37–#43. As sete foram fechadas com comentários de evidências e limites; a aceitação do portal foi manual.
+- Não houve auditoria autenticada do portal pelo agente. O checklist de busca, teclado, leitura responsiva e Mermaid continua útil em cada atualização, sem transformar a confirmação geral em resultados individuais inventados.
+- Após a captura inicial **Not published**, a pessoa mantenedora publicou o canal de desenvolvimento em 20/10/2026; a URL acima respondeu sem autenticação. O canal estável ainda precisa de configuração própria. A branch `main` remota, no commit `0cac42af`, ainda não contém `docs/gitbook/`.
+- Antes de configurar produção, promover o conteúdo pelo fluxo `develop` → `main` e alinhar comandos, APIs e links ao npm `latest` e Storybook `/prod/`. Não trocar simplesmente a branch do site atual: isso removeria a referência de homologação e apontaria para guias ausentes em `main`.
+- O [guia editorial](docs/gitbook/guia-editorial.md) acrescenta uma página ao sumário, totalizando 26. Está preparado no repositório para revisão e cadastro no Style guide; a sincronização da página não configura esse recurso automaticamente.
 
-Este início não conclui a issue #38. O Storybook continua sendo a referência executável de API; os guias não duplicam suas matrizes de props.
+### Recursos adicionais
+
+Decisão da pessoa mantenedora em 20/10/2026: adiar a configuração do Style guide, pois a conta apresenta gratuidade de apenas 15 dias para o recurso; MCP e adoção de change requests também ficam para o futuro. O guia editorial permanece como referência Markdown versionada, sem ativação de funcionalidades adicionais ou contratação. O site de desenvolvimento foi publicado; produção virá depois.
+
+O GitBook Agent pode usar regras de escrita e instruções do site para redigir e revisar, conforme a [documentação oficial](https://gitbook.com/docs/gitbook-agent/overview). O guia não foi cadastrado no painel por esta sessão.
+
+Change requests ajudam na revisão pelo editor; antes de incorporá-los ao fluxo habitual, validar uma alteração pequena chegando ao GitHub com PR e checks obrigatórios. Não conceder bypass nem permitir que uma edição de documentação contorne as proteções de `develop`/`main`.
+
+MCP oferece dois usos distintos: o servidor do site publicado permite consultar a documentação; o servidor autenticado do GitBook permite também editar e abrir change requests. Isso não substitui o Git Sync nem atualiza os guias a partir do código. A [referência oficial](https://www.gitbook.com/blog/create-documentation-with-ai-and-mcp) descreve ambos. Nenhum servidor novo foi conectado nesta etapa.
+
+### Publicar o canal de desenvolvimento
+
+A pessoa mantenedora publicou este canal em 20/10/2026 e forneceu a URL registrada acima. O agente confirmou acesso público à página inicial e a três páginas internas por HTTP, sem autenticação. Não houve nova consulta ao painel nem confirmação do SHA sincronizado. O procedimento abaixo fica como referência para futuras publicações.
+
+1. Abra o painel do site indicado acima e confira Git Sync com `develop` e estado **Synced**. O conteúdo já integrado nessa branch pode ser publicado; um push em uma branch de trabalho só atualiza o conteúdo principal depois do merge em `develop`.
+2. Clique em **Publish** no cabeçalho. Caso apareçam opções de publicação, mantenha a audiência **Public** e use o endereço padrão do GitBook; não é necessário configurar um domínio personalizado para esta etapa.
+3. Confirme a publicação. Em **Overview**, copie o link do site publicado e abra-o em uma janela sem autenticação. Confira a página inicial, o sumário e os links para o Storybook de homologação.
+4. Registre aqui a URL pública, a data e o commit sincronizado após confirmar o resultado. Não registrar o endereço interno do painel como URL pública.
+
+O site atual permanece ligado a `develop`. Não conectar `main` nem ativar Style guide, MCP ou novos fluxos de change requests nesta etapa. Consulte o [procedimento oficial de publicação](https://gitbook.com/docs/getting-started/quickstart#publish-your-documentation).
 
 ## Guias de adoção — issue #39
 
@@ -107,7 +130,7 @@ Os seis guias de fundamentos cobrem os exports reais dos tokens, personalizaçã
 
 Os links interativos foram conferidos contra o index.json publicado do Storybook de homologação. As orientações de acessibilidade têm referências oficiais WAI/WCAG. Os cálculos de contraste usam os HEX de fallback de tokens 0.2.0, sem transparência; branco sobre primary.600 resulta em aproximadamente 2,12:1. Essa limitação foi documentada sem alterar o visual dos componentes ou afirmar conformidade integral.
 
-As páginas da issue #40 ainda precisam de merge e revisão no GitBook. O arquivo de mapeamento do site e a chave art-liz-docs permanecem os mesmos.
+As páginas da issue #40 foram integradas pela PR #51 e incluídas no aceite manual de 20/10/2026. O arquivo de mapeamento do site e a chave art-liz-docs permanecem os mesmos.
 
 ### Validação dos fundamentos
 
@@ -115,7 +138,7 @@ Em 20/10/2026, sete blocos TS/TSX foram extraídos diretamente dos seis guias e 
 
 Passaram typecheck e check:commit: nove testes (três originais e seis verificações dos exemplos), lint, formatação e build. As verificações dos exemplos cobriram nomes acessíveis e ícones decorativos, descrição/erro de campo, semântica de heading e SSR dos estilos de marca, media query, foco e movimento reduzido. As asserções de CSS consideram diferenças de espaços na serialização.
 
-Também passaram a formatação do repositório, os links locais e os 16 links de stories dos fundamentos, conferidos contra o índice publicado de homologação; o sumário tem 15 páginas únicas. As verificações SSR de CSS não medem aparência, contraste de estilos computados ou execução de animações no navegador. A prévia atualizada do GitBook continua pendente após o merge. A suíte completa do monorepo não foi repetida nesta alteração de documentação.
+Também passaram a formatação do repositório, os links locais e os 16 links de stories dos fundamentos, conferidos contra o índice publicado de homologação; o sumário tem 15 páginas únicas. As verificações SSR de CSS não medem aparência, contraste de estilos computados ou execução de animações no navegador. A prévia atualizada foi aceita manualmente pela pessoa mantenedora em 20/10/2026; não houve auditoria autenticada pelo agente. A suíte completa do monorepo não foi repetida nesta alteração de documentação.
 
 ## Receitas, diagramas e manutenção — issues #41 a #43
 
@@ -137,11 +160,11 @@ Os três fontes Mermaid ficam nos blocos de arquitetura.md, fluxo-desenvolviment
 
 A inspeção por API do GitHub confirmou rulesets ativos de main/develop, sem bypass, checks obrigatórios e zero reviews exigidas. npm-beta não tinha regras de proteção; npm-production tinha política de branches, sem required reviewers. Os guias e a documentação técnica foram corrigidos para não prometer aprovação humana de environment inexistente. Nenhuma proteção, permissão ou credencial foi alterada.
 
-### O que ainda exige revisão no serviço
+### Revisão contínua no serviço
 
-- Depois do merge, conferir o SHA sincronizado e a renderização das 25 páginas no GitBook.
+- Em cada atualização, conferir o SHA sincronizado e a renderização das páginas no GitBook.
 - Verificar Mermaid no espaço real; as imagens e o texto são alternativas prontas, mas uma renderização local não comprova a integração do portal.
 - Conferir busca, links, teclado, leitura em desktop/celular e correspondência entre versão npm e ambiente do catálogo no GitBook atualizado.
-- Registrar a configuração do canal estável e a decisão/URL de publicação; a conexão de develop não confirma essas etapas.
+- Registrar futuramente a configuração e a URL do canal estável; a publicação de desenvolvimento não confirma produção.
 
-Essas pendências têm responsáveis e checklist em manutencao.md. As issues #41–#43 não devem ser fechadas como integralmente concluídas antes das validações de portal previstas em seus critérios. A suíte completa do monorepo não foi repetida: esta entrega altera documentação e imagens, com verificação específica dos snippets e do consumidor.
+O aceite manual do conteúdo atualizado e o encerramento autorizado das issues #37–#43 foram registrados em 20/10/2026. As revisões recorrentes têm responsáveis e checklist em manutencao.md; o canal de desenvolvimento foi publicado; configuração e publicação de produção seguem como evolução separada. A suíte completa do monorepo não foi repetida: esta entrega altera documentação e imagens, com verificação específica dos snippets e do consumidor.

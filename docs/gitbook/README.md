@@ -1,5 +1,7 @@
 # Art-Liz Design System
 
+Este é o canal de **desenvolvimento e homologação**, acompanhado pela branch `develop` e pelo npm `beta`. A documentação de produção será configurada separadamente, com `main` e `latest`.
+
 O Art-Liz reúne tokens, componentes React e um gerador de aplicações para compartilhar a base visual dos projetos web. Os componentes do núcleo são genéricos; regras e identidades de produtos específicos podem ficar em UI Kits independentes.
 
 Este guia atende quem vai consumir o DS em uma aplicação e quem vai contribuir com sua evolução. Comece pelos [primeiros passos](primeiros-passos.md), consulte os [catálogos e ambientes](catalogos.md) para explorar os componentes e leia como [atualizar a documentação](contribuicao.md) ao contribuir.
@@ -26,4 +28,4 @@ O GitBook organiza a adoção, as decisões e a composição de interfaces. O St
 
 ## Estado desta documentação
 
-Os guias cobrem adoção, fundamentos, composição, arquitetura, versões e contribuição, conforme o [plano #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37). A sincronização inicial com `develop` e o funcionamento da prévia inicial foram confirmados pela pessoa mantenedora. As páginas e diagramas desta expansão precisam de merge e revisão no GitBook, inclusive busca e layout. Publicação e canal estável são etapas separadas da prévia de homologação.
+Os guias cobrem adoção, fundamentos, composição, arquitetura, versões e contribuição, conforme o [plano #37](https://github.com/ArturRibeiro01/art-liz-design-system/issues/37). As PRs #49–#51 foram integradas a `develop`; a pessoa mantenedora confirmou o funcionamento do conteúdo atualizado após ressincronizar em 20/10/2026 e autorizou encerrar as issues dessa entrega. A [documentação de desenvolvimento](https://arturs-organization-13.gitbook.io/art-liz-design-system/) foi publicada em 20/10/2026; o canal de produção será configurado depois.
