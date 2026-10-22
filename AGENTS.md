@@ -6,6 +6,7 @@ Este arquivo é o ponto de entrada para assistentes de programação que trabalh
 
 - Projeto: `art-liz-design-system`.
 - Objetivo: criar um design system para os sistemas web pessoais e, quando necessário, UI Kits separados para projetos específicos.
+- Licença: MIT, já declarada nos manifests; o texto completo fica em `LICENSE`, na raiz. Preserve os avisos e as licenças dos materiais de terceiros.
 - A pessoa usuária quer preservar decisões e contexto no próprio repositório, porque o histórico das conversas pode não estar disponível em sessões futuras.
 - Responda em português do Brasil, a menos que a pessoa peça outro idioma.
 
