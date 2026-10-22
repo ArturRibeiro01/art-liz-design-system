@@ -17,6 +17,7 @@ O repositório é um monorepo npm. Cada biblioteca publicável vive em `packages
 - **Documentação visual:** Storybook com integração Vite, docs, acessibilidade e testes de stories via Vitest em navegador.
 - **Ícones:** catálogo público `Icons` do DS, usado por componentes, stories e aplicações. A integração Phosphor fica restrita a `packages/react/src/Icons`; slots públicos continuam aceitando `ReactNode`.
 - **Gerenciador e publicação:** npm, npm workspaces e pacotes com escopo `@art-liz`.
+- **Licença:** MIT, com o texto completo em [LICENSE](LICENSE), na raiz, alinhado aos manifests do monorepo. Preserve os avisos e as licenças dos materiais de terceiros.
 - **Task runner:** scripts npm e workspaces; Nx/Turborepo não são necessários para a escala atual.
 - **Versões:** Changesets para registrar mudanças e versionar pacotes.
 - **Homologação e produção:** builds separados do Storybook e tags npm `beta` e `latest`.
