@@ -275,6 +275,10 @@ O contrato do fluxo e os arquivos reutilizáveis estão em `.github/workflows/` 
 - `develop`: homologação e branch padrão; aceita PRs de qualquer branch.
 - Ambas: PR obrigatório, checks `Quality gates` e `Allowed source branch`, sem bypass administrativo, force-push ou exclusão.
 
+Promoções `develop` → `main` usam **Create a merge commit**. O mesmo vale para sincronizações de histórico entre essas branches permanentes. Squash e rebase alteram a ancestralidade da promoção e podem trazer commits antigos e conflitos às próximas PRs; squash permanece adequado às branches curtas de implementação e às PRs de versão do Changesets.
+
+Em 22/10/2026, a PR #55 estava bloqueada por conflitos em RELEASES.md e package.json após a promoção #53 ter reunido 24 commits em um único commit de main. A árvore de main era idêntica à de develop antes da correção #54; portanto a resolução preservou o conteúdo atual de develop e a correção de publicação. A recuperação incorpora main em uma branch baseada em develop e entra por PR com merge commit, restaurando a ligação dos históricos. Workflows de pull_request não executam enquanto houver conflitos; um status Expected de Allowed source branch nesse cenário não significa que a origem develop foi rejeitada. Consulte RELEASES.md para o procedimento.
+
 O workflow `PR branch policy` falha se um PR destinado a `main` vier de outra branch que não `develop`. O script `scripts/setup-gitflow.sh` cria rulesets via API REST, pode criar `develop`, ativa exclusão automática de branches mescladas e define `develop` como default por último. Ele executa dry run por padrão e requer `--apply` mais confirmação literal. Rulesets existentes com os nomes esperados só são substituídos com `--replace-rulesets`.
 
 No estado remoto confirmado em 2026-09-29, `develop` é a branch padrão e `main` continua sendo produção. Ambas têm rulesets ativos exigindo PR e os checks `Quality gates` e `Allowed source branch`, sem bypass, force-push ou exclusão. `delete_branch_on_merge` está habilitado. O PR #11 (`initial_config` -> `develop`) foi mesclado com os dois checks aprovados. Confirme o GitHub antes de assumir que esse estado não mudou. O script reutilizável cria rulesets de repositório e mantém os existentes por padrão; use `--replace-rulesets` apenas após revisar o diff/configuração.
@@ -358,6 +362,8 @@ npm install @art-liz/react
 ```
 
 O primeiro comando seleciona a versão beta; o segundo seleciona a versão estável. Como `@art-liz/react` depende de `@art-liz/tokens`, publique os tokens antes de publicar uma versão do React que dependa deles.
+
+A promoção stable usa scripts/promote-stable-packages.mjs para confirmar as versões exatas com npm view --prefer-online antes de qualquer alteração de dist-tag nessa etapa. São até 12 tentativas por pacote, com intervalo de 10s, timeout e erros visíveis no log. A consulta pode falhar temporariamente logo após npm publish. Em 21/10/2026, o log informou publicação bem-sucedida do CLI 0.3.1, mas a verificação imediata falhou; na investigação, CLI 0.3.1 e React 1.1.0 já estavam em latest. O erro original da consulta foi descartado pelo shell anterior, portanto não foi possível distinguir cache, propagação ou rede. Os testes do script cobrem recuperação de consulta, versão exata, esgotamento das tentativas sem promoção parcial nessa etapa e falha de permissão na promoção. O script está no gate de testes/lint; não exige Changeset para essa correção de workflow. Recuperação documentada em RELEASES.md.
 
 ## Resolução de pacotes locais
 

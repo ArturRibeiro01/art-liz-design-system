@@ -39,6 +39,7 @@ Quando uma decisão mudar, atualize a documentação correspondente no mesmo tra
 - ESLint flat compartilhado na raiz, scripts de lint por workspace, Prettier com format-on-save e Husky/lint-staged seguido de check:commit no pre-commit (testes, stories, lint, formatação e build).
 - UI Kits de projetos específicos devem ser pacotes independentes em `packages/` e depender do núcleo apenas quando isso fizer sentido.
 - O fluxo GitFlow usa `develop` como branch padrão/homologação e `main` como produção; PRs para `main` só podem vir de `develop`, PRs para `develop` aceitam qualquer origem.
+- Promoções `develop` → `main` e sincronizações de histórico entre essas branches devem usar **Create a merge commit**, preservando a ancestralidade. Não usar squash/rebase nessas operações. Squash continua permitido para branches curtas de implementação e para a PR de versionamento do Changesets. Se uma promoção anterior tiver sido feita por squash, sincronizar `main` em uma branch baseada em `develop`, resolver conflitos e integrar por PR com merge commit antes de promover novamente; preservar os checks e as proteções.
 - `main` e `develop` estão protegidas contra push direto, force-push, exclusão e bypass administrativo; ambas exigem os checks `Quality gates` e `Allowed source branch`.
 - O PR #11 (`initial_config` -> `develop`) foi mesclado e seus checks passaram; confirme o estado remoto antes de continuar o bootstrap.
 - O template de GitFlow reutilizável fica em `templates/gitflow/README.md`; o bootstrap remoto cria rulesets, tem dry run em `scripts/setup-gitflow.sh` e permite substituir os rulesets de nome esperado apenas com `--replace-rulesets`.
@@ -111,6 +112,8 @@ npm run dev --workspace @art-liz/playground -- --force
 Não trate o reinício como correção de código se um build limpo também falhar: nesse caso investigue package names, workspaces, `exports`, artefatos e lockfile.
 
 ## Baseline e validações históricas
+
+- Publicação stable: scripts/promote-stable-packages.mjs confirma todas as versões exatas via npm view --prefer-online antes de promover tags, com até 12 tentativas/intervalo de 10s, timeout e erros visíveis. Em 21/10/2026, o publish do CLI 0.3.1 foi aceito, mas a consulta imediata falhou; depois CLI 0.3.1 e React 1.1.0 já estavam em latest. Não atribuir a falha a credenciais ou ao build: o shell antigo ocultou o erro da consulta. Testes de recuperação e falha estão no gate; procedimento de reexecução em RELEASES.md. Nenhuma publicação ou dist-tag foi alterada durante a investigação.
 
 - O pacote de tokens exporta cores, espaçamentos e raios iniciais.
 - O pacote React contém o componente `Button`, com aparências `primary`, `outline`, `ghost` e `link`, e intents semânticos `primary`, `danger`, `success`, `info` e `warning`.

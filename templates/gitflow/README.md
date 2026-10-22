@@ -52,6 +52,7 @@ Não configure required checks antes de eles aparecerem nos pull requests. Não 
 
 ## Regras incluídas
 
+- Use **Create a merge commit** para promoções `develop` → `main` e sincronizações de histórico entre branches permanentes. Squash/rebase nessas operações pode causar conflitos e reapresentar commits antigos nas próximas promoções. Branches curtas de implementação e PRs de versão podem continuar usando squash.
 - PR para `main` só passa pela política quando a origem é `develop`.
 - PR para `develop` aceita qualquer branch de origem.
 - PRs para ambas as branches executam os gates de qualidade e a política de origem.
