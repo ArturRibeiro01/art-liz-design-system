@@ -41,6 +41,17 @@ O workflow também tem uma recuperação manual por `workflow_dispatch` com `pub
 
 A promoção de `develop` para `main` aciona `Publish stable packages`.
 
+Use **Create a merge commit** para essa promoção. Não use squash/rebase entre `develop` e `main`: essas branches são permanentes e precisam manter a ancestralidade das integrações. O squash das PRs de implementação/versionamento para `develop` continua permitido.
+
+Se uma promoção anterior tiver sido feita por squash e a próxima PR apresentar conflitos:
+
+1. Crie uma branch de sincronização a partir de `develop` atualizado e incorpore `main` nela por merge.
+2. Resolva os conflitos comparando o conteúdo das duas branches; preserve as correções novas e verifique os gates.
+3. Abra uma PR dessa branch para `develop` e integre com **Create a merge commit**, depois dos checks obrigatórios. Essa integração precisa manter o commit de `main` como ancestral; squash da PR de sincronização não resolve o problema de histórico.
+4. Aguarde a atualização da PR `develop` → `main` e os checks desse novo estado; promova também com **Create a merge commit**.
+
+Não remover o check Allowed source branch para contornar um estado Expected. Quando há conflitos, o GitHub não dispara workflows de `pull_request`; resolvê-los permite a execução normal. Um Quality gates aprovado por `push` na branch não comprova que a combinação com a base foi testada. A PR #55 apresentou esse caso após o squash da #53. A política de origem `develop` → `main` e os gates continuam obrigatórios.
+
 O workflow:
 
 1. Instala o Chromium/Playwright e roda `npm run ci`.
