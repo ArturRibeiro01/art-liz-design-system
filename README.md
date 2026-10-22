@@ -61,3 +61,7 @@ npm install @art-liz/react@beta
 ```
 
 `@art-liz/react` depende de `@art-liz/tokens`; o npm instala os tokens automaticamente como dependência do pacote React.
+
+## Licença
+
+Este projeto usa a [licença MIT](LICENSE), conforme declarado nos manifests. Os avisos e as licenças dos materiais de terceiros permanecem aplicáveis.
